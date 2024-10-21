@@ -3,6 +3,7 @@ from typing import Dict, Tuple, List
 import random
 from collections import defaultdict as D
 from collections import namedtuple as T
+import logging
 
 from ORSalgorithm.simplify.plotting import plot
 from ORSalgorithm.simplify.MinHeap import MinHeap
@@ -12,7 +13,7 @@ from ORSalgorithm.Utils.scoring_functions import score_closeness
 
 Solution = T("Solution", "error currentIdx currentOrder prevIdx prevOrder last_seg")
 Function = T("Function", "m b")
-
+logging.basicConfig(level=logging.INFO)
 
 def sol(error, currentIdx, currentOrder, prevIdx, prevOrder, last_seg):
     return Solution(error, currentIdx, currentOrder, prevIdx, prevOrder, last_seg)  # please never round
@@ -64,8 +65,8 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
     @ Y:param, List of Y values
     @ c:param, Punishment for more segments
     """
-    print(f"X:{X}")
-    print(f"Y:{Y}")
+    logging.debug(f"X:{X}")
+    logging.debug(f"Y:{Y}")
     OPT = D(lambda: VINF)
     # Base case for only one point
     OPT[0, 0] = sol0
@@ -93,7 +94,7 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
 
         # For each possible j we have now found the best solution, let's search for the overall k best.
         if i == len(X) - 1:
-            print("Stop!")
+            logging.debug("Stop!")
         idx_k = 0
         while idx_k < K and min_heap_top_k_solutions.getMin() is not None:
             heapObj = min_heap_top_k_solutions.removeMin()
@@ -145,14 +146,14 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
                          prevOrder=last_heapObj.order, last_seg=True)
             OPT[len(X) - 1, idx_k] = k_best
             if idx_k == 0:
-                print("Error check", k_best.error, k_best.currentIdx, k_best.prevIdx)
+                logging.debug("Error check", k_best.error, k_best.currentIdx, k_best.prevIdx)
         else:
             k_best = sol(error=last_heapObj.error, currentIdx=last_heapObj.i, currentOrder=idx_k,
                          prevIdx=last_heapObj.j,
                          prevOrder=last_heapObj.order, last_seg=False)
             OPT[len(X) - 1, idx_k] = k_best
             if idx_k == 0:
-                print("Error check", k_best.error, k_best.currentIdx, k_best.prevIdx)
+                logging.debug("Error check", k_best.error, k_best.currentIdx, k_best.prevIdx)
 
             # Add the next best option from j to the heap
             if OPT[last_heapObj.j, last_heapObj.order + 1].error < float("inf"):
@@ -199,19 +200,19 @@ def solve_and_find_points(X, Y, c, K, distance_weight: float, alpha: float, save
     :param saveImg:
     :return: all_selected_points, all_ys
     """
-    print("Solve done")
+    logging.debug("Solve done")
     OPT = solve(X, Y, c, K, distance_weight, alpha=alpha)
     if saveImg:
-        print("Making images...")
-    print("Min error:", OPT[len(X) - 1, 0].error)
-    print("Max error:", OPT[len(X) - 1, K - 1].error)
+        logging.debug("Making images...")
+    logging.debug("Min error:", OPT[len(X) - 1, 0].error)
+    logging.debug("Max error:", OPT[len(X) - 1, K - 1].error)
     all_selected_points = []
     all_ys = []
     for k in range(K):
         selected_points = extract_points(OPT, k, X)
         ys = [Y[i] for i in selected_points]
         if saveImg:
-            print(f"{k}/{K}")
+            logging.debug(f"{k}/{K}")
             plot(X, Y, selected_points, ys, fname=f"simplify/img/{k}")
 
         all_selected_points.append(selected_points)

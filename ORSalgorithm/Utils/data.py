@@ -25,7 +25,7 @@ def get_min_max_from_dataset_name(dataset_name: str) -> Tuple[float, float]:
 def dataset_sensitive_c(distance_weight: float, dataset: str) -> float:
     c_percentage = get_c_percentage_by_dataset(dataset_name=dataset)
     c = distance_weight * c_percentage
-    print(f"c constant {c}")
+    #print(f"c constant {c}")
     return c
 
 

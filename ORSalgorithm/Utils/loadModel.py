@@ -9,7 +9,7 @@ def load_pytorch_model(model_path):
     global MODELS
     if model_path not in MODELS:
         pytorch_model = ConvClassifier()
-        pytorch_model.load_state_dict(torch.load(model_path))
+        pytorch_model.load_state_dict(torch.load(model_path, weights_only=False))
         pytorch_model.eval()  # Set the model to evaluation mode
         MODELS[model_path] = pytorch_model
     return MODELS[model_path]
@@ -29,6 +29,7 @@ def model_classify(model_path, time_series):
 def model_batch_classify(model_path, batch_of_timeseries):
     model = load_pytorch_model(model_path)
     batch_of_timeseries = [np.array(timeseries).reshape(1, -1) for timeseries in batch_of_timeseries]
+    batch_of_timeseries = np.array(batch_of_timeseries)
     with torch.no_grad():
         batch_of_timeseries_tensor = torch.tensor(batch_of_timeseries, dtype=torch.float32)
         predictions = model(batch_of_timeseries_tensor).numpy()

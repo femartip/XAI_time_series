@@ -6,7 +6,7 @@ from ORSalgorithm.Utils.data import get_min_and_max, dataset_sensitive_c
 from ORSalgorithm.Utils.line import interpolate_points_to_line
 from ORSalgorithm.Utils.loadModel import model_classify, model_confidence, model_batch_classify, batch_confidence
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):
     """
@@ -17,17 +17,21 @@ def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):
 
     Returns: list of best simplified and robust approximations for each time series
     """
+    logging.debug(f"Shape of time series:{time_series.shape}")
     min_y, max_y = get_min_and_max(time_series)
     distance_weight = max_y - min_y
 
     #c = dataset_sensitive_c(dataset=dataset_name, distance_weight=distance_weight) 
     c = distance_weight * 0.01      #In practice both are equivalent, but do not know where the 0.01 comes from
+    chosen_simplifications = []
+    confidence_chosen_simplifications = []
+
     for ts_nr, ts in enumerate(time_series):
         """
         DP Scheme for simplifications for all time series in the dataset
         This is model independant of the model 
         """
-        logging.debug("TS number:", ts_nr)
+        logging.debug(f"TS number: {ts_nr}")
         logging.debug(f"TS: {ts}")
 
         x_values = [i for i in range(len(ts))]
@@ -61,8 +65,10 @@ def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):
         confidence_approx = confidence_of_keep[highest_confidence_among_keep_idx]
         
         logging.debug(f"Original class: {org_class}, Original confidence: {org_confidence}")
-        logging.debug(f"Approx class: {class_approx}, Approx confidence: {confidence_approx}")
-        logging.debug(f"TS idx to keep: {ts_idx_to_keep}")
-        logging.debug(f"Confidence of keep: {confidence_of_keep}")
+        logging.debug(f"TS idx to keep: {ts_idx_to_keep}, Approx class: {class_approx}, Approx confidence: {confidence_approx}")
 
-        return all_interpolations[highest_confidence_idx]
+        chosen_simplifications.append(all_interpolations[highest_confidence_idx])
+        confidence_chosen_simplifications.append(confidence_approx)
+    
+    logging.debug(f"Average confidence of all approximations: {np.mean(confidence_chosen_simplifications)}")
+    return chosen_simplifications, confidence_chosen_simplifications
