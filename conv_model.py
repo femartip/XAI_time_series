@@ -3,7 +3,7 @@ import torch
 # Classifier for time series classification
 class ConvClassifier(torch.nn.Module):
 
-    def __init__(self, input_size, num_classes):
+    def __init__(self):
         super(ConvClassifier, self).__init__()
 
 
