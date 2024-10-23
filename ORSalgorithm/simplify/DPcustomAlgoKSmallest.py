@@ -64,6 +64,9 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
     @ X:param, List of X values
     @ Y:param, List of Y values
     @ c:param, Punishment for more segments
+    @ K:param, Top K best solutions
+    @ distance_weight:param, Weight of the distance
+    @ alpha:param, ?????
     """
     logging.debug(f"X:{X}")
     logging.debug(f"Y:{Y}")
@@ -197,6 +200,7 @@ def solve_and_find_points(X, Y, c, K, distance_weight: float, alpha: float, save
     :param Y: Y_values in timeseries
     :param c: Punishment for more segments
     :param K: Top k best solution
+    :param alpha: ???
     :param saveImg:
     :return: all_selected_points, all_ys
     """
