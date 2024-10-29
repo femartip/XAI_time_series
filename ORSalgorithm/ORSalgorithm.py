@@ -24,6 +24,7 @@ def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):             #ùë
     
     chosen_simplifications = []
     confidence_chosen_simplifications = []
+    class_chosen_simplifications = []
 
     for ts_nr, ts in enumerate(time_series):
         """
@@ -74,6 +75,7 @@ def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):             #ùë
 
         chosen_simplifications.append(all_interpolations[highest_confidence_idx])
         confidence_chosen_simplifications.append(confidence_approx)
+        class_chosen_simplifications.append(class_approx)
     
     logging.debug(f"Average confidence of all approximations: {np.mean(confidence_chosen_simplifications)}")
-    return chosen_simplifications, confidence_chosen_simplifications
+    return chosen_simplifications, confidence_chosen_simplifications, class_chosen_simplifications
