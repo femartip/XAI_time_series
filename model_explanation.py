@@ -29,6 +29,7 @@ def simplify_ts(time_series:np.ndarray, blackbox_model_path:str, k:int, alpha:fl
     """
     Create a simplified version (X) of the time series (D) using the ORS algorithm given a blackbox model (M_AI).
     """
+    logging.info("Extracting prototypes from the blackbox model...")
     prototypes, confidences, prot_pred_labels = ORSalgorithm(time_series, blackbox_model_path, k=k, alpha=alpha)      #Extract prototypes from blackbox model
     prototypes, confidences, prot_pred_labels = np.array(prototypes), np.array(confidences), np.array(prot_pred_labels)
 
@@ -42,7 +43,6 @@ def train_machine_teaching_model(prototypes:np.ndarray, prot_labels:np.ndarray, 
     """
     Learn a machine teaching model (M_ML) from the prototypes S(x).
     """
-
     X_train = prototypes
     y_train = prot_labels
     X_val = torch.tensor(orig_data, dtype=torch.float32).to(DEVICE)

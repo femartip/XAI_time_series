@@ -1,7 +1,6 @@
 import torch
 from torcheval.metrics import BinaryAccuracy
 import argparse
-from data import load_data
 import conv_model
 import numpy as np
 import os
@@ -9,6 +8,7 @@ import logging
 import matplotlib.pyplot as plt
 
 from Utils.plotting import plot_metrics
+from Utils.load_data import load_dataset, load_dataset_labels
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -31,7 +31,7 @@ def train_conv_model(X,y, X_val, y_val):
     logging.info("Number of classes: " + str(num_classes))
     logging.debug(f"y: {y}")
 
-    model = conv_model.ConvClassifier(input_size, num_classes)
+    model = conv_model.ConvClassifier()
     model.train()
     model.to(DEVICE)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -94,10 +94,10 @@ if __name__ == '__main__':
 
     logging.basicConfig(level=logging.INFO)
 
-    X_train = load_data.load_dataset(args.dataset_name)
-    y_train = load_data.load_dataset_labels(args.dataset_name)
-    X_val = load_data.load_dataset(args.dataset_name, data_type='VALIDATION')
-    y_val = load_data.load_dataset_labels(args.dataset_name, data_type='VALIDATION')
+    X_train = load_dataset(args.dataset_name)
+    y_train = load_dataset_labels(args.dataset_name)
+    X_val = load_dataset(args.dataset_name, data_type='VALIDATION')
+    y_val = load_dataset_labels(args.dataset_name, data_type='VALIDATION')
 
     model = train_conv_model(X_train, y_train, X_val, y_val)
 
