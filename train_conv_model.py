@@ -88,16 +88,17 @@ def save_model(model, model_path='model.pth'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('dataset_name', type=str, help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
-    parser.add_argument('model_file_name', type=str, help='Path to save the model')
+    parser.add_argument('--dataset_name', type=str, help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
+    parser.add_argument('--normalized', action='store_true', help='True or False')
+    parser.add_argument('--model_file_name', type=str, help='Path to save the model')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
-
-    X_train = load_dataset(args.dataset_name)
-    y_train = load_dataset_labels(args.dataset_name)
-    X_val = load_dataset(args.dataset_name, data_type='VALIDATION')
-    y_val = load_dataset_labels(args.dataset_name, data_type='VALIDATION')
+    extra = ("_normalized" if args.normalized else "")
+    X_train = load_dataset(dataset_name=args.dataset_name, data_type="TRAIN" + extra)
+    y_train = load_dataset_labels(dataset_name=args.dataset_name, data_type="TRAIN" + extra)
+    X_val = load_dataset(args.dataset_name, data_type='VALIDATION' + extra)
+    y_val = load_dataset_labels(args.dataset_name, data_type='VALIDATION'+ extra)
 
     model = train_conv_model(X_train, y_train, X_val, y_val)
 

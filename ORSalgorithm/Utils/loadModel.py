@@ -22,7 +22,7 @@ def model_classify(model_path, time_series):
     with torch.no_grad():
         time_series_tensor = torch.tensor(time_series, dtype=torch.float32)
         predictions = model(time_series_tensor).numpy()
-    class_pred = np.argmax(predictions, axis=1)[0]  # Extract batch index 0
+    class_pred = round(predictions[0][0])  # Extract batch index 0
     return class_pred
 
 
@@ -33,7 +33,7 @@ def model_batch_classify(model_path, batch_of_timeseries):
     with torch.no_grad():
         batch_of_timeseries_tensor = torch.tensor(batch_of_timeseries, dtype=torch.float32)
         predictions = model(batch_of_timeseries_tensor).numpy()
-    class_pred = [np.argmax(prediction) for prediction in predictions]
+    class_pred = [round(prediction[0]) for prediction in predictions]
     return class_pred
 
 

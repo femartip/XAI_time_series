@@ -4,6 +4,7 @@ import random
 from collections import defaultdict as D
 from collections import namedtuple as T
 import logging
+import os
 
 from ORSalgorithm.simplify.plotting import plot
 from ORSalgorithm.simplify.MinHeap import MinHeap
@@ -37,10 +38,10 @@ sol0 = sol(0, 0, 0, 0, 0, True)
 VINF = sol(float("inf"), 0, 0, 0, 0, True)
 
 
-def _line_error(f: Function, X, Y, distance_weight, alpha):
+def _line_error(f: Function, X, Y, alpha, ts_length) -> float:
     ts1 = [f.m * x + f.b for x in X]
     ts2 = Y
-    error = score_closeness(ts1=ts1, ts2=ts2, distance_weight=distance_weight, alpha=alpha)
+    error = score_closeness(ts1=ts1, ts2=ts2, alpha=alpha, ts_length=ts_length)
     return error
     # error = 0
     # for x, y in zip(X, Y):
@@ -54,8 +55,8 @@ def _gen_line(x1, y1, x2, y2) -> Function:
     return Function(m, b)
 
 
-def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: float, K: int, distance_weight: float,
-                               alpha: float) -> \
+def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, K: int,
+                               alpha: float, beta:float) -> \
         Dict[
             Tuple[int, int], Solution]:
     """
@@ -74,6 +75,8 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
     # Base case for only one point
     OPT[0, 0] = sol0
 
+    ts_length = len(X)
+    segment_punishment = beta*(1/(ts_length-1))
     # Solve DP
     for i in range(1, len(X)):
         min_heap_top_k_solutions = MinHeap()  # Size: O(2*i)
@@ -81,16 +84,16 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
             f = _gen_line(X[j], Y[j], X[i], Y[i])
 
             # Keep other segments
-            f_line_error = _line_error(f, X[j:i + 1], Y[j:i + 1], distance_weight, alpha=alpha)
-            f_segment_keep_error = OPT[j, 0].error + c + f_line_error
+            f_line_error = _line_error(f, X[j:i + 1], Y[j:i + 1], alpha=alpha, ts_length=ts_length)
+            f_segment_keep_error = OPT[j, 0].error + segment_punishment + f_line_error
 
             heap_best_opt_j = heap(f_segment_keep_error, f_line_error, j, i, 0, last_seg=False)
             min_heap_top_k_solutions.insert(heap_best_opt_j)
 
             if j != 0:
                 # Draw a line to the start
-                f_total_line_error = _line_error(f, X[0:i + 1], Y[0:i + 1], distance_weight, alpha=alpha)
-                f_total_error = f_total_line_error + c
+                f_total_line_error = _line_error(f, X[0:i + 1], Y[0:i + 1], alpha=alpha, ts_length=ts_length)
+                f_total_error = f_total_line_error + segment_punishment
 
                 heap_final_best_opt_j = heap(f_total_error, None, j, i, 0, last_seg=True)
                 min_heap_top_k_solutions.insert(heap_final_best_opt_j)
@@ -112,7 +115,7 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
 
                 # Add the next best option from j to the heap
                 if OPT[heapObj.j, heapObj.order + 1].error < float("inf"):
-                    new_total_error = OPT[heapObj.j, heapObj.order + 1].error + c + heapObj.lineSegError
+                    new_total_error = OPT[heapObj.j, heapObj.order + 1].error + segment_punishment + heapObj.lineSegError
                     newHeapObj = heap(error=new_total_error, lineSegError=heapObj.lineSegError, j=heapObj.j, i=i,
                                       order=heapObj.order + 1, last_seg=False)
                     min_heap_top_k_solutions.insert(newHeapObj)
@@ -128,15 +131,15 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
             f = _gen_line(X[j], Y[j], X[i], Y[i])
 
             # Find error j to end.
-            f_line_out_error = _line_error(f, X[j:], Y[j:], distance_weight, alpha=alpha)
-            f_out_error = OPT[j, 0].error + c + f_line_out_error  # OPTIMAL 0..j + c + rest
+            f_line_out_error = _line_error(f, X[j:], Y[j:], alpha=alpha, ts_length=ts_length)
+            f_out_error = OPT[j, 0].error + segment_punishment + f_line_out_error  # OPTIMAL 0..j + c + rest
             heap_best_opt_j = heap(f_out_error, f_line_out_error, j, i, 0, last_seg=False)
             min_heap_last_point.insert(heap_best_opt_j)
 
             if j != 0:  # Don't want duplicate
                 # Find error 0 to end
-                f_line_full_error = _line_error(f, X, Y, distance_weight, alpha=alpha)
-                f_out_full_error = c + f_line_full_error  # c + ALL
+                f_line_full_error = _line_error(f, X, Y, alpha=alpha, ts_length=ts_length)
+                f_out_full_error = beta + f_line_full_error  # c + ALL
                 heap_best_all_opt_j = heap(f_out_full_error, None, j, i, 0, last_seg=True)
                 min_heap_last_point.insert(heap_best_all_opt_j)
 
@@ -160,7 +163,7 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
 
             # Add the next best option from j to the heap
             if OPT[last_heapObj.j, last_heapObj.order + 1].error < float("inf"):
-                new_total_error = OPT[last_heapObj.j, last_heapObj.order + 1].error + c + last_heapObj.lineSegError
+                new_total_error = OPT[last_heapObj.j, last_heapObj.order + 1].error + beta + last_heapObj.lineSegError
                 newHeapObj = heap(error=new_total_error, lineSegError=last_heapObj.lineSegError, j=last_heapObj.j,
                                   i=last_heapObj.i,
                                   order=last_heapObj.order + 1, last_seg=False)
@@ -169,8 +172,8 @@ def segmented_least_squares_DP(X: List[int], Y: List[float] | np.ndarray, c: flo
     return OPT
 
 
-def solve(X, Y, c, K, distance_weight, alpha: float) -> Dict[Tuple[int, int], Solution]:
-    OPT = segmented_least_squares_DP(X, Y, c, K, distance_weight, alpha=alpha)
+def solve(X, Y, K, alpha: float, beta:float) -> Dict[Tuple[int, int], Solution]:
+    OPT = segmented_least_squares_DP(X, Y, K, alpha=alpha, beta=beta)
     return OPT
 
 
@@ -193,7 +196,7 @@ def extract_points(OPT: Dict[Tuple[int, int], Solution], k: int, X):
     return list(reversed(list_of_points_last_first))
 
 
-def solve_and_find_points(X, Y, c, K, distance_weight: float, alpha: float, saveImg=False):
+def solve_and_find_points(X, Y, K, alpha: float, beta:float, saveImg=False):
     """
 
     :param X: X_values in timeseries
@@ -204,8 +207,10 @@ def solve_and_find_points(X, Y, c, K, distance_weight: float, alpha: float, save
     :param saveImg:
     :return: all_selected_points, all_ys
     """
+    #assert beta == 1/ (len(X)-1) # normalize seg coun
+    #beta = 1/ (len(X)-1) # normalize seg count
     logging.debug("Solve done")
-    OPT = solve(X, Y, c, K, distance_weight, alpha=alpha)
+    OPT = solve(X, Y, K, alpha=alpha, beta=beta)
     if saveImg:
         logging.debug("Making images...")
     logging.debug("Min error:", OPT[len(X) - 1, 0].error)
@@ -231,4 +236,4 @@ if __name__ == "__main__":
     my_c = 1
     my_k = 10000
     weight = max(ts_y) - min(ts_y)
-    solve_and_find_points(ts_x, ts_y, my_c, my_k, weight)
+    solve_and_find_points(ts_x, ts_y, my_k, weight)

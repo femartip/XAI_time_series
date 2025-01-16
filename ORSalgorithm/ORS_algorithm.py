@@ -1,6 +1,8 @@
 import logging
 import numpy as np
+import random
 
+import ORSalgorithm.simplify.DPcustomAlgoKSmallest
 from ORSalgorithm.simplify.DPcustomAlgoKSmallest import solve_and_find_points
 from ORSalgorithm.Utils.data import get_min_and_max, dataset_sensitive_c
 from ORSalgorithm.Utils.line import interpolate_points_to_line

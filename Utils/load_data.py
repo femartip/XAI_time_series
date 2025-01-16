@@ -83,12 +83,34 @@ def load_dataset_labels(dataset_name, data_type: str = "TRAIN") -> np.ndarray:
     zero_indexed = zero_indexing_labels(labels_current, dataset_name)
     return zero_indexed
 
+def load_raw_dataset_labels(dataset_name, data_type: str = "TRAIN") -> np.ndarray:
+    """
+    Load the labels AND onehot encode them.
+    :param data_type:
+    :param dataset_name:
+    :return:
+    """
+    labels_current = load_dataset_org_labels(dataset_name, data_type=data_type)
+    return labels_current
+
+def get_time_series(dataset_name: str, data_type:str, instance_nr: int):
+    all_time_series = load_dataset(dataset_name, data_type=data_type)
+    return all_time_series[instance_nr]
 
 def test():
     data = load_dataset("Chinatown", data_type="VALIDATION")
     print(data.shape)
     print(data)
 
+def normalize_data(dataset_name: str, data_type: str = "TRAIN"):
+    dataset = load_dataset(dataset_name, data_type)
+    max_over_all = np.max(dataset)
+    min_over_all = np.min(dataset)
+    dataset = (dataset - min_over_all) / (max_over_all - min_over_all)
+    file_path_name = "data/" + dataset_name + "/" +dataset_name +"_" + data_type + "_normalized.npy"
+    labels = load_raw_dataset_labels(dataset_name, data_type)
+    dataset = np.hstack((labels.reshape(-1, 1), dataset))
+    np.save(file_path_name, dataset)
 
 if __name__ == "__main__":
     test()
