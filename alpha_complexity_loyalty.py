@@ -50,7 +50,7 @@ def simplify_all_in_dataset(dataset_name, datset_type, alpha):
             plt.figure()
             plt.plot(ts_x, ts_y, label="Original")
             plt.plot(selcted_xs[0], selectd_ys[0], label="Simplified")
-
+            plt.plot(ts_x, SegmentedTS(x_pivots=selcted_xs[0], y_pivots=selectd_ys[0], ts_length=len(ts_y)).line_version, label="Line Simplified", linestyle="--")
             plt.legend()
             plt.show()
        
@@ -61,7 +61,7 @@ def simplify_all_in_dataset(dataset_name, datset_type, alpha):
     return all_time_series, all_simplifications
 
 def score_diff_alpha(dataset_name, datset_type, model_path):
-    diff_alpha_values = np.arange(0,1,0.01)
+    diff_alpha_values = np.arange(0,1,0.1)
     all_values = []
     df = pd.DataFrame(columns=["Type","Alpha", "Mean Loyalty", "Kappa Loyalty", "Complexity"])
     for alpha in tqdm(diff_alpha_values):
@@ -130,6 +130,7 @@ def get_RDP_of_timeseries(dataset_name,datset_type, epsilon):
             plt.figure()
             plt.plot(ts_x, ts_y, label="Original")
             plt.plot(simp_x, simp_y, label="Simplified")
+            plt.plot(ts_x, SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)).line_version, label="Line Simplified", linestyle="--")
             plt.show()
             first = False
         all_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
@@ -145,5 +146,5 @@ def solve_for_alpha(dataset: str):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    dataset= "ItalyPowerDemand"
+    dataset= "Chinatown"
     solve_for_alpha(dataset)
