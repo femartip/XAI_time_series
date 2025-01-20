@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from conv_model import ConvClassifier
+from Utils.conv_model import ConvClassifier
 
 MODELS = {}
 

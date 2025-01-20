@@ -1,7 +1,7 @@
 import torch
 from torcheval.metrics import BinaryAccuracy
 import argparse
-import conv_model
+import Utils.conv_model as conv_model
 import numpy as np
 import os
 import logging
@@ -11,6 +11,19 @@ from Utils.plotting import plot_metrics
 from Utils.load_data import load_dataset, load_dataset_labels
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+def test_conv_model(X, y, model):
+    X = torch.tensor(X, dtype=torch.float32).to(DEVICE)
+    X = X.unsqueeze(1)
+    y = torch.tensor(y, dtype=torch.float32).to(DEVICE)
+    model.eval()
+    with torch.no_grad():
+        output = model(X)
+        output = torch.squeeze(output, 1)
+        metric = BinaryAccuracy()
+        metric.update(output, y)
+        print(f'Test Accuracy: {metric.compute()}')
+        return metric.compute()
 
 def train_conv_model(X,y, X_val, y_val):
     learning_rate = 0.01
@@ -90,16 +103,30 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_name', type=str, help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
     parser.add_argument('--normalized', action='store_true', help='True or False')
+    parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn')
     parser.add_argument('--model_file_name', type=str, help='Path to save the model')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
+    if args.dataset_name not in ['Chinatown', 'ECG200', 'ItalyPowerDemand']:
+        logging.error("Dataset not supported")
+        exit(1)
+
     extra = ("_normalized" if args.normalized else "")
     X_train = load_dataset(dataset_name=args.dataset_name, data_type="TRAIN" + extra)
     y_train = load_dataset_labels(dataset_name=args.dataset_name, data_type="TRAIN" + extra)
     X_val = load_dataset(args.dataset_name, data_type='VALIDATION' + extra)
     y_val = load_dataset_labels(args.dataset_name, data_type='VALIDATION'+ extra)
+    X_test = load_dataset(args.dataset_name, data_type='TEST' + extra)
+    y_test = load_dataset_labels(args.dataset_name, data_type='TEST' + extra)
 
-    model = train_conv_model(X_train, y_train, X_val, y_val)
+    if args.model_type == 'cnn':
+        model = train_conv_model(X_train, y_train, X_val, y_val)
+        test_conv_model(X_test, y_test, model)
+    else:
+        logging.error("Model type not supported")
 
-    save_model(model, os.path.join('models', args.model_file_name))
+    if args.model_file_name:
+        save_model(model, os.path.join('models', args.model_file_name))
+    else:
+        logging.info("Model not saved")
