@@ -6,11 +6,27 @@ import numpy as np
 import os
 import logging
 import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier
 
 from Utils.plotting import plot_metrics
 from Utils.load_data import load_dataset, load_dataset_labels
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+SEED = 42
+
+def test_decision_tree(X, y, model):
+    accuracy = model.score(X, y)
+    print(f'Test Accuracy: {accuracy}')
+    return accuracy
+
+def train_decision_tree(X_train, y_train, X_val, y_val):
+    model = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, random_state=SEED)
+    model.fit(X_train, y_train)
+    train_accuracy = model.score(X_train, y_train)
+    val_accuracy = model.score(X_val, y_val)
+    print(f'Train Accuracy: {train_accuracy}')
+    print(f'Validation Accuracy: {val_accuracy}')
+    return model
 
 def test_conv_model(X, y, model):
     X = torch.tensor(X, dtype=torch.float32).to(DEVICE)
@@ -95,9 +111,12 @@ def train_conv_model(X,y, X_val, y_val):
 
     return model    
     
-def save_model(model, model_path='model.pth'):
+def save_pytorch_model(model, model_path='model.pth'):
     torch.save(model.state_dict(), model_path)
 
+def save_sklearn_model(model, model_path='model.pkl'):
+    import joblib
+    joblib.dump(model, model_path)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -123,10 +142,15 @@ if __name__ == '__main__':
     if args.model_type == 'cnn':
         model = train_conv_model(X_train, y_train, X_val, y_val)
         test_conv_model(X_test, y_test, model)
+    elif args.model_type == 'decision_tree':
+        model = train_decision_tree(X_train, y_train, X_val, y_val)
+        test_decision_tree(X_test, y_test, model)
     else:
         logging.error("Model type not supported")
 
-    if args.model_file_name:
-        save_model(model, os.path.join('models', args.model_file_name))
+    if args.model_file_name and args.model_type == 'cnn':
+        save_pytorch_model(model, os.path.join('models', args.model_file_name))
+    elif args.model_file_name:
+        save_sklearn_model(model, os.path.join('models', args.model_file_name))
     else:
         logging.info("Model not saved")
