@@ -10,6 +10,34 @@ from ORSalgorithm.Utils.loadModel import model_classify, model_confidence, model
 
 logging.basicConfig(level=logging.INFO)
 
+
+def get_simplifications(X, Y, K, alpha, beta):
+    all_selected_points, all_ys = solve_and_find_points(X=X, Y=Y, K=K, alpha=alpha, beta=beta)    # Dim (k, 3) -> 3 for tuple value, index, rank
+    return all_selected_points, all_ys
+
+def get_robust_simplifications(ts, all_interpolations, model_path):
+    org_class = model_classify(model_path, ts)
+    org_confidence = model_confidence(model_path, ts)
+    all_classes = model_batch_classify(model_path, all_interpolations)
+
+    ts_and_class = zip(all_classes, list(range(len(all_interpolations))))  # Select segmentations with same classification
+
+    ts_idx_to_keep = list(map(lambda x: x[1], filter(lambda x: x[0] == org_class, ts_and_class)))  # Select the indices of the time series that have the same class as the original time series
+
+    confidence_of_keep = batch_confidence(model_path=model_path, batch_of_timeseries=list(map(lambda x: all_interpolations[x], ts_idx_to_keep)))    # Compute confidence of the selected time series
+
+    highest_confidence_among_keep_idx = np.argmax(confidence_of_keep)  # Find the highest confidence among the selected time series
+    highest_confidence_idx = ts_idx_to_keep[highest_confidence_among_keep_idx]  # Extract the idx
+
+    class_approx = model_classify(model_path, all_interpolations[highest_confidence_idx])   # Compute the class of the selected time series, AGAIN?
+    confidence_approx = confidence_of_keep[highest_confidence_among_keep_idx]   # Compute the confidence of the selected time series
+
+    logging.debug(f"Original class: {org_class}, Original confidence: {org_confidence}")
+    logging.debug(f"TS idx to keep: {ts_idx_to_keep}, Approx class: {class_approx}, Approx confidence: {confidence_approx}")
+
+    return highest_confidence_idx, class_approx, confidence_approx
+
+
 def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):             #𝑜𝑝𝑡_𝑠𝑖𝑚𝑝(𝑡𝑠(time_series), ℎ(model), 𝛼, 𝛽, 𝛾)
     """
     time_series: list of time series as numpy arrays
@@ -41,7 +69,7 @@ def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):             #�
 
         x_values = [i for i in range(len(ts))]
 
-        all_selected_points, all_ys = solve_and_find_points(x_values, ts, c=c, K=k, saveImg=False, distance_weight=distance_weight, alpha=alpha)    # Dim (k, 3) -> 3 for tuple value, index, rank
+        all_selected_points, all_ys = get_simplifications(X=x_values, Y=ts, K=k, alpha=alpha, beta=dataset_sensitive_c[ts_nr])    
         all_interpolations = []
 
         # Constructs table of size n x q        
@@ -56,24 +84,7 @@ def ORSalgorithm(time_series, model_path, k=10000, alpha=0.02):             #�
         Consider the q least costly simplifications sts1, ..., stsq, ordered by non-decreasing cost under error and simplicity as stored in D[n, 1]..D[n, q] respectively. 
         Compute robustness for any simplification that h classifies same as ts.
         """ 
-        org_class = model_classify(model_path, ts)
-        org_confidence = model_confidence(model_path, ts)
-        all_classes = model_batch_classify(model_path, all_interpolations)
-
-        ts_and_class = zip(all_classes, list(range(len(all_interpolations))))  # Select segmentations with same classification
-
-        ts_idx_to_keep = list(map(lambda x: x[1], filter(lambda x: x[0] == org_class, ts_and_class)))  # Select the indices of the time series that have the same class as the original time series
-
-        confidence_of_keep = batch_confidence(model_path=model_path, batch_of_timeseries=list(map(lambda x: all_interpolations[x], ts_idx_to_keep)))    # Compute confidence of the selected time series
-
-        highest_confidence_among_keep_idx = np.argmax(confidence_of_keep)  # Find the highest confidence among the selected time series
-        highest_confidence_idx = ts_idx_to_keep[highest_confidence_among_keep_idx]  # Extract the idx
-
-        class_approx = model_classify(model_path, all_interpolations[highest_confidence_idx])   # Compute the class of the selected time series, AGAIN?
-        confidence_approx = confidence_of_keep[highest_confidence_among_keep_idx]   # Compute the confidence of the selected time series
-        
-        logging.debug(f"Original class: {org_class}, Original confidence: {org_confidence}")
-        logging.debug(f"TS idx to keep: {ts_idx_to_keep}, Approx class: {class_approx}, Approx confidence: {confidence_approx}")
+        highest_confidence_idx, class_approx, confidence_approx = get_robust_simplifications(ts, all_interpolations, model_path)
 
         chosen_simplifications.append(all_interpolations[highest_confidence_idx])
         confidence_chosen_simplifications.append(confidence_approx)
