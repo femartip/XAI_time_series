@@ -7,9 +7,9 @@ from ORSalgorithm.Utils.loadModel import model_batch_classify
 from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
 from ORSalgorithm.Utils.scoring_functions import score_simplicity
 
-def calculate_accuracy_loyalty(batch_org_ts:List[float], batch_simplified_ts:List[SegmentedTS], model_path)->float:
+def calculate_mean_loyalty(batch_org_ts:List[float], batch_simplified_ts:List[SegmentedTS], model_path)->float:
     """
-    Calculate Accuracy score to measure agreement between original and simplified classifications.
+    Calculate Mean score to measure agreement between original and simplified classifications.
     """
     batch_simplified_ts = [ts.line_version for ts in batch_simplified_ts]
     pred_class_original = model_batch_classify(model_path, batch_of_timeseries=batch_org_ts) 
