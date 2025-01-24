@@ -5,6 +5,8 @@ import Utils.conv_model as conv_model
 import os
 import logging
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import accuracy_score
 import joblib
 
 from Utils.plotting import plot_metrics
@@ -14,15 +16,30 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 SEED = 42
 
 def test_decision_tree(X, y, model):
-    accuracy = model.score(X, y)
+    accuracy = accuracy_score(y, (model.predict(X) > 0.5).astype(int))  
     print(f'Test Accuracy: {accuracy}')
     return accuracy
 
 def train_decision_tree(X_train, y_train, X_val, y_val):
     model = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, random_state=SEED)
     model.fit(X_train, y_train)
-    train_accuracy = model.score(X_train, y_train)
-    val_accuracy = model.score(X_val, y_val)
+    train_accuracy = accuracy_score(y_train, (model.predict(X_train) > 0.5).astype(int))
+    val_accuracy = accuracy_score(y_val, (model.predict(X_val) > 0.5).astype(int))
+    print(f'Train Accuracy: {train_accuracy}')
+    print(f'Validation Accuracy: {val_accuracy}')
+    return model
+
+def test_linear_regression(X, y, model):
+    accuracy = accuracy_score(y, (model.predict(X) > 0.5).astype(int))
+    print(f'Test Accuracy: {accuracy}')
+    return accuracy
+
+def train_linear_regression(X_train, y_train, X_val, y_val):
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    model.predict(X_train)
+    train_accuracy = accuracy_score(y_train, (model.predict(X_train) > 0.5).astype(int))
+    val_accuracy = accuracy_score(y_val, (model.predict(X_val) > 0.5).astype(int))
     print(f'Train Accuracy: {train_accuracy}')
     print(f'Validation Accuracy: {val_accuracy}')
     return model
@@ -120,7 +137,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_name', type=str, help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
     parser.add_argument('--normalized', action='store_true', help='True or False')
-    parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn')
+    parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn, decision-tree, linear-regression')
     parser.add_argument('--model_file_name', type=str, help='Path to save the model')
     args = parser.parse_args()
 
@@ -140,9 +157,12 @@ if __name__ == '__main__':
     if args.model_type == 'cnn':
         model = train_conv_model(X_train, y_train, X_val, y_val)
         test_conv_model(X_test, y_test, model)
-    elif args.model_type == 'decision_tree':
+    elif args.model_type == 'decision-tree':
         model = train_decision_tree(X_train, y_train, X_val, y_val)
         test_decision_tree(X_test, y_test, model)
+    elif args.model_type == 'linear-regression':
+        model = train_linear_regression(X_train, y_train, X_val, y_val)
+        test_linear_regression(X_test, y_test, model)
     else:
         logging.error("Model type not supported")
 

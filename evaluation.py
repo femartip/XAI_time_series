@@ -6,14 +6,14 @@ import os
 
 from simplifications import get_OS_simplification, get_RDP_simplification
 from Utils.metrics import calculate_mean_loyalty, calculate_kappa_loyalty, calculate_complexity
-from Utils.load_models import model_batch_classify
+from Utils.load_models import model_batch_classify # type: ignore
 
 
 def score_different_alphas(dataset_name, datset_type, model_path):
     """
     Evaluate the impact of different alpha values on loyalty, kappa, and complexity.
     """
-    diff_alpha_values = np.arange(0,1,0.1)
+    diff_alpha_values = np.arange(0,1,0.01)
     df = pd.DataFrame(columns=["Type","Alpha", "Mean Loyalty", "Kappa Loyalty", "Complexity"])
 
     for alpha in tqdm(diff_alpha_values):
