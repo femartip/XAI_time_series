@@ -48,7 +48,6 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         df.loc[len(df)] = row
 
     model_type = model_path.split("_")[1]
-    print(model_type)
     if os.path.exists(f"results/{model_type}"):
         df.to_csv(f"results/{model_type}/Alpha_complexity_loyalty_{dataset_name}.csv")
         logging.info("Results saved to CSV.")
