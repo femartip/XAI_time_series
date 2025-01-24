@@ -2,11 +2,10 @@ import torch
 from torcheval.metrics import BinaryAccuracy
 import argparse
 import Utils.conv_model as conv_model
-import numpy as np
 import os
 import logging
-import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier
+import joblib
 
 from Utils.plotting import plot_metrics
 from Utils.load_data import load_dataset, load_dataset_labels
@@ -115,7 +114,6 @@ def save_pytorch_model(model, model_path='model.pth'):
     torch.save(model.state_dict(), model_path)
 
 def save_sklearn_model(model, model_path='model.pkl'):
-    import joblib
     joblib.dump(model, model_path)
 
 if __name__ == '__main__':
