@@ -6,8 +6,8 @@ import logging
 from Utils.load_data import load_dataset
 from ORSalgorithm.ORS_algorithm import get_simplifications
 from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
-
 from SimplificationMethods.BottumUp.bottomUp import  get_swab_approx
+from SimplificationMethods.Visvalingam_whyattt.Visvalingam_Whyatt import  simplify as VC_simplify
 
 
 def get_OS_simplification(dataset_name, datset_type, alpha):
@@ -71,7 +71,7 @@ def get_bottom_up_simplification(dataset_name, datset_type, max_error):
     """
     all_time_series = load_dataset(dataset_name, data_type=datset_type)
     all_simplifications = []
-    first = True
+    first = False
     max_error = max_error
     logging.debug("max_error:", max_error)
     for ts_y in all_time_series:
@@ -82,6 +82,33 @@ def get_bottom_up_simplification(dataset_name, datset_type, max_error):
         if first:
             plt.figure()
             plt.title("Simplification using SWAB")
+            plt.plot(ts_x, ts_y, label="Original")
+            plt.plot(simp_x, simp_y, label="Simplified")
+            plt.plot(ts_x, SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)).line_version,
+                     label="Line Simplified", linestyle="--")
+            plt.show()
+            first = False
+        all_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
+
+    return all_time_series, all_simplifications
+
+def get_VC_simplification(dataset_name, datset_type, alpha):
+    """
+    Apply Visvalingam Whyatt algorithm to simplify all time series in the dataset.
+    """
+    all_time_series = load_dataset(dataset_name, data_type=datset_type)
+    all_simplifications = []
+    first = True
+    alpha = alpha
+    logging.debug("alpha:", alpha)
+    for ts_y in all_time_series:
+        ts_x = list(range(len(ts_y)))
+        simplification = VC_simplify(ts_y, alpha=alpha)
+        simp_x = simplification.x_pivots
+        simp_y = simplification.y_pivots
+        if first:
+            plt.figure()
+            plt.title("Simplification using VC")
             plt.plot(ts_x, ts_y, label="Original")
             plt.plot(simp_x, simp_y, label="Simplified")
             plt.plot(ts_x, SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)).line_version,

@@ -4,7 +4,8 @@ import logging
 from tqdm import tqdm
 import os
 
-from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification
+from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
+    get_VC_simplification
 from Utils.metrics import calculate_mean_loyalty, calculate_kappa_loyalty, calculate_complexity
 from Utils.load_models import model_batch_classify # type: ignore
 
@@ -64,6 +65,26 @@ def score_different_alphas(dataset_name, datset_type, model_path):
                                                     pred_class_simplified=predicted_classes_simplifications_BU)
         complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
         row = ["BU", alpha, mean_loyalty_BU, kappa_loyalty_BU, complexity_BU]
+        df.loc[len(df)] = row
+
+        # Step 1 gen all simplified ts
+        all_time_series_VC, all_simplifications_VC = get_VC_simplification(dataset_name=dataset_name,
+                                                                                  datset_type=datset_type,
+                                                                                  alpha=alpha)
+
+        # Step 2 get model predictions
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_VC]
+        predicted_classes_simplifications_VC = get_model_predictions(model_path, batch_simplified_ts)
+        predicted_classes_original = get_model_predictions(model_path,
+                                                           all_time_series_VC)  # I will say this and all_time_series_OS are the same, but just in case
+
+        # Step 3 calculate loyalty and complexity
+        mean_loyalty_VC = calculate_mean_loyalty(pred_class_original=predicted_classes_original,
+                                                 pred_class_simplified=predicted_classes_simplifications_VC)
+        kappa_loyalty_VC = calculate_kappa_loyalty(pred_class_original=predicted_classes_original,
+                                                   pred_class_simplified=predicted_classes_simplifications_VC)
+        complexity_VC = calculate_complexity(batch_simplified_ts=all_simplifications_VC)
+        row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC]
         df.loc[len(df)] = row
 
 
