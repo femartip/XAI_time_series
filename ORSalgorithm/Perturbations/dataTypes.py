@@ -26,6 +26,9 @@ class SegmentedTS:
                                                   y_selected=self.y_pivots)
         self.line_version = line_version
 
+    def __repr__(self):
+        return "--".join([f"({x},{y})" for x,y in zip(self.x_pivots, self.y_pivots)])
+
 
 class SinglePointPerturbation:
     new_x: int

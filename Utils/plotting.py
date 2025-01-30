@@ -33,7 +33,7 @@ def plot_csv_alpha_mean_loyalty(file:str) -> plt.Figure:
 
 def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
     df = pd.read_csv(file)
-    representation_type = ["o", "x"]
+    representation_type = ["o", "x", '+']
     fig, ax = plt.subplots()
     for i, (name, group) in enumerate(df.groupby("Type")):
         scatter = ax.scatter(group["Complexity"], group["Mean Loyalty"], label=name, c=group['Alpha'], cmap='viridis', marker=representation_type[i])
@@ -47,7 +47,7 @@ def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
 
 def plot_csv_complexity_kappa_loyalty(file:str) -> plt.Figure:
     df = pd.read_csv(file)
-    representation_type = ["o", "x"]
+    representation_type = ["o", "x", '+']
     fig, ax = plt.subplots()
     for i, (name, group) in enumerate(df.groupby("Type")):
         scatter = ax.scatter(group["Complexity"], group["Kappa Loyalty"], label=name, c=group['Alpha'], cmap='viridis', marker=representation_type[i])

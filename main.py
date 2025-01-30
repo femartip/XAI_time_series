@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate simplifications')
     parser.add_argument('--datasets', type=str, nargs='+', default=["Chinatown"], help='List of dataset names, for now Chinatown, ECG200 and ItalyPowerDemand supported')
     parser.add_argument('--dataset_type', type=str, default="TEST_normalized", help='Dataset type, can be either TRAIN, TEST, VALIDATION with or without _normalized')
-    parser.add_argument('--model_type', type=str, default="cnn", help='Model type, can be either cnn, decision-tree, knn')
+    parser.add_argument('--model_type', type=str, default="knn", help='Model type, can be either cnn, decision-tree, knn')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
