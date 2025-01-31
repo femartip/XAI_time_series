@@ -52,7 +52,7 @@ def load_dataset(dataset_name: str, data_type: str = "TRAIN") -> np.ndarray:
     :return: 2D numpy array
     """
     array_2d = load_data_set_full(dataset_name=dataset_name, data_type=data_type)
-
+    
     # Remove the first column (index 0) along axis 1 (columns)
     array_2d = np.delete(array_2d, 0, axis=1)
     return array_2d
@@ -104,12 +104,15 @@ def test():
 
 def normalize_data(dataset_name: str, data_type: str = "TRAIN"):
     dataset = load_dataset(dataset_name, data_type)
+    
     max_over_all = np.max(dataset)
     min_over_all = np.min(dataset)
-    dataset = (dataset - min_over_all) / (max_over_all - min_over_all)
+    
+    dataset = (dataset - min_over_all) / (max_over_all - min_over_all + 1e-8)
     file_path_name = "data/" + dataset_name + "/" +dataset_name +"_" + data_type + "_normalized.npy"
     labels = load_raw_dataset_labels(dataset_name, data_type)
     dataset = np.hstack((labels.reshape(-1, 1), dataset))
+    assert not np.isnan(dataset).any(), f"NaN values in the dataset {dataset}."
     np.save(file_path_name, dataset)
 
 if __name__ == "__main__":
