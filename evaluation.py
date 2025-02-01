@@ -9,16 +9,23 @@ from simplifications import get_OS_simplification, get_RDP_simplification, get_b
 from Utils.metrics import calculate_mean_loyalty, calculate_kappa_loyalty, calculate_complexity
 from Utils.load_models import model_batch_classify # type: ignore
 
+logging.basicConfig(level=
+logging.debug)
+
 
 def score_different_alphas(dataset_name, datset_type, model_path):
     """
     Evaluate the impact of different alpha values on loyalty, kappa, and complexity.
     """
-    diff_alpha_values = np.arange(0,1,0.01)
+    diff_alpha_values = np.arange(0,1,0.1)
     df = pd.DataFrame(columns=["Type","Alpha", "Mean Loyalty", "Kappa Loyalty", "Complexity"])
 
     for alpha in tqdm(diff_alpha_values):
         # Step 1 gen all simplified ts
+        
+        logging.debug(f"Alpha: {alpha}")   
+        
+        logging.debug("Running OS")
         all_time_series_OS, all_simplificationsOS = get_OS_simplification(dataset_name=dataset_name,datset_type=datset_type, alpha=alpha)
 
         #Step 2 get model predictions
@@ -34,6 +41,8 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         df.loc[len(df)] = row
 
         # Step 1 gen all simplified ts
+        
+        logging.debug("Running RDP")
         all_time_series_RDP, all_simplifications_RDP = get_RDP_simplification(dataset_name=dataset_name, datset_type=datset_type, epsilon=alpha)
         
         #Step 2 get model predictions
@@ -49,6 +58,8 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         df.loc[len(df)] = row
 
         # Step 1 gen all simplified ts
+        
+        logging.debug("Running BU")
         all_time_series_BU, all_simplifications_BU = get_bottom_up_simplification(dataset_name=dataset_name,
                                                                               datset_type=datset_type, max_error=alpha)
 
@@ -68,6 +79,8 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         df.loc[len(df)] = row
 
         # Step 1 gen all simplified ts
+        
+        logging.debug("Running VC")
         all_time_series_VC, all_simplifications_VC = get_VC_simplification(dataset_name=dataset_name,
                                                                                   datset_type=datset_type,
                                                                                   alpha=alpha)
@@ -87,14 +100,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC]
         df.loc[len(df)] = row
 
-
-
-    model_type = model_path.split("_")[1]
-    if os.path.exists(f"results/{model_type}"):
-        df.to_csv(f"results/{model_type}/Alpha_complexity_loyalty_{dataset_name}.csv")
-        logging.info("Results saved to CSV.")
-    else:
-        logging.error("Results not saved to CSV.")
+    return df
 
 def get_model_predictions(model_path, batch_of_TS):
     predicted_classes = model_batch_classify(model_path, batch_of_timeseries=batch_of_TS) 

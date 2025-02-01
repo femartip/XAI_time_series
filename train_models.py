@@ -17,22 +17,18 @@ SEED = 42
 
 def test_decision_tree(X, y, model):
     accuracy = accuracy_score(y, (model.predict(X) > 0.5).astype(int))  
-    print(f'Test Accuracy: {accuracy}')
-    return accuracy
+    return {"test_acc": accuracy}
 
 def train_decision_tree(X_train, y_train, X_val, y_val):
     model = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, random_state=SEED)
     model.fit(X_train, y_train)
     train_accuracy = accuracy_score(y_train, (model.predict(X_train) > 0.5).astype(int))
     val_accuracy = accuracy_score(y_val, (model.predict(X_val) > 0.5).astype(int))
-    print(f'Train Accuracy: {train_accuracy}')
-    print(f'Validation Accuracy: {val_accuracy}')
-    return model
+    return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
 
 def test_linear_regression(X, y, model):
     accuracy = accuracy_score(y, (model.predict(X) > 0.5).astype(int))
-    print(f'Test Accuracy: {accuracy}')
-    return accuracy
+    return {"test_acc": accuracy}
 
 def train_linear_regression(X_train, y_train, X_val, y_val):
     model = LinearRegression()
@@ -40,11 +36,9 @@ def train_linear_regression(X_train, y_train, X_val, y_val):
     model.predict(X_train)
     train_accuracy = accuracy_score(y_train, (model.predict(X_train) > 0.5).astype(int))
     val_accuracy = accuracy_score(y_val, (model.predict(X_val) > 0.5).astype(int))
-    print(f'Train Accuracy: {train_accuracy}')
-    print(f'Validation Accuracy: {val_accuracy}')
-    return model
+    return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
 
-def test_conv_model(X, y, model):
+def test_conv_model(X, y, model, plot=False):
     X = torch.tensor(X, dtype=torch.float32).to(DEVICE)
     X = X.unsqueeze(1)
     y = torch.tensor(y, dtype=torch.float32).to(DEVICE)
@@ -54,10 +48,11 @@ def test_conv_model(X, y, model):
         output = torch.squeeze(output, 1)
         metric = BinaryAccuracy()
         metric.update(output, y)
-        print(f'Test Accuracy: {metric.compute()}')
-        return metric.compute()
+        if plot:
+            print(f'Test Accuracy: {metric.compute()}')
+        return {"test_acc": metric.compute()}
 
-def train_conv_model(X,y, X_val, y_val):
+def train_conv_model(X,y, X_val, y_val, plot=False):
     learning_rate = 0.01
     epochs = 100
     batch_size = 1024
@@ -109,7 +104,8 @@ def train_conv_model(X,y, X_val, y_val):
             if i % 1 == 0:
                 train_losses.append(loss.item())
                 train_metrics.append(metric.compute())
-                print(f'Epoch {epoch}, Loss: {loss.item()}, Accuracy: {metric.compute()}')
+                if plot:
+                    print(f'Epoch {epoch}, Loss: {loss.item()}, Accuracy: {metric.compute()}')
                 with torch.no_grad():
                     logging.debug("Validation shape: " + str(X_val.shape))
                     val_output = model(torch.tensor(X_val, dtype=torch.float32).to(DEVICE))
@@ -118,20 +114,64 @@ def train_conv_model(X,y, X_val, y_val):
                     metric_val.update(val_output, y_val)
                     val_losses.append(val_loss.item())
                     val_metrics.append(metric_val.compute())
-                    print(f'Validation Loss: {val_loss.item()}, Accuracy: {metric_val.compute()}')
+                    if plot:
+                        print(f'Validation Loss: {val_loss.item()}, Accuracy: {metric_val.compute()}')
 
-    print(f'Final Accuracy: {metric.compute()}')
-    print(f'Final Validation Accuracy: {metric_val.compute()}')
+    final_metrics = {"train_acc": metric.compute(), "val_acc": metric_val.compute()}
+    if plot:
+        print(f'Final Accuracy: {metric.compute()}')
+        print(f'Final Validation Accuracy: {metric_val.compute()}')
+        plot_metrics(train_metrics, train_losses, val_metrics, val_losses)
 
-    plot_metrics(train_metrics, train_losses, val_metrics, val_losses)
-
-    return model    
+    return model, final_metrics    
     
 def save_pytorch_model(model, model_path='model.pth'):
     torch.save(model.state_dict(), model_path)
 
 def save_sklearn_model(model, model_path='model.pkl'):
     joblib.dump(model, model_path)
+
+
+def save_model(model, model_path: str, model_type: str):
+
+    if model_path and model_type == 'cnn':
+        save_pytorch_model(model, model_path)
+    elif model_path:
+        save_sklearn_model(model, model_path)
+    else:
+        logging.info("Model not saved")
+
+def train_model(dataset_name: str, model_type:str, normalized: bool):
+    extra = ("_normalized" if normalized else "")
+
+    X_train = load_dataset(dataset_name=dataset_name, data_type="TRAIN" + extra)
+    y_train = load_dataset_labels(dataset_name=dataset_name, data_type="TRAIN" + extra)
+    X_val = load_dataset(dataset_name=dataset_name, data_type='VALIDATION' + extra)
+    y_val = load_dataset_labels(dataset_name=dataset_name, data_type='VALIDATION'+ extra)
+    X_test = load_dataset(dataset_name=dataset_name, data_type='TEST' + extra)
+    y_test = load_dataset_labels(dataset_name=dataset_name, data_type='TEST' + extra)
+
+    if model_type == 'cnn':
+        model, metrics = train_conv_model(X_train, y_train, X_val, y_val)
+        test_metric = test_conv_model(X_test, y_test, model)
+        metrics.update(test_metric)
+        return model, metrics
+    
+    elif model_type == 'decision-tree':
+        model, metrics = train_decision_tree(X_train, y_train, X_val, y_val)
+        test_metrics = test_decision_tree(X_test, y_test, model)
+        metrics.update(test_metrics)
+        return model, metrics
+
+    elif model_type == 'linear-regression':
+        model, metrics = train_linear_regression(X_train, y_train, X_val, y_val)
+        test_metrics = test_linear_regression(X_test, y_test, model)
+        metrics.update(test_metrics)
+        return model, metrics
+    else:
+        raise ValueError("Model type not supported")
+
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -146,29 +186,8 @@ if __name__ == '__main__':
         logging.error("Dataset not supported")
         exit(1)
 
-    extra = ("_normalized" if args.normalized else "")
-    X_train = load_dataset(dataset_name=args.dataset_name, data_type="TRAIN" + extra)
-    y_train = load_dataset_labels(dataset_name=args.dataset_name, data_type="TRAIN" + extra)
-    X_val = load_dataset(args.dataset_name, data_type='VALIDATION' + extra)
-    y_val = load_dataset_labels(args.dataset_name, data_type='VALIDATION'+ extra)
-    X_test = load_dataset(args.dataset_name, data_type='TEST' + extra)
-    y_test = load_dataset_labels(args.dataset_name, data_type='TEST' + extra)
-
-    if args.model_type == 'cnn':
-        model = train_conv_model(X_train, y_train, X_val, y_val)
-        test_conv_model(X_test, y_test, model)
-    elif args.model_type == 'decision-tree':
-        model = train_decision_tree(X_train, y_train, X_val, y_val)
-        test_decision_tree(X_test, y_test, model)
-    elif args.model_type == 'linear-regression':
-        model = train_linear_regression(X_train, y_train, X_val, y_val)
-        test_linear_regression(X_test, y_test, model)
-    else:
-        logging.error("Model type not supported")
-
-    if args.model_file_name and args.model_type == 'cnn':
-        save_pytorch_model(model, os.path.join('models', args.model_file_name))
-    elif args.model_file_name:
-        save_sklearn_model(model, os.path.join('models', args.model_file_name))
-    else:
-        logging.info("Model not saved")
+    model, metrics = train_model(args.dataset_name, args.model_type, args.normalized)
+    print(f"Train accuracy: {metrics['train_acc']}, Validation accuracy: {metrics['val_acc']}, Test accuracy: {metrics['test_acc']}")
+    logging.info("Model trained")
+    save_model(model, args.model_file_name, args.model_type)
+    

@@ -23,7 +23,6 @@ def get_OS_simplification(dataset_name, datset_type, alpha):
         my_k = 1
         beta = 1/(len(ts_x)-1)*(1-alpha)
         selcted_xs, selectd_ys = get_simplifications(X=ts_x, Y=ts_y, K=my_k, alpha=alpha, beta=beta)
-       
         if first:
             plt.figure()
             plt.plot(ts_x, ts_y, label="Original")
@@ -98,7 +97,7 @@ def get_VC_simplification(dataset_name, datset_type, alpha):
     """
     all_time_series = load_dataset(dataset_name, data_type=datset_type)
     all_simplifications = []
-    first = True
+    first = False
     alpha = alpha
     logging.debug("alpha:", alpha)
     for ts_y in all_time_series:
