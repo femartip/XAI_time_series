@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import logging
 from tqdm import tqdm
-import os
+import datetime
 
 from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
     get_VC_simplification
@@ -17,8 +17,13 @@ def score_different_alphas(dataset_name, datset_type, model_path):
     """
     Evaluate the impact of different alpha values on loyalty, kappa, and complexity.
     """
-    diff_alpha_values = np.arange(0,1,0.1)
+    diff_alpha_values = np.arange(0,1,0.01)
     df = pd.DataFrame(columns=["Type","Alpha", "Mean Loyalty", "Kappa Loyalty", "Complexity"])
+
+    time_os = []
+    time_rdp = []
+    time_vc = []
+    time_bu = []
 
     for alpha in tqdm(diff_alpha_values):
         # Step 1 gen all simplified ts
@@ -26,7 +31,9 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         logging.debug(f"Alpha: {alpha}")   
         
         logging.debug("Running OS")
+        init_time = datetime.datetime.now()
         all_time_series_OS, all_simplificationsOS = get_OS_simplification(dataset_name=dataset_name,datset_type=datset_type, alpha=alpha)
+        time_os.append((datetime.datetime.now()-init_time).total_seconds())
 
         #Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplificationsOS]
@@ -43,7 +50,9 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         # Step 1 gen all simplified ts
         
         logging.debug("Running RDP")
+        init_time = datetime.datetime.now()
         all_time_series_RDP, all_simplifications_RDP = get_RDP_simplification(dataset_name=dataset_name, datset_type=datset_type, epsilon=alpha)
+        time_rdp.append((datetime.datetime.now()-init_time).total_seconds())
         
         #Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_RDP]
@@ -58,10 +67,11 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         df.loc[len(df)] = row
 
         # Step 1 gen all simplified ts
-        
         logging.debug("Running BU")
+        init_time = datetime.datetime.now()
         all_time_series_BU, all_simplifications_BU = get_bottom_up_simplification(dataset_name=dataset_name,
                                                                               datset_type=datset_type, max_error=alpha)
+        time_bu.append((datetime.datetime.now()-init_time).total_seconds())
 
         # Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
@@ -79,11 +89,11 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         df.loc[len(df)] = row
 
         # Step 1 gen all simplified ts
-        
         logging.debug("Running VC")
         all_time_series_VC, all_simplifications_VC = get_VC_simplification(dataset_name=dataset_name,
                                                                                   datset_type=datset_type,
                                                                                   alpha=alpha)
+        time_vc.append((datetime.datetime.now()-init_time).total_seconds())
 
         # Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_VC]
@@ -99,6 +109,13 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         complexity_VC = calculate_complexity(batch_simplified_ts=all_simplifications_VC)
         row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC]
         df.loc[len(df)] = row
+
+    time_log = pd.read_csv(f"results/time_log.csv", header=0)
+    
+    if time_log.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}'") is not None:
+        time_log = time_log.drop(time_log.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}'").index)
+    time_log.loc[len(time_log)] = [dataset_name + datset_type, model_path.split("/")[-1], np.mean(time_os), np.mean(time_rdp), np.mean(time_vc), np.mean(time_bu)]
+    time_log.to_csv(f"results/time_log.csv", index=False)
 
     return df
 

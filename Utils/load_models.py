@@ -57,7 +57,7 @@ def batch_classify_sklearn_model(model_path, batch_of_timeseries):
     return predictions
 
 def model_batch_classify(model_path, batch_of_timeseries):
-    if model_path.split("_")[1] == "cnn":
+    if model_path.endswith(".pth"):
         model = load_pytorch_model(model_path)
         return batch_classify_pytorch_model(model, batch_of_timeseries)
     elif model_path.endswith(".pkl"):
