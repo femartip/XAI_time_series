@@ -46,14 +46,13 @@ def batch_classify_pytorch_model(model, batch_of_timeseries):
     with torch.no_grad():
         batch_of_timeseries_tensor = torch.tensor(batch_of_timeseries, dtype=torch.float32)
         predictions = model(batch_of_timeseries_tensor).numpy()
-    class_pred = [round(prediction[0]) for prediction in predictions]
+    class_pred = [1 if pred > 0.5 else 0 for pred in predictions]
     return class_pred
 
 def batch_classify_sklearn_model(model_path, batch_of_timeseries):
     model = joblib.load(open(model_path, 'rb'))
     predictions = model.predict(batch_of_timeseries)
-    if len(np.unique(predictions)) > 2:
-        predictions = [1 if pred > 0.5 else 0 for pred in predictions]
+    predictions = [1 if pred > 0.5 else 0 for pred in predictions]
     return predictions
 
 def model_batch_classify(model_path, batch_of_timeseries):

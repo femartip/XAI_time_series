@@ -2,10 +2,10 @@ import torch
 from torcheval.metrics import BinaryAccuracy
 import argparse
 import Utils.conv_model as conv_model
-import os
+import numpy as np
 import logging
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import joblib
 
@@ -26,12 +26,12 @@ def train_decision_tree(X_train, y_train, X_val, y_val):
     val_accuracy = accuracy_score(y_val, (model.predict(X_val) > 0.5).astype(int))
     return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
 
-def test_linear_regression(X, y, model):
+def test_logistic_regression(X, y, model):
     accuracy = accuracy_score(y, (model.predict(X) > 0.5).astype(int))
     return {"test_acc": accuracy}
 
-def train_linear_regression(X_train, y_train, X_val, y_val):
-    model = LinearRegression()
+def train_logistic_regression(X_train, y_train, X_val, y_val):
+    model = LogisticRegression(solver='liblinear', random_state=SEED)
     model.fit(X_train, y_train)
     model.predict(X_train)
     train_accuracy = accuracy_score(y_train, (model.predict(X_train) > 0.5).astype(int))
@@ -163,9 +163,9 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
         metrics.update(test_metrics)
         return model, metrics
 
-    elif model_type == 'linear-regression':
-        model, metrics = train_linear_regression(X_train, y_train, X_val, y_val)
-        test_metrics = test_linear_regression(X_test, y_test, model)
+    elif model_type == 'logistic-regression':
+        model, metrics = train_logistic_regression(X_train, y_train, X_val, y_val)
+        test_metrics = test_logistic_regression(X_test, y_test, model)
         metrics.update(test_metrics)
         return model, metrics
     else:
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_name', type=str, help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
     parser.add_argument('--normalized', action='store_true', help='True or False')
-    parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn, decision-tree, linear-regression')
+    parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn, decision-tree, logistic-regression')
     parser.add_argument('--model_file_name', type=str, help='Path to save the model')
     args = parser.parse_args()
 
@@ -189,5 +189,6 @@ if __name__ == '__main__':
     model, metrics = train_model(args.dataset_name, args.model_type, args.normalized)
     print(f"Train accuracy: {metrics['train_acc']}, Validation accuracy: {metrics['val_acc']}, Test accuracy: {metrics['test_acc']}")
     logging.info("Model trained")
-    save_model(model, args.model_file_name, args.model_type)
+    if args.model_file_name:
+        save_model(model, args.model_file_name, args.model_type)
     

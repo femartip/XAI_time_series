@@ -1,0 +1,2 @@
+model_type,train_acc,val_acc,test_acc
+logistic-regression,0.85,0.7,0.8142857142857143

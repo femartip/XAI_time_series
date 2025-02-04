@@ -17,7 +17,12 @@ def calculate_kappa_loyalty(pred_class_original:List[int], pred_class_simplified
     """
     Calculate Cohen's Kappa score to measure agreement between original and simplified classifications.
     """
-    kappa_loyalty = cohen_kappa_score(pred_class_original, pred_class_simplified)
+    #https://github.com/scikit-learn/scikit-learn/issues/9624 
+    if len(set(pred_class_original).union(set(pred_class_simplified))) == 1:
+        kappa_loyalty = 1.0
+    else:
+        kappa_loyalty = cohen_kappa_score(pred_class_original, pred_class_simplified, labels=[0,1])
+    
     return kappa_loyalty
 
 def calculate_complexity(batch_simplified_ts: List[SegmentedTS])->float:

@@ -79,7 +79,7 @@ if __name__ == "__main__":
     if args.model_type is not None:
         model_types = [args.model_type]
     else:     
-        model_types = ["cnn", "decision-tree", "linear-regression", "knn"]
+        model_types = ["cnn", "decision-tree", "logistic-regression", "knn"]
 
     for dataset in datasets:
         for model_type in model_types:
