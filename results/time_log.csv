@@ -1,6 +1,6 @@
 dataset,model,os,rdp,vc,bu
-ECG200TEST_normalized,linear-regression_norm.pkl,37.83046426,0.51490598,0.34862273,0.31067215
-ItalyPowerDemandTEST_normalized,linear-regression_norm.pkl,8.551204479999999,1.19279559,1.01887243,0.80895628
+ECG200TEST_normalized,logistic-regression_norm.pkl,37.83046426,0.51490598,0.34862273,0.31067215
+ItalyPowerDemandTEST_normalized,logistic-regression_norm.pkl,8.551204479999999,1.19279559,1.01887243,0.80895628
 ChinatownTEST_normalized,decision-tree_norm.pkl,2.2821378,0.2970971,0.2164922,0.1778192
 ChinatownTEST_normalized,logistic-regression_norm.pkl,2.1855711,0.3648661,0.2175773,0.1808563
 ECG200TEST_normalized,decision-tree_norm.pkl,33.1432274,0.6185319,0.309863,0.2718124
