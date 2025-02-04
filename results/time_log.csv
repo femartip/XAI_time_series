@@ -1,8 +1,6 @@
 dataset,model,os,rdp,vc,bu
-ECG200TEST_normalized,logistic-regression_norm.pkl,37.83046426,0.51490598,0.34862273,0.31067215
-ItalyPowerDemandTEST_normalized,logistic-regression_norm.pkl,8.551204479999999,1.19279559,1.01887243,0.80895628
-ChinatownTEST_normalized,decision-tree_norm.pkl,2.2821378,0.2970971,0.2164922,0.1778192
-ChinatownTEST_normalized,logistic-regression_norm.pkl,2.1855711,0.3648661,0.2175773,0.1808563
-ECG200TEST_normalized,decision-tree_norm.pkl,33.1432274,0.6185319,0.309863,0.2718124
-ItalyPowerDemandTEST_normalized,decision-tree_norm.pkl,6.460034,0.9842912,0.6006134,0.5214943
-ItalyPowerDemandTEST_normalized,knn_norm.pkl,6.4622972,0.9646788000000001,7.354384399999999,0.5197473
+ChinatownTEST_normalized,cnn_norm.pth,1.81532965,0.2348289,0.01560342,0.12857234
+ChinatownTEST_normalized,knn_norm.pkl,1.81404963,0.23292193,0.01383665,0.12757566
+ECG200TEST_normalized,logistic-regression_norm.pkl,25.227748230000003,0.33455882,0.01198203,0.17951351
+ECG200TEST_normalized,knn_norm.pkl,25.232956020000007,0.3324342999999999,0.01198141,0.18010636
+ItalyPowerDemandTEST_normalized,knn_norm.pkl,5.40061994,0.63169524,0.04520642,0.38179718
