@@ -90,6 +90,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
 
         # Step 1 gen all simplified ts
         logging.debug("Running VC")
+        init_time = datetime.datetime.now()
         all_time_series_VC, all_simplifications_VC = get_VC_simplification(dataset_name=dataset_name,
                                                                                   datset_type=datset_type,
                                                                                   alpha=alpha)
