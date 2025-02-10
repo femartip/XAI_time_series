@@ -64,6 +64,7 @@ def main(dataset: str, dataset_type: str, model_type: str):
     else:
         logging.error("Results not saved to CSV.")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate simplifications')
     parser.add_argument('--datasets', type=str, nargs='+', help='List of dataset names, if not specified will evaluate all datasets in data folder.')

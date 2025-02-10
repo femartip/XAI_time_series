@@ -14,6 +14,7 @@ def get_OS_simplification(dataset_name, datset_type, alpha):
     """
     Apply OS algorithm to simplify all time series in the dataset.
     """
+    import time
     all_time_series = load_dataset(dataset_name, data_type=datset_type)
     all_simplifications = []
     first = False
@@ -22,7 +23,9 @@ def get_OS_simplification(dataset_name, datset_type, alpha):
         ts_x = [i for i in range(len(ts_y))]
         my_k = 1
         beta = 1/(len(ts_x)-1)*(1-alpha)
+        init_time = time.time()
         selcted_xs, selectd_ys = get_simplifications(X=ts_x, Y=ts_y, K=my_k, alpha=alpha, beta=beta)
+        logging.debug(f"Time: {(time.time()-init_time)}")
         if first:
             plt.figure()
             plt.plot(ts_x, ts_y, label="Original")
@@ -42,6 +45,7 @@ def get_RDP_simplification(dataset_name,datset_type, epsilon):
     """
     Apply Ramer-Douglas-Peucker (RDP) algorithm to simplify all time series in the dataset.
     """
+    import time
     all_time_series = load_dataset(dataset_name, data_type=datset_type)
     all_simplifications = []
     first = False
@@ -49,7 +53,9 @@ def get_RDP_simplification(dataset_name,datset_type, epsilon):
     logging.debug("epis:", epsilon)
     for ts_y in all_time_series:
         ts_x = list(range(len(ts_y)))
+        init_time = time.time()
         simp_mask = rdp(np.array(list(zip(ts_x,ts_y))), epsilon=epsilon, return_mask=True)
+        logging.debug(f"Time: {(time.time()-init_time)}")
         simp_y = [y for y,bool in zip(ts_y, simp_mask) if bool]
         simp_x = [x for x,bool in zip(ts_x, simp_mask) if bool]
         if first:
