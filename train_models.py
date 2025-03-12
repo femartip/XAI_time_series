@@ -108,9 +108,9 @@ def train_conv_model(X,y, X_val, y_val, plot=False):
                     print(f'Epoch {epoch}, Loss: {loss.item()}, Accuracy: {metric.compute()}')
                 with torch.no_grad():
                     logging.debug("Validation shape: " + str(X_val.shape))
-                    val_output = model(torch.tensor(X_val, dtype=torch.float32).to(DEVICE))
+                    val_output = model(X_val.clone().to(DEVICE)) #   torch.tensor(X_val, dtype=torch.float32).to(DEVICE)
                     val_output = torch.squeeze(val_output, 1)
-                    val_loss = criterion(val_output, torch.tensor(y_val, dtype=torch.float32))
+                    val_loss = criterion(val_output, y_val.clone().to(DEVICE))   #torch.tensor(y_val, dtype=torch.float32)
                     metric_val.update(val_output, y_val)
                     val_losses.append(val_loss.item())
                     val_metrics.append(metric_val.compute())

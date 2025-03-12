@@ -8,6 +8,7 @@ from simplifications import get_OS_simplification, get_RDP_simplification, get_b
     get_VC_simplification
 from Utils.metrics import calculate_mean_loyalty, calculate_kappa_loyalty, calculate_complexity
 from Utils.load_models import model_batch_classify # type: ignore
+from Utils.load_data import load_dataset
 
 logging.basicConfig(level=
 logging.debug)
@@ -19,6 +20,12 @@ def score_different_alphas(dataset_name, datset_type, model_path):
     """
     diff_alpha_values = np.arange(0,1,0.01)
     df = pd.DataFrame(columns=["Type","Alpha", "Mean Loyalty", "Kappa Loyalty", "Complexity"])
+    all_time_series = load_dataset(dataset_name, data_type=datset_type)
+
+    # Algorithms grow in time complexity with the number of time series. If there are too many, we will only use the first 100
+    if np.shape(all_time_series)[0] > 100:
+        all_time_series = all_time_series[:100]
+        logging.info(f"Input size modified to: {np.shape(all_time_series)[0]}")
 
     time_os = []
     time_rdp = []
@@ -27,12 +34,11 @@ def score_different_alphas(dataset_name, datset_type, model_path):
 
     for alpha in tqdm(diff_alpha_values):
         # Step 1 gen all simplified ts
-        
         logging.debug(f"Alpha: {alpha}")   
         
         logging.debug("Running OS")
         init_time = datetime.datetime.now()
-        all_time_series_OS, all_simplificationsOS = get_OS_simplification(dataset_name=dataset_name,datset_type=datset_type, alpha=alpha)
+        all_time_series_OS, all_simplificationsOS = get_OS_simplification(time_series=all_time_series, alpha=alpha)
         time_os.append((datetime.datetime.now()-init_time).total_seconds())
 
         #Step 2 get model predictions
@@ -51,7 +57,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         
         logging.debug("Running RDP")
         init_time = datetime.datetime.now()
-        all_time_series_RDP, all_simplifications_RDP = get_RDP_simplification(dataset_name=dataset_name, datset_type=datset_type, epsilon=alpha)
+        all_time_series_RDP, all_simplifications_RDP = get_RDP_simplification(time_series=all_time_series, epsilon=alpha)
         time_rdp.append((datetime.datetime.now()-init_time).total_seconds())
         
         #Step 2 get model predictions
@@ -69,8 +75,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         # Step 1 gen all simplified ts
         logging.debug("Running BU")
         init_time = datetime.datetime.now()
-        all_time_series_BU, all_simplifications_BU = get_bottom_up_simplification(dataset_name=dataset_name,
-                                                                              datset_type=datset_type, max_error=alpha)
+        all_time_series_BU, all_simplifications_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha)
         time_bu.append((datetime.datetime.now()-init_time).total_seconds())
 
         # Step 2 get model predictions
@@ -91,9 +96,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         # Step 1 gen all simplified ts
         logging.debug("Running VC")
         init_time = datetime.datetime.now()
-        all_time_series_VC, all_simplifications_VC = get_VC_simplification(dataset_name=dataset_name,
-                                                                                  datset_type=datset_type,
-                                                                                  alpha=alpha)
+        all_time_series_VC, all_simplifications_VC = get_VC_simplification(time_series=all_time_series,alpha=alpha)
         time_vc.append((datetime.datetime.now()-init_time).total_seconds())
 
         # Step 2 get model predictions

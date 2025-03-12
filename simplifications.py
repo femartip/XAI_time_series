@@ -2,24 +2,22 @@ import numpy as np
 from matplotlib import pyplot as plt
 from rdp import rdp
 import logging
+import time
 
-from Utils.load_data import load_dataset
 from ORSalgorithm.ORS_algorithm import get_simplifications
 from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
 from SimplificationMethods.BottumUp.bottomUp import  get_swab_approx
 from SimplificationMethods.Visvalingam_whyattt.Visvalingam_Whyatt import  simplify as VC_simplify
 
 
-def get_OS_simplification(dataset_name, datset_type, alpha):
+def get_OS_simplification(time_series: np.ndarray, alpha: float):
     """
     Apply OS algorithm to simplify all time series in the dataset.
     """
-    import time
-    all_time_series = load_dataset(dataset_name, data_type=datset_type)
-    all_simplifications = []
+    ts_simplifications = []
     first = False
     logging.debug(alpha)
-    for ts_y in all_time_series:
+    for ts_y in time_series:
         ts_x = [i for i in range(len(ts_y))]
         my_k = 1
         beta = 1/(len(ts_x)-1)*(1-alpha)
@@ -36,22 +34,20 @@ def get_OS_simplification(dataset_name, datset_type, alpha):
        
             first = False
         segTS = SegmentedTS(x_pivots=selcted_xs[0], y_pivots=selectd_ys[0], ts_length=len(ts_y))
-        all_simplifications.append(segTS)
+        ts_simplifications.append(segTS)
     
-    return all_time_series, all_simplifications
+    return time_series, ts_simplifications
 
 
-def get_RDP_simplification(dataset_name,datset_type, epsilon):
+def get_RDP_simplification(time_series: np.ndarray, epsilon: float):
     """
     Apply Ramer-Douglas-Peucker (RDP) algorithm to simplify all time series in the dataset.
     """
-    import time
-    all_time_series = load_dataset(dataset_name, data_type=datset_type)
-    all_simplifications = []
+    ts_simplifications = []
     first = False
     epsilon = epsilon
     logging.debug("epis:", epsilon)
-    for ts_y in all_time_series:
+    for ts_y in time_series:
         ts_x = list(range(len(ts_y)))
         init_time = time.time()
         simp_mask = rdp(np.array(list(zip(ts_x,ts_y))), epsilon=epsilon, return_mask=True)
@@ -65,21 +61,20 @@ def get_RDP_simplification(dataset_name,datset_type, epsilon):
             plt.plot(ts_x, SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)).line_version, label="Line Simplified", linestyle="--")
             plt.show()
             first = False
-        all_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
+        ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
     
-    return all_time_series, all_simplifications
+    return time_series, ts_simplifications
 
 
-def get_bottom_up_simplification(dataset_name, datset_type, max_error):
+def get_bottom_up_simplification(time_series: np.ndarray, max_error: float):
     """
     Apply Bottom Up algorithm to simplify all time series in the dataset.
     """
-    all_time_series = load_dataset(dataset_name, data_type=datset_type)
-    all_simplifications = []
+    ts_simplifications = []
     first = False
     max_error = max_error
     logging.debug("max_error:", max_error)
-    for ts_y in all_time_series:
+    for ts_y in time_series:
         ts_x = list(range(len(ts_y)))
         simplification = get_swab_approx(ts_y, max_error=max_error)
         simp_x = simplification.x_pivots
@@ -93,20 +88,19 @@ def get_bottom_up_simplification(dataset_name, datset_type, max_error):
                      label="Line Simplified", linestyle="--")
             plt.show()
             first = False
-        all_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
+        ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
 
-    return all_time_series, all_simplifications
+    return time_series, ts_simplifications
 
-def get_VC_simplification(dataset_name, datset_type, alpha):
+def get_VC_simplification(time_series: np.ndarray, alpha: float):
     """
     Apply Visvalingam Whyatt algorithm to simplify all time series in the dataset.
     """
-    all_time_series = load_dataset(dataset_name, data_type=datset_type)
-    all_simplifications = []
+    ts_simplifications = []
     first = False
     alpha = alpha
     logging.debug("alpha:", alpha)
-    for ts_y in all_time_series:
+    for ts_y in time_series:
         ts_x = list(range(len(ts_y)))
         simplification = VC_simplify(ts_y, alpha=alpha)
         simp_x = simplification.x_pivots
@@ -120,6 +114,6 @@ def get_VC_simplification(dataset_name, datset_type, alpha):
                      label="Line Simplified", linestyle="--")
             plt.show()
             first = False
-        all_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
+        ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
 
-    return all_time_series, all_simplifications
+    return time_series, ts_simplifications
