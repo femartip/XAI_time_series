@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 import pandas as pd
 import argparse
+import numpy as np
 
 def plot_metrics(train_metrics, train_losses, val_metrics, val_losses):
     fig, ax = plt.subplots(2, 1, figsize=(10, 10))
@@ -34,29 +35,73 @@ def plot_csv_alpha_mean_loyalty(file:str) -> plt.Figure:
 def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
     df = pd.read_csv(file)
     representation_type = ["o", "x", '+', "|"]
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
     for i, (name, group) in enumerate(df.groupby("Type")):
-        scatter = ax.scatter(group["Complexity"], group["Mean Loyalty"], label=name, c=group['Alpha'], cmap='viridis', marker=representation_type[i])
+        scatter = ax.scatter(group["Complexity"], group["Mean Loyalty"], 
+                            label=name, c=group['Alpha'], cmap='viridis', 
+                            marker=representation_type[i])
+    
     ax.set_title(f"Mean Loyalty")
-    ax.set_xlabel("Complexity")
+    ax.set_xlabel("Complexity\n(Num Segments)")
     ax.set_ylabel("Mean Loyalty")
+    
+    min_complexity = df["Complexity"].min()
+    max_complexity = df["Complexity"].max()
+    num_ticks = 6
+    complexity_ticks = np.linspace(min_complexity, max_complexity, num_ticks)
+    
+    labels = []
+    for comp in complexity_ticks:
+        closest_comp = df["Complexity"].iloc[(df["Complexity"] - comp).abs().argsort()[:1]].values[0]
+        segments = sorted(df[df["Complexity"] == closest_comp]["Num Segments"].unique())
+        segments_str = ", ".join(map(str, segments))
+        labels.append(f"{comp:.1f}\n({segments_str})")
+    
+    ax.set_xticks(complexity_ticks)
+    ax.set_xticklabels(labels)
+    
     ax.legend()
     cbar = plt.colorbar(scatter, ax=ax)
     cbar.set_label('Alpha/Epsilon')
+    plt.tight_layout()
+    
     return fig
 
 def plot_csv_complexity_kappa_loyalty(file:str) -> plt.Figure:
     df = pd.read_csv(file)
     representation_type = ["o", "x", '+', "|"]
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
     for i, (name, group) in enumerate(df.groupby("Type")):
-        scatter = ax.scatter(group["Complexity"], group["Kappa Loyalty"], label=name, c=group['Alpha'], cmap='viridis', marker=representation_type[i])
+        scatter = ax.scatter(group["Complexity"], group["Kappa Loyalty"], 
+                            label=name, c=group['Alpha'], cmap='viridis', 
+                            marker=representation_type[i])
+    
     ax.set_title(f"Kappa Loyalty")
-    ax.set_xlabel("Complexity")
+    ax.set_xlabel("Complexity\n(Num Segments)")
     ax.set_ylabel("Kappa Loyalty")
+    
+    min_complexity = df["Complexity"].min()
+    max_complexity = df["Complexity"].max()
+    num_ticks = 6
+    complexity_ticks = np.linspace(min_complexity, max_complexity, num_ticks)
+    
+    labels = []
+    for comp in complexity_ticks:
+        closest_comp = df["Complexity"].iloc[(df["Complexity"] - comp).abs().argsort()[:1]].values[0]
+        segments = sorted(df[df["Complexity"] == closest_comp]["Num Segments"].unique())
+        segments_str = ", ".join(map(str, segments))
+        labels.append(f"{comp:.1f}\n({segments_str})")
+    
+    ax.set_xticks(complexity_ticks)
+    ax.set_xticklabels(labels)
+    
     ax.legend()
     cbar = plt.colorbar(scatter, ax=ax)
     cbar.set_label('Alpha/Epsilon')
+    plt.tight_layout()
+    
     return fig
 
 
@@ -66,6 +111,6 @@ if __name__ == "__main__":
     args = argparser.parse_args()
     file = args.file
     fig1 = plot_csv_complexity_mean_loyalty(file)
-    fig1.show()
+    plt.show()
     fig2 = plot_csv_complexity_kappa_loyalty(file)
-    fig2.show()
+    plt.show()

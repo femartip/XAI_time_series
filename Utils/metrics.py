@@ -3,8 +3,11 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import cohen_kappa_score
 from typing import List
 
-from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
-from ORSalgorithm.Utils.scoring_functions import score_simplicity
+from Utils.dataTypes import SegmentedTS
+
+def score_simplicity(approximation: SegmentedTS) -> float:
+        simplicity = (len(approximation.x_pivots) - 1)  * (1 / (len(approximation.line_version) - 1))
+        return simplicity
 
 def calculate_mean_loyalty(pred_class_original:List[int], pred_class_simplified:List[int])->float:
     """
