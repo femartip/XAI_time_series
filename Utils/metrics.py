@@ -2,8 +2,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.metrics import cohen_kappa_score
 from typing import List
+import pandas as pd
 
-from Utils.dataTypes import SegmentedTS
+from Utils.dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
         simplicity = (len(approximation.x_pivots) - 1)  * (1 / (len(approximation.line_version) - 1))
@@ -34,3 +35,61 @@ def calculate_complexity(batch_simplified_ts: List[SegmentedTS])->float:
     """
     complexity = np.mean([score_simplicity(ts) for ts in batch_simplified_ts])
     return complexity
+
+def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> dict[str, float]:
+    """
+    Calculate the Area Under the Curve of the Complexity vs Loyalty curve for each simplification algorithm.
+    This is used to compare the performance of the different simplification algorithms.
+    """
+    assert metric != "Kappa Loyalty" or metric != "Mean Loyalty", "Metric must be either Kappa Loyalty or Mean Loyalty"
+
+    algorithms = df["Type"].unique()
+    auc = {}
+    for algorithm in algorithms:
+        complexity = df["Complexity"].copy().where(df["Type"] == algorithm).dropna().to_list()
+        loyalty = df[metric].copy().where(df["Type"] == algorithm).dropna().to_list()
+
+        if algorithm != "OS":
+            # As OS vs rest of alg have opposite trends for the value of alpha, we need to reverse the order of the lists    
+            complexity = complexity[::-1]
+            loyalty = loyalty[::-1]
+
+        filtered_complexity, filtered_loyalty = filter_anomalous_loyalty_curve(complexity, loyalty)
+        
+        if show_fig:
+            plt.plot(complexity, loyalty)
+            plt.plot(filtered_complexity, filtered_loyalty)
+            plt.show()
+
+        auc[algorithm] = np.trapz(filtered_loyalty, filtered_complexity)
+
+    return auc
+    
+
+def filter_anomalous_loyalty_curve(x_values: List, y_values: List) -> tuple[List, List]:
+    """
+    Filter out anomalous behavior in loyalty vs complexity curves where there's an initial high loyalty followed by a decrease and then the expected pattern of increasing loyalty with complexity.
+    The function uses slope analysis to find the point where the curve begins to consistently increase, which is considered the start of the valid data.
+    """
+    x = np.array(x_values)
+    y = np.array(y_values)
+    slopes = np.diff(y) / np.maximum(np.diff(x), 1e-10)   #Slope of curve at each point
+    
+    valid_idx = 0
+    step = 7        
+    for i in range(len(slopes) - step + 1):
+        # Check if the majority of the next few slopes are positive
+        if np.sum(slopes[i:i+step] > 0) >= 0.6*step:        # If we consider more % of slopes positive, then se delete sudden drops
+            valid_idx = i
+            break
+    
+    return x[valid_idx:].tolist(), y[valid_idx:].tolist()
+
+
+if __name__ == '__main__':
+    #dataset = "Chinatown"
+    dataset = "ItalyPowerDemand"
+    models = ["cnn", "decision-tree", "logistic-regression", "knn"]
+    for model in models:
+        df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
+        print(auc(df, show_fig=True))

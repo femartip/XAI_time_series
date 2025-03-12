@@ -79,7 +79,7 @@ def plot_csv_complexity_kappa_loyalty(file:str) -> plt.Figure:
                             marker=representation_type[i])
     
     ax.set_title(f"Kappa Loyalty")
-    ax.set_xlabel("Complexity\n(Num Segments)")
+    ax.set_xlabel("Complexity\n(Abs. Num. Segments)")
     ax.set_ylabel("Kappa Loyalty")
     
     min_complexity = df["Complexity"].min()

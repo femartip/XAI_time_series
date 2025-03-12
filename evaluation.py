@@ -26,7 +26,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
     if np.shape(all_time_series)[0] > 100:
         real_shape = np.shape(all_time_series)
         all_time_series = all_time_series[:100]
-        logging.info(f"Number of instances {real_shape} >100. Input size modified to: {np.shape(all_time_series)[0]}")
+        logging.info(f"Number of instances {real_shape} > 100. Input size modified to: {np.shape(all_time_series)[0]}")
 
     time_os = []
     time_rdp = []
@@ -119,14 +119,9 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC, num_segments_VC]
         df.loc[len(df)] = row
 
-    #time_log = pd.read_csv(f"results/time_log.csv", header=0)
-    
-    #if time_log.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}'") is not None:
-    #    time_log = time_log.drop(time_log.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}'").copy().index)
-    #time_log.loc[len(time_log)] = [dataset_name + datset_type, model_path.split("/")[-1], np.mean(time_os), np.mean(time_rdp), np.mean(time_vc), np.mean(time_bu)]
-    #time_log.to_csv(f"results/time_log.csv", index=False)
+    time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VC": np.mean(time_vc), "BU": np.mean(time_bu)}
 
-    return df
+    return df, time
 
 def get_model_predictions(model_path, batch_of_TS):
     predicted_classes = model_batch_classify(model_path, batch_of_timeseries=batch_of_TS) 
