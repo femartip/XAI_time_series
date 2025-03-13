@@ -68,7 +68,7 @@ def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
     
     return fig
 
-def plot_csv_complexity_kappa_loyalty(file:str) -> plt.Figure:
+def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
     df = pd.read_csv(file)
     representation_type = ["o", "x", '+', "|"]
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -77,6 +77,13 @@ def plot_csv_complexity_kappa_loyalty(file:str) -> plt.Figure:
         scatter = ax.scatter(group["Complexity"], group["Kappa Loyalty"], 
                             label=name, c=group['Alpha'], cmap='viridis', 
                             marker=representation_type[i])
+        
+        if points is not None:
+            point_x = float(points[name][0])
+            point_y = float(points[name][1])
+            ax.scatter(point_x, point_y, color='red', marker=representation_type[i])
+            ax.axhline(y=point_y, color='red', linestyle='--', alpha=0.4)
+            ax.axvline(x=point_x, color='red', linestyle='--', alpha=0.4)
     
     ax.set_title(f"Kappa Loyalty")
     ax.set_xlabel("Complexity\n(Abs. Num. Segments)")
@@ -96,7 +103,7 @@ def plot_csv_complexity_kappa_loyalty(file:str) -> plt.Figure:
     
     ax.set_xticks(complexity_ticks)
     ax.set_xticklabels(labels)
-    
+
     ax.legend()
     cbar = plt.colorbar(scatter, ax=ax)
     cbar.set_label('Alpha/Epsilon')

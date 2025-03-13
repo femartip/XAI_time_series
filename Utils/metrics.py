@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import cohen_kappa_score
 from typing import List
 import pandas as pd
+from kneed import KneeLocator
 
 from Utils.dataTypes import SegmentedTS 
 
@@ -36,7 +37,7 @@ def calculate_complexity(batch_simplified_ts: List[SegmentedTS])->float:
     complexity = np.mean([score_simplicity(ts) for ts in batch_simplified_ts])
     return complexity
 
-def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> dict[str, float]:
+def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tuple[dict[str, float], dict[str,tuple[List, List]]]:
     """
     Calculate the Area Under the Curve of the Complexity vs Loyalty curve for each simplification algorithm.
     This is used to compare the performance of the different simplification algorithms.
@@ -45,6 +46,7 @@ def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> di
 
     algorithms = df["Type"].unique()
     auc = {}
+    filtered_curves = {}
     for algorithm in algorithms:
         complexity = df["Complexity"].copy().where(df["Type"] == algorithm).dropna().to_list()
         loyalty = df[metric].copy().where(df["Type"] == algorithm).dropna().to_list()
@@ -62,8 +64,9 @@ def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> di
             plt.show()
 
         auc[algorithm] = np.trapz(filtered_loyalty, filtered_complexity)
+        filtered_curves[algorithm] = (filtered_complexity, filtered_loyalty)
 
-    return auc
+    return auc, filtered_curves
     
 
 def filter_anomalous_loyalty_curve(x_values: List, y_values: List) -> tuple[List, List]:
@@ -86,10 +89,28 @@ def filter_anomalous_loyalty_curve(x_values: List, y_values: List) -> tuple[List
     return x[valid_idx:].tolist(), y[valid_idx:].tolist()
 
 
+def find_knee_curve(x_values: List, y_values: List) -> tuple[float, float]:
+    """
+    Find the knee point of the curve using the Kneedle algorithm from "Finding a “Kneedle” in a Haystack:Detecting Knee Points in System Behavior"
+    https://github.com/arvkevi/kneed?tab=readme-ov-file#input-data
+    """
+    x = np.array(x_values)
+    y = np.array(y_values)
+    kneedle = KneeLocator(x, y, S=1.0, curve='concave', direction='increasing', online=True)
+    knee_x = kneedle.knee
+    knee_y = kneedle.knee_y
+    return knee_x, knee_y
+
+
 if __name__ == '__main__':
     #dataset = "Chinatown"
     dataset = "ItalyPowerDemand"
     models = ["cnn", "decision-tree", "logistic-regression", "knn"]
     for model in models:
         df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
-        print(auc(df, show_fig=True))
+        auc_value, filtered_tuple = auc(df, show_fig=False)
+        knee_point = find_knee_curve(filtered_tuple[0], filtered_tuple[1])
+        # Plot the filtered curve with the knee point
+        plt.plot(filtered_tuple[0], filtered_tuple[1])
+        plt.scatter(knee_point[0], knee_point[1], color='red')
+        plt.show()
