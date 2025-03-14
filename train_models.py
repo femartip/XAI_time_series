@@ -7,6 +7,7 @@ import logging
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+from tslearn.neighbors import KNeighborsTimeSeriesClassifier
 import joblib
 
 from Utils.plotting import plot_metrics
@@ -36,6 +37,17 @@ def train_logistic_regression(X_train, y_train, X_val, y_val):
     model.predict(X_train)
     train_accuracy = accuracy_score(y_train, (model.predict(X_train) > 0.5).astype(int))
     val_accuracy = accuracy_score(y_val, (model.predict(X_val) > 0.5).astype(int))
+    return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
+
+def test_knn(X, y, model):
+    accuracy = accuracy_score(y, model.predict(X))
+    return {"test_acc": accuracy}
+
+def train_knn(X_train, y_train, X_val, y_val):
+    model = KNeighborsTimeSeriesClassifier(n_neighbors=5, weights="distance", metric='dtw')
+    model.fit(X_train, y_train)
+    train_accuracy = accuracy_score(y_train, model.predict(X_train))
+    val_accuracy = accuracy_score(y_val, model.predict(X_val))
     return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
 
 def test_conv_model(X, y, model, plot=False):
@@ -173,6 +185,11 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
     elif model_type == 'logistic-regression':
         model, metrics = train_logistic_regression(X_train, y_train, X_val, y_val)
         test_metrics = test_logistic_regression(X_test, y_test, model)
+        metrics.update(test_metrics)
+        return model, metrics
+    elif model_type == 'knn':
+        model, metrics = train_knn(X_train, y_train, X_val, y_val)
+        test_metrics = test_knn(X_test, y_test, model)
         metrics.update(test_metrics)
         return model, metrics
     else:

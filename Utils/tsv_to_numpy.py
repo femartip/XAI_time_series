@@ -28,15 +28,22 @@ def main(datasets: list, data_dir: str):
                 print(f"Generating both .npy and _normalized.npy files for {dataset}/{file_name}")
                 tsv_file = os.path.join(dataset_dir, file)
                 df_file_data = pd.read_csv(tsv_file, sep='\t')
-                try:
-                    df_file_data.iloc[:,0] = df_file_data.iloc[:,0].map({sorted(df_file_data.iloc[:,0].unique())[0]:1, sorted(df_file_data.iloc[:,0].unique())[1]: 2})
-                except IndexError:
-                    print(f"Dataset classes do not contain two values! Was not mapped")
-
+                
+                unique_classes = sorted(df_file_data.iloc[:, 0].unique())
+                min_class = min(unique_classes)
+                print(f"Dataset classes in the range of {unique_classes}.")
+                if min_class != 0:
+                    class_mapping = {cls: idx + 1 for idx, cls in enumerate(unique_classes)}
+                    df_file_data.iloc[:, 0] = df_file_data.iloc[:, 0].map(class_mapping)
+                
                 print(f"Dataset classes in the range of {sorted(df_file_data.iloc[:,0].unique())}.")
                 np_file_data = df_file_data.to_numpy()
                 np.save(os.path.join(dataset_dir, file_name + ".npy"), np_file_data.astype(np.float32))
-                normalize_data(dataset, file_name.split('_')[1].upper())
+                try:
+                    normalize_data(dataset, file_name.split('_')[1].upper())
+                except Exception as e:
+                    print(f"Error while normalizing {dataset}/{file_name}. Error: {e}")
+                    continue
                 print("Done!")
 
     print("Finished.")

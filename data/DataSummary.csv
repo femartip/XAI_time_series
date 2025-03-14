@@ -19,7 +19,6 @@ ID,Type,Name,Train ,Test ,Class,Length,ED (w=0),DTW (learned_w) ,DTW (w=100),Def
 109,Motion,GunPointOldVersusYoung,136,315,2,150,0.0476,0.0349 (4),0.1619,0.4762,A. Ratanamahatana & E. Keogh
 38,Sensor,ItalyPowerDemand,67,1029,2,24,0.0447,0.0447 (0),0.0496,0.4985,"JJ van Wijk, E. Keogh & L. Wi"
 44,Image,MedicalImages,381,760,10,99,0.3158,0.2526 (20),0.2632,0.4855,J. Felipe & C. Traina
-113,Traffic,MelbournePedestrian,1194,2439,10,24,0.1525,0.1845 (1),0.2091,0.8995,H.A. Dau
 45,Image,MiddlePhalanxOutlineAgeGroup,400,154,3,80,0.4805,0.4805 (0),0.5,0.4286,L. Davis & A. Bagnall
 46,Image,MiddlePhalanxOutlineCorrect,600,291,2,80,0.2337,0.2337 (0),0.3024,0.4296,L. Davis & A. Bagnall
 47,Image,MiddlePhalanxTW,399,154,6,80,0.487,0.4935 (3),0.4935,0.7143,L. Davis & A. Bagnall
