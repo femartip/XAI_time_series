@@ -93,7 +93,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original,
                                                     pred_class_simplified=predicted_classes_simplifications_BU)
         complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
-        num_segments_BU = np.mean([(len(ts.num_real_segments) - 1) for ts in all_simplifications_BU])
+        num_segments_BU = np.mean([ts.num_real_segments for ts in all_simplifications_BU])
         row = ["BU", alpha, mean_loyalty_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
         df.loc[len(df)] = row
 
@@ -136,7 +136,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         kappa_loyalty_LSF = calculate_kappa_loyalty(pred_class_original=predicted_classes_original,
                                                     pred_class_simplified=predicted_classes_simplifications_LSF)
         complexity_LSF = calculate_complexity(batch_simplified_ts=all_simplifications_LSF)
-        num_segments_LSF = np.mean([(len(ts.num_real_segments) - 1) for ts in all_simplifications_LSF])
+        num_segments_LSF = np.mean([ts.num_real_segments for ts in all_simplifications_LSF])
         row = ["LSF", alpha, mean_loyalty_LSF, kappa_loyalty_LSF, complexity_LSF, num_segments_LSF]
         df.loc[len(df)] = row
 
