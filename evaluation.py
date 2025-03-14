@@ -5,7 +5,7 @@ from tqdm import tqdm
 import datetime
 
 from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
-    get_VC_simplification
+    get_VC_simplification, get_LSF_simplification
 from Utils.metrics import calculate_mean_loyalty, calculate_kappa_loyalty, calculate_complexity, score_simplicity
 from Utils.load_models import model_batch_classify # type: ignore
 from Utils.load_data import load_dataset
@@ -93,7 +93,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original,
                                                     pred_class_simplified=predicted_classes_simplifications_BU)
         complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
-        num_segments_BU = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU])
+        num_segments_BU = np.mean([(len(ts.num_real_segments) - 1) for ts in all_simplifications_BU])
         row = ["BU", alpha, mean_loyalty_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
         df.loc[len(df)] = row
 
@@ -119,7 +119,28 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC, num_segments_VC]
         df.loc[len(df)] = row
 
-    time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VC": np.mean(time_vc), "BU": np.mean(time_bu)}
+        logging.debug("Running LSF")
+        init_time = datetime.datetime.now()
+        all_time_series_LSF, all_simplifications_LSF = get_LSF_simplification(time_series=all_time_series, alpha=alpha)
+        time_lsf = (datetime.datetime.now()-init_time).total_seconds()
+
+        # Step 2 get model predictions
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_LSF]
+        predicted_classes_simplifications_LSF = get_model_predictions(model_path, batch_simplified_ts)
+        predicted_classes_original = get_model_predictions(model_path,
+                                                           all_time_series_LSF)
+        
+        # Step 3 calculate loyalty and complexity
+        mean_loyalty_LSF = calculate_mean_loyalty(pred_class_original=predicted_classes_original,
+                                                  pred_class_simplified=predicted_classes_simplifications_LSF)
+        kappa_loyalty_LSF = calculate_kappa_loyalty(pred_class_original=predicted_classes_original,
+                                                    pred_class_simplified=predicted_classes_simplifications_LSF)
+        complexity_LSF = calculate_complexity(batch_simplified_ts=all_simplifications_LSF)
+        num_segments_LSF = np.mean([(len(ts.num_real_segments) - 1) for ts in all_simplifications_LSF])
+        row = ["LSF", alpha, mean_loyalty_LSF, kappa_loyalty_LSF, complexity_LSF, num_segments_LSF]
+        df.loc[len(df)] = row
+
+    time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VC": np.mean(time_vc), "BU": np.mean(time_bu), "LSF": time_lsf}
 
     return df, time
 

@@ -8,7 +8,11 @@ from kneed import KneeLocator
 from Utils.dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
-        simplicity = (len(approximation.x_pivots) - 1)  * (1 / (len(approximation.line_version) - 1))
+        if approximation.num_real_segments is None:
+            simplicity = (len(approximation.x_pivots) - 1)  * (1 / (len(approximation.line_version) - 1))
+        else:
+            simplicity = approximation.num_real_segments  * (1 / (len(approximation.line_version) - 1))
+            
         return simplicity
 
 def calculate_mean_loyalty(pred_class_original:List[int], pred_class_simplified:List[int])->float:

@@ -5,10 +5,10 @@ import logging
 import time
 
 from ORSalgorithm.ORS_algorithm import get_simplifications
-from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
+from Utils.dataTypes import SegmentedTS
 from SimplificationMethods.BottumUp.bottomUp import  get_swab_approx
 from SimplificationMethods.Visvalingam_whyattt.Visvalingam_Whyatt import  simplify as VC_simplify
-
+import SimplificationMethods.Seg_Least_Square as LS
 
 def get_OS_simplification(time_series: np.ndarray, alpha: float):
     """
@@ -79,6 +79,8 @@ def get_bottom_up_simplification(time_series: np.ndarray, max_error: float):
         simplification = get_swab_approx(ts_y, max_error=max_error)
         simp_x = simplification.x_pivots
         simp_y = simplification.y_pivots
+        num_segments = simplification.num_real_segments
+        print(num_segments)
         if first:
             plt.figure()
             plt.title("Simplification using SWAB")
@@ -88,7 +90,7 @@ def get_bottom_up_simplification(time_series: np.ndarray, max_error: float):
                      label="Line Simplified", linestyle="--")
             plt.show()
             first = False
-        ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
+        ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y), num_real_segments=num_segments))
 
     return time_series, ts_simplifications
 
@@ -117,3 +119,46 @@ def get_VC_simplification(time_series: np.ndarray, alpha: float):
         ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
 
     return time_series, ts_simplifications
+
+
+def get_LSF_simplification(time_series: np.ndarray, alpha: float):
+    """
+    Apply Segmented Least Square Fit algorithm to simplify all time series in the dataset.
+    """
+    ts_simplifications = []
+    first = False
+    L = round(alpha * (len(time_series[0]) - 1))
+    if L == 0: L = 1
+    logging.debug("alpha:", alpha)
+    for ts_y in time_series:
+        ts_x = list(range(len(ts_y)))
+        simplification = LS.run(ts_x, ts_y, L)
+
+        simp_x = simplification.x_pivots
+        simp_y = simplification.y_pivots
+        real_seg = simplification.num_real_segments
+        if first:
+            plt.figure()
+            plt.title("Simplification using LSF")
+            plt.plot(ts_x, ts_y, label="Original")
+            plt.plot(simp_x, simp_y, label="Simplified")
+            plt.plot(ts_x, SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)).line_version,
+                     label="Line Simplified", linestyle="--")
+            plt.show()
+            first = False
+        ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y), num_real_segments=real_seg))
+
+    return time_series, ts_simplifications
+
+def main():
+    X = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    Y = [6, 3, 3, 5, 8, 6, 6, 7, 8, 9, 10]
+    for i in range(1,10,1):
+        L = round(len(X) * i/10)
+        simp = LS.run(X, Y, L, do_plot=True, do_print=True)
+        #simp = LS.run(X, Y, L)
+        print(simp)
+        print(simp.num_real_segments)
+
+if __name__ == "__main__":
+    main()

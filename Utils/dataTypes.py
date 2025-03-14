@@ -52,15 +52,17 @@ class SegmentedTS:
     x_pivots: List[int]
     y_pivots: List[float]
     ts_length: int
+    num_real_segments: int = None #Only used if segments are non contiguous
 
     line_version: List[float]
 
     pred_class: int
 
-    def __init__(self, x_pivots: List[int], y_pivots: List[float], ts_length: int):
+    def __init__(self, x_pivots: List[int], y_pivots: List[float], ts_length: int, num_real_segments: int = None):
         self.x_pivots = x_pivots
         self.y_pivots = y_pivots
         self.ts_length = ts_length
+        self.num_real_segments = num_real_segments
         self.set_line_version(ts_length)
 
     def set_class(self, pred_class: int):

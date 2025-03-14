@@ -2,8 +2,9 @@ from typing import List, TypedDict, Dict, Any
 from heapq import heapify, heappop
 
 from SimplificationMethods.BottumUp.Heap import new_heapify,new_heappop, peek
-from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
+from Utils.dataTypes import SegmentedTS
 import numpy as np
+
 class Segment:
     def __init__(self, x_1:int, x_2:int, y_1:float, y_2:float):
         self.start_x = x_1
@@ -101,6 +102,7 @@ def bottom_up(ts:List[float], max_error):
 def convert_to_segmentedTS(segments:List[Segment], ts_length) -> SegmentedTS:
     pivot_x = []
     pivot_y = []
+    num_segments = len(segments)
     for segment in segments:
         start_x = segment.start_x
         start_y = segment.evaluate_at(start_x)
@@ -113,7 +115,7 @@ def convert_to_segmentedTS(segments:List[Segment], ts_length) -> SegmentedTS:
             pivot_x.append(end_x)
             pivot_y.append(end_y)
 
-    return SegmentedTS(pivot_x, pivot_y, ts_length=ts_length)
+    return SegmentedTS(pivot_x, pivot_y, ts_length=ts_length, num_real_segments=num_segments)
 
 
 def get_swab_approx(ts, max_error):

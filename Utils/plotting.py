@@ -34,7 +34,7 @@ def plot_csv_alpha_mean_loyalty(file:str) -> plt.Figure:
 
 def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
     df = pd.read_csv(file)
-    representation_type = ["o", "x", '+', "|"]
+    representation_type = ["o", "x", '+', "|", "s"]
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for i, (name, group) in enumerate(df.groupby("Type")):
@@ -70,7 +70,7 @@ def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
 
 def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
     df = pd.read_csv(file)
-    representation_type = ["o", "x", '+', "|"]
+    representation_type = ["o", "x", '+', "|", "s"]
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for i, (name, group) in enumerate(df.groupby("Type")):
