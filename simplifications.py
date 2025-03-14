@@ -80,7 +80,7 @@ def get_bottom_up_simplification(time_series: np.ndarray, max_error: float):
         simp_x = simplification.x_pivots
         simp_y = simplification.y_pivots
         num_segments = simplification.num_real_segments
-        print(num_segments)
+        
         if first:
             plt.figure()
             plt.title("Simplification using SWAB")
