@@ -82,8 +82,8 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
             point_x = float(points[name][0])
             point_y = float(points[name][1])
             ax.scatter(point_x, point_y, color='red', marker=representation_type[i])
-            ax.axhline(y=point_y, color='red', linestyle='--', alpha=0.4)
-            ax.axvline(x=point_x, color='red', linestyle='--', alpha=0.4)
+            #ax.axhline(y=point_y, color='red', linestyle='--', alpha=0.2)
+            #ax.axvline(x=point_x, color='red', linestyle='--', alpha=0.2)
     
     ax.set_title(f"Kappa Loyalty")
     ax.set_xlabel("Complexity\n(Abs. Num. Segments)")

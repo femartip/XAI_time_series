@@ -1,5 +1,5 @@
 import torch
-from torcheval.metrics import BinaryAccuracy
+from torcheval.metrics import BinaryAccuracy, MulticlassAccuracy
 import argparse
 import Utils.conv_model as conv_model
 import numpy as np
@@ -46,7 +46,10 @@ def test_conv_model(X, y, model, plot=False):
     with torch.no_grad():
         output = model(X)
         output = torch.squeeze(output, 1)
-        metric = BinaryAccuracy()
+        if len(set(y)) == 2:
+            metric = BinaryAccuracy()
+        else:
+            metric = MulticlassAccuracy()
         metric.update(output, y)
         if plot:
             print(f'Test Accuracy: {metric.compute()}')
@@ -75,9 +78,14 @@ def train_conv_model(X,y, X_val, y_val, plot=False):
     model.train()
     model.to(DEVICE)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    criterion = torch.nn.BCELoss()
-    metric = BinaryAccuracy()
-    metric_val = BinaryAccuracy()
+    if num_classes == 2:
+        criterion = torch.nn.BCELoss()
+        metric = BinaryAccuracy()
+        metric_val = BinaryAccuracy()
+    else:
+        criterion = torch.nn.CrossEntropyLoss()
+        metric = MulticlassAccuracy()
+        metric_val = MulticlassAccuracy()
     #scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, factor=0.5, verbose=True)
 
     for epoch in range(epochs):
@@ -133,7 +141,6 @@ def save_sklearn_model(model, model_path='model.pkl'):
 
 
 def save_model(model, model_path: str, model_type: str):
-
     if model_path and model_type == 'cnn':
         save_pytorch_model(model, model_path)
     elif model_path:

@@ -26,7 +26,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
     if np.shape(all_time_series)[0] > 100:
         real_shape = np.shape(all_time_series)
         all_time_series = all_time_series[:100]
-        logging.info(f"Number of instances {real_shape} > 100. Input size modified to: {np.shape(all_time_series)[0]}")
+        logging.info(f"Number of instances {real_shape} > 100, so modified to: {np.shape(all_time_series)[0]}")
 
     time_os = []
     time_rdp = []

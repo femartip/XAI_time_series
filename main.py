@@ -6,6 +6,7 @@ import argparse
 import os
 from train_models import train_model, save_model
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def save_plots(dataset: str, model_type: str, knee: dict = None):
@@ -13,12 +14,15 @@ def save_plots(dataset: str, model_type: str, knee: dict = None):
         output_file = f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv"
         fig1 = plot_csv_alpha_mean_loyalty(output_file)
         fig1.savefig(f"results/{dataset}/{model_type}_alpha_mean_loyalty.png")
+        fig1.clear()
 
         fig2 = plot_csv_complexity_kappa_loyalty(output_file, knee)
         fig2.savefig(f"results/{dataset}/{model_type}_complexity_kappa_loyalty.png")
+        fig2.clear()
 
         fig3 = plot_csv_complexity_mean_loyalty(output_file)
         fig3.savefig(f"results/{dataset}/{model_type}_complexity_mean_loyalty.png")
+        fig3.clear()
     else:
         logging.error("Results not saved to CSV.")
 

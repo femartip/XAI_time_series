@@ -1,0 +1,2 @@
+model_type,train_acc,val_acc,test_acc
+cnn,tensor(0.8816),tensor(0.6829),tensor(0.)
