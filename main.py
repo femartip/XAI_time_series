@@ -94,6 +94,7 @@ def main(dataset: str, dataset_type: str, model_type: str):
         filtered_complexity = filtered_curve[0]
         filtered_kappa_loyalty = filtered_curve[1]
         knee = find_knee_curve(filtered_complexity, filtered_kappa_loyalty)
+        
         knees[simp_alg] = knee
     
     update_results(dataset, dataset_type, model_path, time_dict, auc_dict, knees)

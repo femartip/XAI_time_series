@@ -103,6 +103,9 @@ def find_knee_curve(x_values: List, y_values: List) -> tuple[float, float]:
     kneedle = KneeLocator(x, y, S=1.0, curve='concave', direction='increasing', online=True)
     knee_x = kneedle.knee
     knee_y = kneedle.knee_y
+    if knee_y is None or knee_x is None:
+        knee_x = x[-1]
+        knee_y = y[-1]
     return knee_x, knee_y
 
 
