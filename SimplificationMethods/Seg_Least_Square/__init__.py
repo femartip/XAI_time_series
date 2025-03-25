@@ -16,6 +16,8 @@ def convert_to_segmentedTS(segments:list, ts_length) -> SegmentedTS:
 
     num_segments = len(segments)
 
+    segments = list(reversed(segments))
+
     for segment in segments:
         start_x = segment[0][0]
         start_y = segment[0][1]
