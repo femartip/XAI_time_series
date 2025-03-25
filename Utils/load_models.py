@@ -10,7 +10,7 @@ def load_pytorch_model(model_path):
     global MODELS
     if model_path not in MODELS:
         pytorch_model = ConvClassifier()
-        pytorch_model.load_state_dict(torch.load(model_path, weights_only=False))
+        pytorch_model.load_state_dict(torch.load(model_path, weights_only=False,map_location=torch.device('cpu')))
         pytorch_model.eval()  # Set the model to evaluation mode
         MODELS[model_path] = pytorch_model
     return MODELS[model_path]

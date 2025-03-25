@@ -127,12 +127,12 @@ def get_LSF_simplification(time_series: np.ndarray, alpha: float):
     """
     ts_simplifications = []
     first = False
-    L = round(alpha * (len(time_series[0]) - 1))
+    L = round(alpha * (len(time_series[0])))
     if L == 0: L = 1
     logging.debug("alpha:", alpha)
     for ts_y in time_series:
         ts_x = list(range(len(ts_y)))
-        simplification = LS.run(ts_x, ts_y, L)
+        simplification = LS.run(ts_x, ts_y, L, do_plot=False)
 
         simp_x = simplification.x_pivots
         simp_y = simplification.y_pivots
@@ -152,9 +152,9 @@ def get_LSF_simplification(time_series: np.ndarray, alpha: float):
 
 def main():
     X = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    Y = [6, 3, 3, 5, 8, 6, 6, 7, 8, 9, 10]
-    for i in range(1,10,1):
-        L = round(len(X) * i/10)
+    Y = [6, 3, 3, 5, 8, 6, 6, 7, 8, 9.1, 10]
+    for i in range(1,len(X),1):
+        L = i
         simp = LS.run(X, Y, L, do_plot=True, do_print=True)
         #simp = LS.run(X, Y, L)
         print(simp)

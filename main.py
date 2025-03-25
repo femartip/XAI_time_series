@@ -29,7 +29,7 @@ def save_plots(dataset: str, model_type: str, knee: dict = None):
 def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict, auc:dict, knee:dict):
     results_df = pd.read_csv(f"results/results.csv", header=0)
 
-    simp_alg = ["OS", "RDP", "VC", "BU", "LSF"]
+    simp_alg = ["LSF"]#["OS", "RDP", "VC", "BU", "LSF"]
 
     for alg in simp_alg:
         if results_df.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}' & simp_algorithm == '{alg}'") is not None:

@@ -50,3 +50,11 @@ def segmented_least_squares(X, Y, L):
 def solve(X, Y, L):
     OPT = segmented_least_squares(X, Y, L)
     return OPT
+
+
+if __name__ == "__main__":
+    import random
+    x = list(range(0, 24))
+    y = [random.randint(1,100) for _ in range(0, 24)]
+    ba = solve(X=x,Y=y,L=len(x))
+    print(ba)

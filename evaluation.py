@@ -18,7 +18,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
     """
     Evaluate the impact of different alpha values on loyalty, kappa, and complexity.
     """
-    diff_alpha_values = np.arange(0,1,0.01)
+    diff_alpha_values = np.arange(0,1,0.1)
     df = pd.DataFrame(columns=["Type","Alpha", "Mean Loyalty", "Kappa Loyalty", "Complexity", "Num Segments"])
     all_time_series = load_dataset(dataset_name, data_type=datset_type)
 
@@ -35,8 +35,8 @@ def score_different_alphas(dataset_name, datset_type, model_path):
 
     for alpha in tqdm(diff_alpha_values):
         # Step 1 gen all simplified ts
-        logging.debug(f"Alpha: {alpha}")   
-        
+        logging.debug(f"Alpha: {alpha}")
+
         logging.debug("Running OS")
         init_time = datetime.datetime.now()
         all_time_series_OS, all_simplifications_OS = get_OS_simplification(time_series=all_time_series, alpha=alpha)
@@ -56,12 +56,12 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         df.loc[len(df)] = row
 
         # Step 1 gen all simplified ts
-        
+
         logging.debug("Running RDP")
         init_time = datetime.datetime.now()
         all_time_series_RDP, all_simplifications_RDP = get_RDP_simplification(time_series=all_time_series, epsilon=alpha)
         time_rdp.append((datetime.datetime.now()-init_time).total_seconds())
-        
+
         #Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_RDP]
         predicted_classes_simplifications_RDP = get_model_predictions(model_path, batch_simplified_ts)

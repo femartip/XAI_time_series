@@ -30,6 +30,9 @@ SmoothSubspaceTEST_normalized,logistic-regression_norm.pkl,RDP,0.594998125589577
 SmoothSubspaceTEST_normalized,logistic-regression_norm.pkl,VC,0.5681667148967835,"(0.8321428571428571, 1.0)",0.00968525
 SmoothSubspaceTEST_normalized,logistic-regression_norm.pkl,BU,0.520751984057252,"(0.6621428571428569, 0.8451327433628318)",0.11473483
 SmoothSubspaceTEST_normalized,knn_norm.pkl,OS,0.7030324844872009,"(0.8542857142857144, 1.0)",0.64035584
-ChinatownTEST_normalized,cnn_norm.pth,LSF,-0.013083567185393052,"(0.08695652173913043, 0.0)",46.850347
-ChinatownTEST_normalized,cnn_norm.pth,VC,0.6751516217386677,"(0.437391304347826, 0.909706546275395)",0.012915639999999999
+ChinatownTEST_normalized,cnn_norm.pth,VC,0.6751516217386677,"(0.437391304347826, 0.909706546275395)",0.0129156399999999
 ChinatownTEST_normalized,cnn_norm.pth,OS,0.7511262481231707,"(0.6239130434782609, 1.0)",1.6140034899999995
+SyntheticControlTEST_normalized,logistic-regression_norm.pkl,LSF,-0.3457934469435781,"(np.float64(0.2033898305084745), np.float64(0.8120300751879699))",119.219751
+ChinatownTEST_normalized,decision-tree_norm.pkl,LSF,-0.282721920289855,"(np.float64(0.21739130434782605), np.float64(0.5))",7.183431
+ChinatownTEST_normalized,logistic-regression_norm.pkl,LSF,-0.4065120246579317,"(np.float64(0.21739130434782605), np.float64(0.9189189189189189))",7.529165
+ChinatownTEST_normalized,knn_norm.pkl,LSF,-0.4190671012589546,"(np.float64(0.30434782608695654), np.float64(0.9524036173250833))",7.115756
