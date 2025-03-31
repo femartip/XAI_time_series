@@ -119,6 +119,7 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC, num_segments_VC]
         df.loc[len(df)] = row
 
+        """
         logging.debug("Running LSF")
         init_time = datetime.datetime.now()
         all_time_series_LSF, all_simplifications_LSF = get_LSF_simplification(time_series=all_time_series, alpha=alpha)
@@ -138,6 +139,9 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         complexity_LSF = calculate_complexity(batch_simplified_ts=all_simplifications_LSF)
         num_segments_LSF = np.mean([ts.num_real_segments for ts in all_simplifications_LSF])
         row = ["LSF", alpha, mean_loyalty_LSF, kappa_loyalty_LSF, complexity_LSF, num_segments_LSF]
+        """
+        row = ["LSF", alpha, 0, 0, 0, 0]
+        time_lsf = 0
         df.loc[len(df)] = row
 
     time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VC": np.mean(time_vc), "BU": np.mean(time_bu), "LSF": time_lsf}
