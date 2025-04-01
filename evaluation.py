@@ -163,8 +163,9 @@ def get_model_predictions(model_path: str, batch_of_TS: list) -> list:
 def save_simplifications(os_alg: str, dataset_name: str, dataset_type: str, model_path: str, X: tuple[np.ndarray, list], y: list, classes: list, alpha: float) -> None:
     if not os.path.exists(f"results/{dataset_name}/data"):
         os.makedirs(f"results/{dataset_name}/data")
-
-    dtype = np.dtype([('alpha', np.float64, (1,)), ('class', np.int8, (1,)),('X', np.float64, (24,)),('y', np.float64, (24,))])
+    
+    dim = X.shape[1] 
+    dtype = np.dtype([('alpha', np.float64, (1,)), ('class', np.int8, (1,)),('X', np.float64, (dim,)),('y', np.float64, (dim,))])
     alphas = np.array([alpha] * len(classes))[:, np.newaxis]
     classes = np.array(classes)[:, np.newaxis]
     y = np.array(y)

@@ -1,940 +1,0 @@
-INFO:root:Configuration:
-INFO:root:Dataset: MiddlePhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:26<03:56, 26.25s/it] 20%|██        | 2/10 [00:53<03:33, 26.65s/it] 30%|███       | 3/10 [01:20<03:07, 26.76s/it] 40%|████      | 4/10 [01:46<02:40, 26.73s/it] 50%|█████     | 5/10 [02:13<02:13, 26.77s/it] 60%|██████    | 6/10 [02:40<01:47, 26.79s/it] 70%|███████   | 7/10 [03:07<01:20, 26.73s/it] 80%|████████  | 8/10 [03:33<00:53, 26.65s/it] 90%|█████████ | 9/10 [03:59<00:26, 26.53s/it]100%|██████████| 10/10 [04:26<00:00, 26.49s/it]100%|██████████| 10/10 [04:26<00:00, 26.62s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: MiddlePhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:26<03:58, 26.45s/it] 20%|██        | 2/10 [00:53<03:33, 26.64s/it] 30%|███       | 3/10 [01:20<03:07, 26.74s/it] 40%|████      | 4/10 [01:46<02:40, 26.72s/it] 50%|█████     | 5/10 [02:13<02:13, 26.70s/it] 60%|██████    | 6/10 [02:40<01:46, 26.73s/it] 70%|███████   | 7/10 [03:06<01:20, 26.71s/it] 80%|████████  | 8/10 [03:33<00:53, 26.69s/it] 90%|█████████ | 9/10 [03:59<00:26, 26.55s/it]100%|██████████| 10/10 [04:26<00:00, 26.49s/it]100%|██████████| 10/10 [04:26<00:00, 26.61s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: MiddlePhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:26<03:55, 26.19s/it] 20%|██        | 2/10 [00:53<03:32, 26.59s/it] 30%|███       | 3/10 [01:19<03:06, 26.69s/it] 40%|████      | 4/10 [01:46<02:39, 26.65s/it] 50%|█████     | 5/10 [02:13<02:13, 26.66s/it] 60%|██████    | 6/10 [02:39<01:46, 26.73s/it] 70%|███████   | 7/10 [03:06<01:19, 26.62s/it] 80%|████████  | 8/10 [03:32<00:53, 26.54s/it] 90%|█████████ | 9/10 [03:59<00:26, 26.48s/it]100%|██████████| 10/10 [04:25<00:00, 26.48s/it]100%|██████████| 10/10 [04:25<00:00, 26.56s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: MiddlePhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:48<07:13, 48.16s/it] 20%|██        | 2/10 [01:36<06:23, 48.00s/it] 30%|███       | 3/10 [02:23<05:35, 47.91s/it] 40%|████      | 4/10 [03:11<04:47, 47.86s/it] 50%|█████     | 5/10 [03:59<03:59, 47.89s/it] 60%|██████    | 6/10 [04:47<03:11, 47.98s/it] 70%|███████   | 7/10 [05:35<02:23, 47.87s/it] 80%|████████  | 8/10 [06:23<01:35, 47.87s/it] 90%|█████████ | 9/10 [07:10<00:47, 47.73s/it]100%|██████████| 10/10 [07:58<00:00, 47.66s/it]100%|██████████| 10/10 [07:58<00:00, 47.81s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: FaceAll, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (1689, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:47<16:11, 107.94s/it] 20%|██        | 2/10 [03:36<14:27, 108.49s/it] 30%|███       | 3/10 [05:25<12:38, 108.42s/it] 40%|████      | 4/10 [07:12<10:48, 108.08s/it] 50%|█████     | 5/10 [09:00<09:00, 108.03s/it] 60%|██████    | 6/10 [10:48<07:12, 108.00s/it] 70%|███████   | 7/10 [12:36<05:24, 108.02s/it] 80%|████████  | 8/10 [14:24<03:35, 107.84s/it] 90%|█████████ | 9/10 [16:11<01:47, 107.72s/it]100%|██████████| 10/10 [17:59<00:00, 107.75s/it]100%|██████████| 10/10 [17:59<00:00, 107.94s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: FaceAll, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (1689, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:47<16:08, 107.60s/it] 20%|██        | 2/10 [03:36<14:26, 108.26s/it] 30%|███       | 3/10 [05:24<12:38, 108.29s/it] 40%|████      | 4/10 [07:12<10:48, 108.04s/it] 50%|█████     | 5/10 [09:00<08:59, 107.94s/it] 60%|██████    | 6/10 [10:47<07:11, 107.93s/it] 70%|███████   | 7/10 [12:35<05:23, 107.80s/it] 80%|████████  | 8/10 [14:23<03:35, 107.84s/it] 90%|█████████ | 9/10 [16:10<01:47, 107.71s/it]100%|██████████| 10/10 [17:58<00:00, 107.75s/it]100%|██████████| 10/10 [17:58<00:00, 107.87s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: FaceAll, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (1689, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:48<16:12, 108.01s/it] 20%|██        | 2/10 [03:36<14:27, 108.38s/it] 30%|███       | 3/10 [05:24<12:38, 108.36s/it] 40%|████      | 4/10 [07:12<10:48, 108.13s/it] 50%|█████     | 5/10 [09:00<08:59, 107.89s/it] 60%|██████    | 6/10 [10:48<07:11, 108.00s/it] 70%|███████   | 7/10 [12:36<05:23, 107.90s/it] 80%|████████  | 8/10 [14:23<03:35, 107.75s/it] 90%|█████████ | 9/10 [16:11<01:47, 107.79s/it]100%|██████████| 10/10 [17:59<00:00, 107.78s/it]100%|██████████| 10/10 [17:59<00:00, 107.92s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-/home/felix/XAI_time_series/Utils/plotting.py:38: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
-  fig, ax = plt.subplots(figsize=(10, 6))
-INFO:root:Configuration:
-INFO:root:Dataset: FaceAll, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (1689, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:20<21:02, 140.33s/it] 20%|██        | 2/10 [04:41<18:48, 141.12s/it] 30%|███       | 3/10 [07:03<16:27, 141.11s/it] 40%|████      | 4/10 [09:23<14:05, 140.93s/it] 50%|█████     | 5/10 [11:44<11:44, 140.88s/it] 60%|██████    | 6/10 [14:05<09:23, 140.83s/it] 70%|███████   | 7/10 [16:26<07:02, 140.82s/it] 80%|████████  | 8/10 [18:46<04:41, 140.76s/it] 90%|█████████ | 9/10 [21:07<02:20, 140.66s/it]100%|██████████| 10/10 [23:27<00:00, 140.70s/it]100%|██████████| 10/10 [23:27<00:00, 140.79s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SonyAIBORobotSurface2, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (952, 65) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:14<02:14, 14.93s/it] 20%|██        | 2/10 [00:30<02:01, 15.14s/it] 30%|███       | 3/10 [00:45<01:46, 15.22s/it] 40%|████      | 4/10 [01:00<01:30, 15.08s/it] 50%|█████     | 5/10 [01:14<01:14, 14.91s/it] 60%|██████    | 6/10 [01:29<00:59, 14.82s/it] 70%|███████   | 7/10 [01:44<00:44, 14.75s/it] 80%|████████  | 8/10 [01:58<00:29, 14.71s/it] 90%|█████████ | 9/10 [02:13<00:14, 14.71s/it]100%|██████████| 10/10 [02:28<00:00, 14.72s/it]100%|██████████| 10/10 [02:28<00:00, 14.84s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SonyAIBORobotSurface2, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (952, 65) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:15<02:16, 15.20s/it] 20%|██        | 2/10 [00:30<02:01, 15.24s/it] 30%|███       | 3/10 [00:45<01:46, 15.21s/it] 40%|████      | 4/10 [01:00<01:30, 15.06s/it] 50%|█████     | 5/10 [01:14<01:14, 14.86s/it] 60%|██████    | 6/10 [01:29<00:59, 14.81s/it] 70%|███████   | 7/10 [01:44<00:44, 14.71s/it] 80%|████████  | 8/10 [01:58<00:29, 14.69s/it] 90%|█████████ | 9/10 [02:13<00:14, 14.67s/it]100%|██████████| 10/10 [02:28<00:00, 14.71s/it]100%|██████████| 10/10 [02:28<00:00, 14.83s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SonyAIBORobotSurface2, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (952, 65) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:15<02:16, 15.16s/it] 20%|██        | 2/10 [00:30<02:01, 15.21s/it] 30%|███       | 3/10 [00:45<01:46, 15.19s/it] 40%|████      | 4/10 [01:00<01:30, 15.07s/it] 50%|█████     | 5/10 [01:14<01:14, 14.88s/it] 60%|██████    | 6/10 [01:29<00:59, 14.79s/it] 70%|███████   | 7/10 [01:44<00:44, 14.70s/it] 80%|████████  | 8/10 [01:58<00:29, 14.67s/it] 90%|█████████ | 9/10 [02:13<00:14, 14.67s/it]100%|██████████| 10/10 [02:28<00:00, 14.71s/it]100%|██████████| 10/10 [02:28<00:00, 14.82s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SonyAIBORobotSurface2, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (952, 65) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:15<02:23, 15.91s/it] 20%|██        | 2/10 [00:32<02:08, 16.04s/it] 30%|███       | 3/10 [00:48<01:52, 16.14s/it] 40%|████      | 4/10 [01:04<01:36, 16.00s/it] 50%|█████     | 5/10 [01:19<01:19, 15.81s/it] 60%|██████    | 6/10 [01:35<01:02, 15.70s/it] 70%|███████   | 7/10 [01:50<00:46, 15.65s/it] 80%|████████  | 8/10 [02:06<00:31, 15.63s/it] 90%|█████████ | 9/10 [02:21<00:15, 15.62s/it]100%|██████████| 10/10 [02:37<00:00, 15.63s/it]100%|██████████| 10/10 [02:37<00:00, 15.74s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Adiac, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (390, 176) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [04:12<37:53, 252.63s/it] 20%|██        | 2/10 [08:28<33:54, 254.31s/it] 30%|███       | 3/10 [12:43<29:44, 254.93s/it] 40%|████      | 4/10 [16:58<25:29, 254.86s/it] 50%|█████     | 5/10 [21:15<21:17, 255.52s/it] 60%|██████    | 6/10 [25:31<17:02, 255.64s/it] 70%|███████   | 7/10 [29:46<12:46, 255.48s/it] 80%|████████  | 8/10 [34:01<08:30, 255.27s/it] 90%|█████████ | 9/10 [38:15<04:15, 255.08s/it]100%|██████████| 10/10 [42:30<00:00, 255.01s/it]100%|██████████| 10/10 [42:30<00:00, 255.06s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Adiac, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (390, 176) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [04:12<37:55, 252.82s/it] 20%|██        | 2/10 [08:27<33:52, 254.06s/it] 30%|███       | 3/10 [12:42<29:41, 254.46s/it] 40%|████      | 4/10 [16:57<25:27, 254.63s/it] 50%|█████     | 5/10 [21:12<21:14, 254.91s/it] 60%|██████    | 6/10 [25:28<17:00, 255.20s/it] 70%|███████   | 7/10 [29:43<12:45, 255.05s/it] 80%|████████  | 8/10 [33:58<08:29, 254.96s/it] 90%|█████████ | 9/10 [38:12<04:14, 254.88s/it]100%|██████████| 10/10 [42:27<00:00, 254.86s/it]100%|██████████| 10/10 [42:27<00:00, 254.78s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Adiac, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (390, 176) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [04:12<37:49, 252.20s/it] 20%|██        | 2/10 [08:27<33:50, 253.83s/it] 30%|███       | 3/10 [12:42<29:41, 254.44s/it] 40%|████      | 4/10 [16:57<25:28, 254.70s/it] 50%|█████     | 5/10 [21:13<21:15, 255.04s/it] 60%|██████    | 6/10 [25:28<17:00, 255.15s/it] 70%|███████   | 7/10 [29:43<12:45, 255.08s/it] 80%|████████  | 8/10 [33:58<08:30, 255.14s/it] 90%|█████████ | 9/10 [38:14<04:15, 255.38s/it]100%|██████████| 10/10 [42:29<00:00, 255.13s/it]100%|██████████| 10/10 [42:29<00:00, 254.91s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Adiac, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (390, 176) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [04:47<43:06, 287.42s/it] 20%|██        | 2/10 [09:37<38:30, 288.85s/it] 30%|███       | 3/10 [14:26<33:44, 289.18s/it] 40%|████      | 4/10 [19:16<28:56, 289.47s/it] 50%|█████     | 5/10 [24:07<24:09, 289.95s/it] 60%|██████    | 6/10 [28:58<19:21, 290.45s/it] 70%|███████   | 7/10 [33:50<14:32, 290.80s/it] 80%|████████  | 8/10 [38:41<09:41, 290.89s/it] 90%|█████████ | 9/10 [43:31<04:50, 290.56s/it]100%|██████████| 10/10 [48:21<00:00, 290.43s/it]100%|██████████| 10/10 [48:21<00:00, 290.16s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SwedishLeaf, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (624, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:40<15:03, 100.44s/it] 20%|██        | 2/10 [03:21<13:27, 100.88s/it] 30%|███       | 3/10 [05:03<11:48, 101.18s/it] 40%|████      | 4/10 [06:44<10:07, 101.24s/it] 50%|█████     | 5/10 [08:25<08:26, 101.33s/it] 60%|██████    | 6/10 [10:07<06:45, 101.35s/it] 70%|███████   | 7/10 [11:48<05:03, 101.15s/it] 80%|████████  | 8/10 [13:29<03:22, 101.08s/it] 90%|█████████ | 9/10 [15:10<01:41, 101.06s/it]100%|██████████| 10/10 [16:50<00:00, 100.98s/it]100%|██████████| 10/10 [16:50<00:00, 101.09s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SwedishLeaf, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (624, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:40<15:06, 100.69s/it] 20%|██        | 2/10 [03:21<13:27, 100.93s/it] 30%|███       | 3/10 [05:02<11:47, 101.04s/it] 40%|████      | 4/10 [06:44<10:06, 101.16s/it] 50%|█████     | 5/10 [08:25<08:25, 101.15s/it] 60%|██████    | 6/10 [10:06<06:44, 101.16s/it] 70%|███████   | 7/10 [11:47<05:03, 101.06s/it] 80%|████████  | 8/10 [13:28<03:21, 100.95s/it] 90%|█████████ | 9/10 [15:08<01:40, 100.89s/it]100%|██████████| 10/10 [16:50<00:00, 100.99s/it]100%|██████████| 10/10 [16:50<00:00, 101.02s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SwedishLeaf, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (624, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:40<15:03, 100.38s/it] 20%|██        | 2/10 [03:21<13:25, 100.72s/it] 30%|███       | 3/10 [05:02<11:46, 100.94s/it] 40%|████      | 4/10 [06:43<10:06, 101.06s/it] 50%|█████     | 5/10 [08:24<08:25, 101.04s/it] 60%|██████    | 6/10 [10:06<06:44, 101.15s/it] 70%|███████   | 7/10 [11:47<05:03, 101.06s/it] 80%|████████  | 8/10 [13:27<03:22, 101.03s/it] 90%|█████████ | 9/10 [15:08<01:40, 100.95s/it]100%|██████████| 10/10 [16:49<00:00, 100.87s/it]100%|██████████| 10/10 [16:49<00:00, 100.95s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SwedishLeaf, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (624, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:08<19:16, 128.52s/it] 20%|██        | 2/10 [04:17<17:10, 128.82s/it] 30%|███       | 3/10 [06:26<15:02, 128.99s/it] 40%|████      | 4/10 [08:36<12:55, 129.24s/it] 50%|█████     | 5/10 [10:45<10:46, 129.23s/it] 60%|██████    | 6/10 [12:54<08:36, 129.22s/it] 70%|███████   | 7/10 [15:04<06:27, 129.25s/it] 80%|████████  | 8/10 [17:12<04:18, 129.08s/it] 90%|█████████ | 9/10 [19:22<02:09, 129.15s/it]100%|██████████| 10/10 [21:31<00:00, 129.13s/it]100%|██████████| 10/10 [21:31<00:00, 129.12s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ECGFiveDays, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (860, 136) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:00<18:01, 120.19s/it] 20%|██        | 2/10 [04:00<16:02, 120.29s/it] 30%|███       | 3/10 [06:00<14:00, 120.13s/it] 40%|████      | 4/10 [08:00<12:01, 120.26s/it] 50%|█████     | 5/10 [10:01<10:01, 120.23s/it] 60%|██████    | 6/10 [12:01<08:01, 120.36s/it] 70%|███████   | 7/10 [14:01<06:00, 120.19s/it] 80%|████████  | 8/10 [16:01<04:00, 120.04s/it] 90%|█████████ | 9/10 [18:01<02:00, 120.15s/it]100%|██████████| 10/10 [20:01<00:00, 120.18s/it]100%|██████████| 10/10 [20:01<00:00, 120.19s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ECGFiveDays, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (860, 136) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:59<17:59, 120.00s/it] 20%|██        | 2/10 [04:00<16:01, 120.21s/it] 30%|███       | 3/10 [06:00<14:01, 120.15s/it] 40%|████      | 4/10 [08:01<12:02, 120.35s/it] 50%|█████     | 5/10 [10:01<10:01, 120.32s/it] 60%|██████    | 6/10 [12:01<08:01, 120.39s/it] 70%|███████   | 7/10 [14:01<06:00, 120.16s/it] 80%|████████  | 8/10 [16:01<03:59, 119.98s/it] 90%|█████████ | 9/10 [18:01<02:00, 120.01s/it]100%|██████████| 10/10 [20:01<00:00, 120.00s/it]100%|██████████| 10/10 [20:01<00:00, 120.12s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ECGFiveDays, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (860, 136) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:59<17:58, 119.83s/it] 20%|██        | 2/10 [04:00<16:00, 120.07s/it] 30%|███       | 3/10 [06:00<14:00, 120.13s/it] 40%|████      | 4/10 [08:00<12:01, 120.30s/it] 50%|█████     | 5/10 [10:01<10:01, 120.31s/it] 60%|██████    | 6/10 [12:01<08:01, 120.42s/it] 70%|███████   | 7/10 [14:01<06:00, 120.27s/it] 80%|████████  | 8/10 [16:01<04:00, 120.21s/it] 90%|█████████ | 9/10 [18:02<02:00, 120.27s/it]100%|██████████| 10/10 [20:02<00:00, 120.17s/it]100%|██████████| 10/10 [20:02<00:00, 120.22s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ECGFiveDays, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (860, 136) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:01<18:09, 121.03s/it] 20%|██        | 2/10 [04:02<16:10, 121.25s/it] 30%|███       | 3/10 [06:03<14:09, 121.33s/it] 40%|████      | 4/10 [08:05<12:09, 121.62s/it] 50%|█████     | 5/10 [10:07<10:07, 121.59s/it] 60%|██████    | 6/10 [12:09<08:06, 121.67s/it] 70%|███████   | 7/10 [14:10<06:04, 121.53s/it] 80%|████████  | 8/10 [16:11<04:02, 121.40s/it] 90%|█████████ | 9/10 [18:13<02:01, 121.51s/it]100%|██████████| 10/10 [20:14<00:00, 121.50s/it]100%|██████████| 10/10 [20:14<00:00, 121.49s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPoint, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (149, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:39<23:52, 159.12s/it] 20%|██        | 2/10 [05:18<21:14, 159.29s/it] 30%|███       | 3/10 [07:57<18:35, 159.30s/it] 40%|████      | 4/10 [10:37<15:57, 159.50s/it] 50%|█████     | 5/10 [13:17<13:17, 159.49s/it] 60%|██████    | 6/10 [15:56<10:37, 159.49s/it] 70%|███████   | 7/10 [18:35<07:57, 159.29s/it] 80%|████████  | 8/10 [21:15<05:18, 159.48s/it] 90%|█████████ | 9/10 [23:54<02:39, 159.49s/it]100%|██████████| 10/10 [26:34<00:00, 159.47s/it]100%|██████████| 10/10 [26:34<00:00, 159.43s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPoint, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (149, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:38<23:44, 158.27s/it] 20%|██        | 2/10 [05:17<21:12, 159.05s/it] 30%|███       | 3/10 [07:57<18:35, 159.37s/it] 40%|████      | 4/10 [10:38<15:58, 159.78s/it] 50%|█████     | 5/10 [13:17<13:19, 159.85s/it] 60%|██████    | 6/10 [15:57<10:39, 159.88s/it] 70%|███████   | 7/10 [18:37<07:58, 159.64s/it] 80%|████████  | 8/10 [21:16<05:19, 159.72s/it] 90%|█████████ | 9/10 [23:56<02:39, 159.60s/it]100%|██████████| 10/10 [26:36<00:00, 159.73s/it]100%|██████████| 10/10 [26:36<00:00, 159.63s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPoint, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (149, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:38<23:47, 158.64s/it] 20%|██        | 2/10 [05:18<21:12, 159.09s/it] 30%|███       | 3/10 [07:57<18:33, 159.11s/it] 40%|████      | 4/10 [10:36<15:56, 159.36s/it] 50%|█████     | 5/10 [13:16<13:17, 159.47s/it] 60%|██████    | 6/10 [15:56<10:38, 159.69s/it] 70%|███████   | 7/10 [18:35<07:58, 159.54s/it] 80%|████████  | 8/10 [21:15<05:18, 159.42s/it] 90%|█████████ | 9/10 [23:54<02:39, 159.54s/it]100%|██████████| 10/10 [26:34<00:00, 159.49s/it]100%|██████████| 10/10 [26:34<00:00, 159.43s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPoint, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (149, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:42<24:20, 162.27s/it] 20%|██        | 2/10 [05:25<21:40, 162.55s/it] 30%|███       | 3/10 [08:08<18:59, 162.79s/it] 40%|████      | 4/10 [10:50<16:16, 162.82s/it] 50%|█████     | 5/10 [13:34<13:34, 162.95s/it] 60%|██████    | 6/10 [16:17<10:52, 163.09s/it] 70%|███████   | 7/10 [19:00<08:09, 163.09s/it] 80%|████████  | 8/10 [21:43<05:26, 163.02s/it] 90%|█████████ | 9/10 [24:26<02:43, 163.04s/it]100%|██████████| 10/10 [27:09<00:00, 163.11s/it]100%|██████████| 10/10 [27:09<00:00, 162.98s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PowerCons, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 144
-INFO:root:Number of classes: 2
-INFO:root:Number of instances (179, 144) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:21<21:13, 141.55s/it] 20%|██        | 2/10 [04:43<18:54, 141.78s/it] 30%|███       | 3/10 [07:05<16:31, 141.67s/it] 40%|████      | 4/10 [09:26<14:10, 141.77s/it] 50%|█████     | 5/10 [11:48<11:48, 141.70s/it] 60%|██████    | 6/10 [14:10<09:26, 141.66s/it] 70%|███████   | 7/10 [16:31<07:04, 141.60s/it] 80%|████████  | 8/10 [18:52<04:42, 141.45s/it] 90%|█████████ | 9/10 [21:14<02:21, 141.47s/it]100%|██████████| 10/10 [23:35<00:00, 141.43s/it]100%|██████████| 10/10 [23:35<00:00, 141.56s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PowerCons, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (179, 144) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:21<21:10, 141.19s/it] 20%|██        | 2/10 [04:42<18:51, 141.47s/it] 30%|███       | 3/10 [07:04<16:30, 141.50s/it] 40%|████      | 4/10 [09:25<14:08, 141.40s/it] 50%|█████     | 5/10 [11:47<11:47, 141.50s/it] 60%|██████    | 6/10 [14:08<09:26, 141.52s/it] 70%|███████   | 7/10 [16:30<07:04, 141.53s/it] 80%|████████  | 8/10 [18:51<04:43, 141.51s/it] 90%|█████████ | 9/10 [21:13<02:21, 141.45s/it]100%|██████████| 10/10 [23:34<00:00, 141.39s/it]100%|██████████| 10/10 [23:34<00:00, 141.45s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PowerCons, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (179, 144) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:21<21:14, 141.57s/it] 20%|██        | 2/10 [04:43<18:55, 141.94s/it] 30%|███       | 3/10 [07:05<16:32, 141.80s/it] 40%|████      | 4/10 [09:27<14:10, 141.73s/it] 50%|█████     | 5/10 [11:48<11:48, 141.77s/it] 60%|██████    | 6/10 [14:10<09:27, 141.87s/it] 70%|███████   | 7/10 [16:31<07:04, 141.61s/it] 80%|████████  | 8/10 [18:54<04:43, 141.76s/it] 90%|█████████ | 9/10 [21:15<02:21, 141.72s/it]100%|██████████| 10/10 [23:37<00:00, 141.85s/it]100%|██████████| 10/10 [23:37<00:00, 141.79s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PowerCons, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (179, 144) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:34<23:07, 154.18s/it] 20%|██        | 2/10 [05:08<20:34, 154.32s/it] 30%|███       | 3/10 [07:42<17:58, 154.01s/it] 40%|████      | 4/10 [10:17<15:28, 154.67s/it] 50%|█████     | 5/10 [12:57<13:02, 156.50s/it] 60%|██████    | 6/10 [15:37<10:30, 157.57s/it] 70%|███████   | 7/10 [18:11<07:49, 156.45s/it] 80%|████████  | 8/10 [20:45<05:11, 155.62s/it] 90%|█████████ | 9/10 [23:20<02:35, 155.39s/it]100%|██████████| 10/10 [25:56<00:00, 155.64s/it]100%|██████████| 10/10 [25:56<00:00, 155.64s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPointMaleVersusFemale, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 150
-INFO:root:Number of classes: 2
-INFO:root:Number of instances (315, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:39<23:56, 159.66s/it] 20%|██        | 2/10 [05:20<21:23, 160.45s/it] 30%|███       | 3/10 [08:05<18:57, 162.50s/it] 40%|████      | 4/10 [10:45<16:09, 161.62s/it] 50%|█████     | 5/10 [13:26<13:25, 161.12s/it] 60%|██████    | 6/10 [16:06<10:43, 160.84s/it] 70%|███████   | 7/10 [18:46<08:01, 160.52s/it] 80%|████████  | 8/10 [21:26<05:20, 160.27s/it] 90%|█████████ | 9/10 [24:06<02:40, 160.24s/it]100%|██████████| 10/10 [26:46<00:00, 160.32s/it]100%|██████████| 10/10 [26:46<00:00, 160.67s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPointMaleVersusFemale, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (315, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:39<23:56, 159.65s/it] 20%|██        | 2/10 [05:20<21:24, 160.52s/it] 30%|███       | 3/10 [08:04<18:52, 161.82s/it] 40%|████      | 4/10 [10:49<16:19, 163.32s/it] 50%|█████     | 5/10 [13:35<13:41, 164.25s/it] 60%|██████    | 6/10 [16:20<10:57, 164.31s/it] 70%|███████   | 7/10 [19:05<08:14, 164.67s/it] 80%|████████  | 8/10 [21:50<05:29, 164.92s/it] 90%|█████████ | 9/10 [24:36<02:45, 165.14s/it]100%|██████████| 10/10 [27:22<00:00, 165.40s/it]100%|██████████| 10/10 [27:22<00:00, 164.26s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPointMaleVersusFemale, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (315, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:45<24:46, 165.18s/it] 20%|██        | 2/10 [05:30<22:02, 165.33s/it] 30%|███       | 3/10 [08:15<19:15, 165.13s/it] 40%|████      | 4/10 [11:01<16:32, 165.41s/it] 50%|█████     | 5/10 [13:47<13:47, 165.53s/it] 60%|██████    | 6/10 [16:33<11:02, 165.70s/it] 70%|███████   | 7/10 [19:17<08:16, 165.37s/it] 80%|████████  | 8/10 [21:58<05:27, 163.79s/it] 90%|█████████ | 9/10 [24:41<02:43, 163.72s/it]100%|██████████| 10/10 [27:27<00:00, 164.44s/it]100%|██████████| 10/10 [27:27<00:00, 164.79s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: GunPointMaleVersusFemale, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (315, 150) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:55<26:17, 175.30s/it] 20%|██        | 2/10 [05:49<23:18, 174.79s/it] 30%|███       | 3/10 [08:45<20:25, 175.05s/it] 40%|████      | 4/10 [11:40<17:31, 175.30s/it] 50%|█████     | 5/10 [14:36<14:37, 175.43s/it] 60%|██████    | 6/10 [17:32<11:42, 175.56s/it] 70%|███████   | 7/10 [20:27<08:46, 175.47s/it] 80%|████████  | 8/10 [23:23<05:51, 175.51s/it] 90%|█████████ | 9/10 [26:18<02:55, 175.49s/it]100%|██████████| 10/10 [29:14<00:00, 175.70s/it]100%|██████████| 10/10 [29:14<00:00, 175.47s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PhalangesOutlinesCorrect, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (857, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:09, 27.73s/it] 20%|██        | 2/10 [00:55<03:42, 27.85s/it] 30%|███       | 3/10 [01:23<03:15, 27.88s/it] 40%|████      | 4/10 [01:51<02:47, 27.91s/it] 50%|█████     | 5/10 [02:19<02:19, 27.93s/it] 60%|██████    | 6/10 [02:47<01:51, 27.85s/it] 70%|███████   | 7/10 [03:14<01:23, 27.76s/it] 80%|████████  | 8/10 [03:42<00:55, 27.69s/it] 90%|█████████ | 9/10 [04:09<00:27, 27.64s/it]100%|██████████| 10/10 [04:37<00:00, 27.61s/it]100%|██████████| 10/10 [04:37<00:00, 27.74s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PhalangesOutlinesCorrect, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (857, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:06, 27.41s/it] 20%|██        | 2/10 [00:55<03:40, 27.60s/it] 30%|███       | 3/10 [01:22<03:13, 27.69s/it] 40%|████      | 4/10 [01:50<02:46, 27.73s/it] 50%|█████     | 5/10 [02:18<02:18, 27.77s/it] 60%|██████    | 6/10 [02:46<01:50, 27.71s/it] 70%|███████   | 7/10 [03:13<01:23, 27.67s/it] 80%|████████  | 8/10 [03:41<00:55, 27.62s/it] 90%|█████████ | 9/10 [04:08<00:27, 27.58s/it]100%|██████████| 10/10 [04:36<00:00, 27.56s/it]100%|██████████| 10/10 [04:36<00:00, 27.63s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PhalangesOutlinesCorrect, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (857, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:07, 27.52s/it] 20%|██        | 2/10 [00:55<03:41, 27.65s/it] 30%|███       | 3/10 [01:23<03:14, 27.76s/it] 40%|████      | 4/10 [01:50<02:46, 27.76s/it] 50%|█████     | 5/10 [02:18<02:18, 27.78s/it] 60%|██████    | 6/10 [02:46<01:50, 27.72s/it] 70%|███████   | 7/10 [03:13<01:22, 27.67s/it] 80%|████████  | 8/10 [03:41<00:55, 27.62s/it] 90%|█████████ | 9/10 [04:08<00:27, 27.56s/it]100%|██████████| 10/10 [04:36<00:00, 27.53s/it]100%|██████████| 10/10 [04:36<00:00, 27.63s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: PhalangesOutlinesCorrect, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (857, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:33<14:00, 93.43s/it] 20%|██        | 2/10 [03:06<12:27, 93.47s/it] 30%|███       | 3/10 [04:40<10:53, 93.39s/it] 40%|████      | 4/10 [06:13<09:19, 93.33s/it] 50%|█████     | 5/10 [07:47<07:47, 93.46s/it] 60%|██████    | 6/10 [09:20<06:13, 93.43s/it] 70%|███████   | 7/10 [10:53<04:39, 93.27s/it] 80%|████████  | 8/10 [12:26<03:06, 93.23s/it] 90%|█████████ | 9/10 [13:59<01:33, 93.15s/it]100%|██████████| 10/10 [15:32<00:00, 93.08s/it]100%|██████████| 10/10 [15:32<00:00, 93.25s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ProximalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 80
-INFO:root:Number of classes: 2
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:09, 27.68s/it] 20%|██        | 2/10 [00:55<03:42, 27.77s/it] 30%|███       | 3/10 [01:23<03:13, 27.71s/it] 40%|████      | 4/10 [01:51<02:46, 27.82s/it] 50%|█████     | 5/10 [02:19<02:19, 27.87s/it] 60%|██████    | 6/10 [02:46<01:51, 27.82s/it] 70%|███████   | 7/10 [03:14<01:23, 27.90s/it] 80%|████████  | 8/10 [03:42<00:55, 27.78s/it] 90%|█████████ | 9/10 [04:09<00:27, 27.71s/it]100%|██████████| 10/10 [04:37<00:00, 27.75s/it]100%|██████████| 10/10 [04:37<00:00, 27.78s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ProximalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:06, 27.43s/it] 20%|██        | 2/10 [00:55<03:41, 27.69s/it] 30%|███       | 3/10 [01:23<03:14, 27.75s/it] 40%|████      | 4/10 [01:50<02:46, 27.79s/it] 50%|█████     | 5/10 [02:18<02:19, 27.87s/it] 60%|██████    | 6/10 [02:46<01:51, 27.88s/it] 70%|███████   | 7/10 [03:14<01:23, 27.87s/it] 80%|████████  | 8/10 [03:42<00:55, 27.80s/it] 90%|█████████ | 9/10 [04:09<00:27, 27.70s/it]100%|██████████| 10/10 [04:37<00:00, 27.65s/it]100%|██████████| 10/10 [04:37<00:00, 27.74s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ProximalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:08, 27.58s/it] 20%|██        | 2/10 [00:55<03:41, 27.74s/it] 30%|███       | 3/10 [01:23<03:14, 27.79s/it] 40%|████      | 4/10 [01:51<02:46, 27.78s/it] 50%|█████     | 5/10 [02:18<02:19, 27.83s/it] 60%|██████    | 6/10 [02:46<01:51, 27.86s/it] 70%|███████   | 7/10 [03:14<01:23, 27.85s/it] 80%|████████  | 8/10 [03:42<00:55, 27.78s/it] 90%|█████████ | 9/10 [04:09<00:27, 27.67s/it]100%|██████████| 10/10 [04:37<00:00, 27.63s/it]100%|██████████| 10/10 [04:37<00:00, 27.73s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ProximalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (290, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:49<07:26, 49.61s/it] 20%|██        | 2/10 [01:39<06:37, 49.71s/it] 30%|███       | 3/10 [02:29<05:47, 49.70s/it] 40%|████      | 4/10 [03:18<04:57, 49.65s/it] 50%|█████     | 5/10 [04:08<04:08, 49.66s/it] 60%|██████    | 6/10 [04:58<03:18, 49.67s/it] 70%|███████   | 7/10 [05:47<02:29, 49.67s/it] 80%|████████  | 8/10 [06:37<01:39, 49.63s/it] 90%|█████████ | 9/10 [07:26<00:49, 49.54s/it]100%|██████████| 10/10 [08:15<00:00, 49.49s/it]100%|██████████| 10/10 [08:15<00:00, 49.59s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ItalyPowerDemand, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (721, 24) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.04s/it] 20%|██        | 2/10 [00:02<00:08,  1.04s/it] 30%|███       | 3/10 [00:03<00:07,  1.03s/it] 40%|████      | 4/10 [00:04<00:06,  1.02s/it] 50%|█████     | 5/10 [00:05<00:04,  1.01it/s] 60%|██████    | 6/10 [00:05<00:03,  1.03it/s] 70%|███████   | 7/10 [00:06<00:02,  1.04it/s] 80%|████████  | 8/10 [00:07<00:01,  1.05it/s] 90%|█████████ | 9/10 [00:08<00:00,  1.05it/s]100%|██████████| 10/10 [00:09<00:00,  1.05it/s]100%|██████████| 10/10 [00:09<00:00,  1.03it/s]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ItalyPowerDemand, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (721, 24) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.01s/it] 20%|██        | 2/10 [00:02<00:08,  1.02s/it] 30%|███       | 3/10 [00:03<00:07,  1.01s/it] 40%|████      | 4/10 [00:03<00:05,  1.01it/s] 50%|█████     | 5/10 [00:04<00:04,  1.04it/s] 60%|██████    | 6/10 [00:05<00:03,  1.06it/s] 70%|███████   | 7/10 [00:06<00:02,  1.07it/s] 80%|████████  | 8/10 [00:07<00:01,  1.08it/s] 90%|█████████ | 9/10 [00:08<00:00,  1.08it/s]100%|██████████| 10/10 [00:09<00:00,  1.08it/s]100%|██████████| 10/10 [00:09<00:00,  1.05it/s]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ItalyPowerDemand, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (721, 24) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.05s/it] 20%|██        | 2/10 [00:02<00:08,  1.02s/it] 30%|███       | 3/10 [00:03<00:07,  1.02s/it] 40%|████      | 4/10 [00:04<00:05,  1.01it/s] 50%|█████     | 5/10 [00:04<00:04,  1.03it/s] 60%|██████    | 6/10 [00:05<00:03,  1.05it/s] 70%|███████   | 7/10 [00:06<00:02,  1.06it/s] 80%|████████  | 8/10 [00:07<00:01,  1.07it/s] 90%|█████████ | 9/10 [00:08<00:00,  1.08it/s]100%|██████████| 10/10 [00:09<00:00,  1.08it/s]100%|██████████| 10/10 [00:09<00:00,  1.05it/s]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: ItalyPowerDemand, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (721, 24) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:03<00:32,  3.63s/it] 20%|██        | 2/10 [00:07<00:29,  3.64s/it] 30%|███       | 3/10 [00:10<00:25,  3.63s/it] 40%|████      | 4/10 [00:14<00:21,  3.62s/it] 50%|█████     | 5/10 [00:18<00:17,  3.59s/it] 60%|██████    | 6/10 [00:21<00:14,  3.58s/it] 70%|███████   | 7/10 [00:25<00:10,  3.57s/it] 80%|████████  | 8/10 [00:28<00:07,  3.56s/it] 90%|█████████ | 9/10 [00:32<00:03,  3.56s/it]100%|██████████| 10/10 [00:35<00:00,  3.56s/it]100%|██████████| 10/10 [00:35<00:00,  3.58s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: FacesUCR, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 131
-INFO:root:Number of classes: 14
-INFO:root:Number of instances (2049, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:52<16:48, 112.09s/it] 20%|██        | 2/10 [03:44<14:58, 112.30s/it] 30%|███       | 3/10 [05:36<13:04, 112.04s/it] 40%|████      | 4/10 [07:27<11:11, 111.87s/it] 50%|█████     | 5/10 [09:19<09:18, 111.67s/it] 60%|██████    | 6/10 [11:11<07:27, 111.77s/it] 70%|███████   | 7/10 [13:02<05:34, 111.53s/it] 80%|████████  | 8/10 [14:53<03:42, 111.41s/it] 90%|█████████ | 9/10 [16:44<01:51, 111.39s/it]100%|██████████| 10/10 [18:35<00:00, 111.33s/it]100%|██████████| 10/10 [18:35<00:00, 111.59s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: FacesUCR, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (2049, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:51<16:44, 111.64s/it] 20%|██        | 2/10 [03:44<14:57, 112.13s/it] 30%|███       | 3/10 [05:35<13:03, 111.90s/it] 40%|████      | 4/10 [07:27<11:11, 111.91s/it] 50%|█████     | 5/10 [09:19<09:18, 111.78s/it] 60%|██████    | 6/10 [11:10<07:26, 111.71s/it] 70%|███████   | 7/10 [13:01<05:34, 111.51s/it] 80%|████████  | 8/10 [14:52<03:42, 111.38s/it] 90%|█████████ | 9/10 [16:44<01:51, 111.34s/it]100%|██████████| 10/10 [18:35<00:00, 111.26s/it]100%|██████████| 10/10 [18:35<00:00, 111.53s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: FacesUCR, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (2049, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:51<16:47, 111.92s/it] 20%|██        | 2/10 [03:44<14:56, 112.05s/it] 30%|███       | 3/10 [05:36<13:04, 112.08s/it] 40%|████      | 4/10 [07:27<11:11, 111.89s/it] 50%|█████     | 5/10 [09:19<09:19, 111.81s/it] 60%|██████    | 6/10 [11:11<07:27, 111.80s/it] 70%|███████   | 7/10 [13:02<05:34, 111.62s/it] 80%|████████  | 8/10 [14:53<03:43, 111.55s/it] 90%|█████████ | 9/10 [16:45<01:51, 111.51s/it]100%|██████████| 10/10 [18:36<00:00, 111.44s/it]100%|██████████| 10/10 [18:36<00:00, 111.66s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: FacesUCR, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (2049, 131) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:03<18:31, 123.54s/it] 20%|██        | 2/10 [04:08<16:33, 124.16s/it] 30%|███       | 3/10 [06:11<14:27, 123.98s/it] 40%|████      | 4/10 [08:15<12:23, 123.88s/it] 50%|█████     | 5/10 [10:19<10:18, 123.78s/it] 60%|██████    | 6/10 [12:22<08:14, 123.67s/it] 70%|███████   | 7/10 [14:25<06:10, 123.45s/it] 80%|████████  | 8/10 [16:29<04:06, 123.47s/it] 90%|█████████ | 9/10 [18:32<02:03, 123.42s/it]100%|██████████| 10/10 [20:36<00:00, 123.57s/it]100%|██████████| 10/10 [20:36<00:00, 123.64s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: CBF, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 128
-INFO:root:Number of classes: 3
-INFO:root:Number of instances (899, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:44<15:40, 104.49s/it] 20%|██        | 2/10 [03:29<14:00, 105.02s/it] 30%|███       | 3/10 [05:14<12:13, 104.84s/it] 40%|████      | 4/10 [06:59<10:30, 105.05s/it] 50%|█████     | 5/10 [08:44<08:44, 104.94s/it] 60%|██████    | 6/10 [10:29<06:59, 104.89s/it] 70%|███████   | 7/10 [12:13<05:13, 104.62s/it] 80%|████████  | 8/10 [13:57<03:29, 104.55s/it] 90%|█████████ | 9/10 [15:42<01:44, 104.57s/it]100%|██████████| 10/10 [17:27<00:00, 104.62s/it]100%|██████████| 10/10 [17:27<00:00, 104.72s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: CBF, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (899, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:44<15:41, 104.57s/it] 20%|██        | 2/10 [03:29<13:58, 104.87s/it] 30%|███       | 3/10 [05:14<12:13, 104.75s/it] 40%|████      | 4/10 [06:59<10:28, 104.79s/it] 50%|█████     | 5/10 [08:43<08:43, 104.70s/it] 60%|██████    | 6/10 [10:27<06:58, 104.52s/it] 70%|███████   | 7/10 [12:11<05:13, 104.39s/it] 80%|████████  | 8/10 [13:56<03:28, 104.28s/it] 90%|█████████ | 9/10 [15:39<01:44, 104.16s/it]100%|██████████| 10/10 [17:24<00:00, 104.21s/it]100%|██████████| 10/10 [17:24<00:00, 104.42s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: CBF, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (899, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:44<15:43, 104.85s/it] 20%|██        | 2/10 [03:30<14:00, 105.09s/it] 30%|███       | 3/10 [05:14<12:14, 104.94s/it] 40%|████      | 4/10 [06:59<10:29, 104.96s/it] 50%|█████     | 5/10 [08:44<08:43, 104.71s/it] 60%|██████    | 6/10 [10:28<06:57, 104.48s/it] 70%|███████   | 7/10 [12:11<05:12, 104.21s/it] 80%|████████  | 8/10 [13:55<03:28, 104.14s/it] 90%|█████████ | 9/10 [15:39<01:44, 104.14s/it]100%|██████████| 10/10 [17:23<00:00, 104.07s/it]100%|██████████| 10/10 [17:23<00:00, 104.39s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: CBF, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (899, 128) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [01:46<15:57, 106.40s/it] 20%|██        | 2/10 [03:33<14:15, 106.94s/it] 30%|███       | 3/10 [05:20<12:26, 106.70s/it] 40%|████      | 4/10 [07:06<10:40, 106.67s/it] 50%|█████     | 5/10 [08:53<08:52, 106.52s/it] 60%|██████    | 6/10 [10:38<07:05, 106.33s/it] 70%|███████   | 7/10 [12:24<05:18, 106.20s/it] 80%|████████  | 8/10 [14:10<03:32, 106.11s/it] 90%|█████████ | 9/10 [15:56<01:46, 106.08s/it]100%|██████████| 10/10 [17:42<00:00, 106.10s/it]100%|██████████| 10/10 [17:42<00:00, 106.30s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 80
-INFO:root:Number of classes: 2
-INFO:root:Number of instances (275, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:06, 27.41s/it] 20%|██        | 2/10 [00:55<03:40, 27.58s/it] 30%|███       | 3/10 [01:23<03:14, 27.76s/it] 40%|████      | 4/10 [01:50<02:46, 27.80s/it] 50%|█████     | 5/10 [02:18<02:19, 27.83s/it] 60%|██████    | 6/10 [02:46<01:51, 27.78s/it] 70%|███████   | 7/10 [03:13<01:23, 27.68s/it] 80%|████████  | 8/10 [03:41<00:55, 27.66s/it] 90%|█████████ | 9/10 [04:09<00:27, 27.64s/it]100%|██████████| 10/10 [04:36<00:00, 27.63s/it]100%|██████████| 10/10 [04:36<00:00, 27.68s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (275, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:07, 27.44s/it] 20%|██        | 2/10 [00:55<03:40, 27.56s/it] 30%|███       | 3/10 [01:22<03:13, 27.69s/it] 40%|████      | 4/10 [01:50<02:46, 27.75s/it] 50%|█████     | 5/10 [02:18<02:19, 27.82s/it] 60%|██████    | 6/10 [02:46<01:50, 27.75s/it] 70%|███████   | 7/10 [03:13<01:23, 27.67s/it] 80%|████████  | 8/10 [03:41<00:55, 27.59s/it] 90%|█████████ | 9/10 [04:08<00:27, 27.54s/it]100%|██████████| 10/10 [04:36<00:00, 27.49s/it]100%|██████████| 10/10 [04:36<00:00, 27.61s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (275, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:04, 27.16s/it] 20%|██        | 2/10 [00:54<03:39, 27.43s/it] 30%|███       | 3/10 [01:22<03:13, 27.58s/it] 40%|████      | 4/10 [01:50<02:45, 27.65s/it] 50%|█████     | 5/10 [02:18<02:18, 27.71s/it] 60%|██████    | 6/10 [02:45<01:50, 27.66s/it] 70%|███████   | 7/10 [03:13<01:22, 27.60s/it] 80%|████████  | 8/10 [03:40<00:55, 27.54s/it] 90%|█████████ | 9/10 [04:07<00:27, 27.49s/it]100%|██████████| 10/10 [04:35<00:00, 27.46s/it]100%|██████████| 10/10 [04:35<00:00, 27.54s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxOutlineCorrect, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (275, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:49<07:25, 49.49s/it] 20%|██        | 2/10 [01:39<06:36, 49.58s/it] 30%|███       | 3/10 [02:28<05:47, 49.60s/it] 40%|████      | 4/10 [03:18<04:57, 49.65s/it] 50%|█████     | 5/10 [04:08<04:08, 49.68s/it] 60%|██████    | 6/10 [04:57<03:18, 49.57s/it] 70%|███████   | 7/10 [05:47<02:28, 49.55s/it] 80%|████████  | 8/10 [06:36<01:38, 49.49s/it] 90%|█████████ | 9/10 [07:25<00:49, 49.44s/it]100%|██████████| 10/10 [08:15<00:00, 49.39s/it]100%|██████████| 10/10 [08:15<00:00, 49.51s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxTW, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 80
-INFO:root:Number of classes: 6
-INFO:root:Number of instances (138, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:06, 27.34s/it] 20%|██        | 2/10 [00:54<03:39, 27.47s/it] 30%|███       | 3/10 [01:22<03:13, 27.67s/it] 40%|████      | 4/10 [01:50<02:46, 27.77s/it] 50%|█████     | 5/10 [02:18<02:18, 27.74s/it] 60%|██████    | 6/10 [02:46<01:51, 27.81s/it] 70%|███████   | 7/10 [03:13<01:22, 27.66s/it] 80%|████████  | 8/10 [03:41<00:55, 27.61s/it] 90%|█████████ | 9/10 [04:08<00:27, 27.56s/it]100%|██████████| 10/10 [04:36<00:00, 27.55s/it]100%|██████████| 10/10 [04:36<00:00, 27.62s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxTW, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (138, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:04, 27.22s/it] 20%|██        | 2/10 [00:54<03:39, 27.44s/it] 30%|███       | 3/10 [01:22<03:13, 27.59s/it] 40%|████      | 4/10 [01:50<02:46, 27.71s/it] 50%|█████     | 5/10 [02:18<02:18, 27.79s/it] 60%|██████    | 6/10 [02:46<01:51, 27.78s/it] 70%|███████   | 7/10 [03:13<01:22, 27.66s/it] 80%|████████  | 8/10 [03:40<00:55, 27.55s/it] 90%|█████████ | 9/10 [04:08<00:27, 27.51s/it]100%|██████████| 10/10 [04:35<00:00, 27.49s/it]100%|██████████| 10/10 [04:35<00:00, 27.57s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxTW, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (138, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:27<04:05, 27.30s/it] 20%|██        | 2/10 [00:54<03:39, 27.44s/it] 30%|███       | 3/10 [01:22<03:12, 27.54s/it] 40%|████      | 4/10 [01:50<02:45, 27.60s/it] 50%|█████     | 5/10 [02:18<02:18, 27.68s/it] 60%|██████    | 6/10 [02:45<01:51, 27.76s/it] 70%|███████   | 7/10 [03:13<01:22, 27.60s/it] 80%|████████  | 8/10 [03:40<00:55, 27.54s/it] 90%|█████████ | 9/10 [04:08<00:27, 27.56s/it]100%|██████████| 10/10 [04:35<00:00, 27.48s/it]100%|██████████| 10/10 [04:35<00:00, 27.55s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: DistalPhalanxTW, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (138, 80) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:41<06:17, 41.94s/it] 20%|██        | 2/10 [01:24<05:37, 42.13s/it] 30%|███       | 3/10 [02:06<04:55, 42.22s/it] 40%|████      | 4/10 [02:49<04:14, 42.34s/it] 50%|█████     | 5/10 [03:31<03:31, 42.38s/it] 60%|██████    | 6/10 [04:13<02:49, 42.39s/it] 70%|███████   | 7/10 [04:55<02:06, 42.23s/it] 80%|████████  | 8/10 [05:37<01:24, 42.20s/it] 90%|█████████ | 9/10 [06:19<00:42, 42.11s/it]100%|██████████| 10/10 [07:01<00:00, 42.11s/it]100%|██████████| 10/10 [07:01<00:00, 42.20s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Crop, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Input size: 46
-INFO:root:Number of classes: 24
-INFO:root:Number of instances (16799, 46) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:06<00:56,  6.25s/it] 20%|██        | 2/10 [00:12<00:49,  6.13s/it] 30%|███       | 3/10 [00:18<00:42,  6.06s/it] 40%|████      | 4/10 [00:24<00:35,  5.99s/it] 50%|█████     | 5/10 [00:30<00:29,  5.96s/it] 60%|██████    | 6/10 [00:36<00:23,  5.96s/it] 70%|███████   | 7/10 [00:42<00:18,  6.02s/it] 80%|████████  | 8/10 [00:48<00:11,  5.99s/it] 90%|█████████ | 9/10 [00:54<00:05,  5.97s/it]100%|██████████| 10/10 [00:59<00:00,  5.96s/it]100%|██████████| 10/10 [00:59<00:00,  6.00s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Crop, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (16799, 46) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:06<00:54,  6.06s/it] 20%|██        | 2/10 [00:12<00:48,  6.04s/it] 30%|███       | 3/10 [00:18<00:42,  6.00s/it] 40%|████      | 4/10 [00:23<00:35,  5.96s/it] 50%|█████     | 5/10 [00:29<00:29,  5.98s/it] 60%|██████    | 6/10 [00:35<00:23,  5.96s/it] 70%|███████   | 7/10 [00:41<00:17,  5.93s/it] 80%|████████  | 8/10 [00:47<00:11,  5.97s/it] 90%|█████████ | 9/10 [00:53<00:05,  5.94s/it]100%|██████████| 10/10 [00:59<00:00,  5.93s/it]100%|██████████| 10/10 [00:59<00:00,  5.96s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Crop, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (16799, 46) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:06<00:54,  6.06s/it] 20%|██        | 2/10 [00:12<00:48,  6.03s/it] 30%|███       | 3/10 [00:18<00:41,  5.99s/it] 40%|████      | 4/10 [00:24<00:36,  6.02s/it] 50%|█████     | 5/10 [00:29<00:29,  5.97s/it] 60%|██████    | 6/10 [00:35<00:23,  5.94s/it] 70%|███████   | 7/10 [00:41<00:17,  5.98s/it] 80%|████████  | 8/10 [00:47<00:11,  5.95s/it] 90%|█████████ | 9/10 [00:53<00:05,  5.93s/it]100%|██████████| 10/10 [00:59<00:00,  5.92s/it]100%|██████████| 10/10 [00:59<00:00,  5.96s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Crop, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (16799, 46) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [03:18<29:49, 198.84s/it] 20%|██        | 2/10 [06:35<26:20, 197.58s/it] 30%|███       | 3/10 [09:53<23:04, 197.76s/it] 40%|████      | 4/10 [13:11<19:47, 197.99s/it] 50%|█████     | 5/10 [16:30<16:30, 198.17s/it] 60%|██████    | 6/10 [19:47<13:11, 197.82s/it] 70%|███████   | 7/10 [23:04<09:52, 197.45s/it] 80%|████████  | 8/10 [26:22<06:35, 197.73s/it] 90%|█████████ | 9/10 [29:41<03:18, 198.02s/it]100%|██████████| 10/10 [32:59<00:00, 197.97s/it]100%|██████████| 10/10 [32:59<00:00, 197.90s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SyntheticControl, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (299, 60) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:12<01:52, 12.45s/it] 20%|██        | 2/10 [00:25<01:40, 12.51s/it] 30%|███       | 3/10 [00:37<01:28, 12.59s/it] 40%|████      | 4/10 [00:50<01:15, 12.62s/it] 50%|█████     | 5/10 [01:02<01:02, 12.49s/it] 60%|██████    | 6/10 [01:14<00:49, 12.34s/it] 70%|███████   | 7/10 [01:26<00:36, 12.19s/it] 80%|████████  | 8/10 [01:38<00:24, 12.05s/it] 90%|█████████ | 9/10 [01:50<00:11, 11.99s/it]100%|██████████| 10/10 [02:02<00:00, 11.96s/it]100%|██████████| 10/10 [02:02<00:00, 12.20s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SyntheticControl, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (299, 60) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 10%|█         | 1/10 [00:12<01:49, 12.15s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 20%|██        | 2/10 [00:24<01:38, 12.29s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 30%|███       | 3/10 [00:37<01:26, 12.42s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 40%|████      | 4/10 [00:49<01:14, 12.45s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 50%|█████     | 5/10 [01:01<01:01, 12.36s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 60%|██████    | 6/10 [01:13<00:48, 12.24s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 70%|███████   | 7/10 [01:25<00:36, 12.11s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 80%|████████  | 8/10 [01:37<00:23, 11.98s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 90%|█████████ | 9/10 [01:49<00:11, 11.93s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-100%|██████████| 10/10 [02:01<00:00, 11.92s/it]100%|██████████| 10/10 [02:01<00:00, 12.11s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SyntheticControl, Dataset Type: TEST_normalized, Model Type: logistic-regression
-INFO:root:Number of instances (299, 60) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 10%|█         | 1/10 [00:12<01:48, 12.04s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 20%|██        | 2/10 [00:24<01:38, 12.31s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 30%|███       | 3/10 [00:37<01:26, 12.39s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 40%|████      | 4/10 [00:49<01:14, 12.38s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 50%|█████     | 5/10 [01:01<01:01, 12.40s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 60%|██████    | 6/10 [01:14<00:49, 12.33s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 70%|███████   | 7/10 [01:25<00:36, 12.18s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 80%|████████  | 8/10 [01:37<00:24, 12.06s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
- 90%|█████████ | 9/10 [01:49<00:12, 12.01s/it]/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/sklearn/base.py:376: InconsistentVersionWarning: Trying to unpickle estimator LogisticRegression from version 1.6.1 when using version 1.5.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
-https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
-  warnings.warn(
-100%|██████████| 10/10 [02:01<00:00, 11.98s/it]100%|██████████| 10/10 [02:01<00:00, 12.15s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: SyntheticControl, Dataset Type: TEST_normalized, Model Type: knn
-INFO:root:Number of instances (299, 60) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:21<03:09, 21.02s/it] 20%|██        | 2/10 [00:42<02:50, 21.26s/it] 30%|███       | 3/10 [01:03<02:29, 21.35s/it] 40%|████      | 4/10 [01:25<02:08, 21.46s/it] 50%|█████     | 5/10 [01:46<01:47, 21.43s/it] 60%|██████    | 6/10 [02:07<01:25, 21.28s/it] 70%|███████   | 7/10 [02:28<01:03, 21.08s/it] 80%|████████  | 8/10 [02:49<00:41, 20.98s/it] 90%|█████████ | 9/10 [03:10<00:20, 20.91s/it]100%|██████████| 10/10 [03:30<00:00, 20.82s/it]100%|██████████| 10/10 [03:30<00:00, 21.07s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Wafer, Dataset Type: TEST_normalized, Model Type: cnn
-INFO:root:Number of instances (6163, 152) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:46<25:01, 166.84s/it] 20%|██        | 2/10 [05:32<22:11, 166.40s/it] 30%|███       | 3/10 [08:18<19:23, 166.19s/it] 40%|████      | 4/10 [11:04<16:36, 166.05s/it] 50%|█████     | 5/10 [13:50<13:49, 165.99s/it] 60%|██████    | 6/10 [16:37<11:04, 166.22s/it] 70%|███████   | 7/10 [19:23<08:18, 166.20s/it] 80%|████████  | 8/10 [22:09<05:32, 166.26s/it] 90%|█████████ | 9/10 [24:55<02:46, 166.23s/it]100%|██████████| 10/10 [27:42<00:00, 166.30s/it]100%|██████████| 10/10 [27:42<00:00, 166.24s/it]
-/home/felix/miniconda3/envs/xai_tsc/lib/python3.10/site-packages/kneed/knee_locator.py:225: RuntimeWarning: invalid value encountered in divide
-  return (a - min(a)) / (max(a) - min(a))
-INFO:root:Configuration:
-INFO:root:Dataset: Wafer, Dataset Type: TEST_normalized, Model Type: decision-tree
-INFO:root:Number of instances (6163, 152) > 100, so modified to: 100
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [02:46<24:54, 166.00s/it] 20%|██        | 2/10 [05:32<22:08, 166.03s/it] 30%|███       | 3/10 [08:17<19:21, 165.91s/it] 40%|████      | 4/10 [11:03<16:34, 165.82s/it]
