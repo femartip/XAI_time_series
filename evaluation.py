@@ -3,6 +3,7 @@ import pandas as pd
 import logging
 from tqdm import tqdm
 import datetime
+import os
 
 from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
     get_VC_simplification, get_LSF_simplification
@@ -14,7 +15,7 @@ logging.basicConfig(level=
 logging.debug)
 
 
-def score_different_alphas(dataset_name, datset_type, model_path):
+def score_different_alphas(dataset_name: str, datset_type: str, model_path: str) -> tuple[pd.DataFrame, dict]:
     """
     Evaluate the impact of different alpha values on loyalty, kappa, and complexity.
     """
@@ -55,8 +56,9 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         row = ["OS", alpha, mean_loyalty_OS, kappa_loyalty_OS, complexity_OS, num_segments_OS]
         df.loc[len(df)] = row
 
-        # Step 1 gen all simplified ts
+        save_simplifications(dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_OS, y=batch_simplified_ts, classes=predicted_classes_simplifications_OS, alpha=alpha)
 
+        # Step 1 gen all simplified ts
         logging.debug("Running RDP")
         init_time = datetime.datetime.now()
         all_time_series_RDP, all_simplifications_RDP = get_RDP_simplification(time_series=all_time_series, epsilon=alpha)
@@ -74,6 +76,8 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         num_segments_RDP = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_RDP])
         row = ["RDP", alpha, mean_loyalty_RDP, kappa_loyalty_RDP, complexity_RDP, num_segments_RDP]
         df.loc[len(df)] = row
+
+        save_simplifications(dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_RDP, y=batch_simplified_ts, classes=predicted_classes_simplifications_RDP, alpha=alpha)
 
         # Step 1 gen all simplified ts
         logging.debug("Running BU")
@@ -97,6 +101,8 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         row = ["BU", alpha, mean_loyalty_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
         df.loc[len(df)] = row
 
+        save_simplifications(dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_BU, y=batch_simplified_ts, classes=predicted_classes_simplifications_BU, alpha=alpha)
+
         # Step 1 gen all simplified ts
         logging.debug("Running VC")
         init_time = datetime.datetime.now()
@@ -118,6 +124,8 @@ def score_different_alphas(dataset_name, datset_type, model_path):
         num_segments_VC = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_VC])
         row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC, num_segments_VC]
         df.loc[len(df)] = row
+
+        save_simplifications(dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_VC, y=batch_simplified_ts, classes=predicted_classes_simplifications_VC, alpha=alpha)
 
         """
         logging.debug("Running LSF")
@@ -148,7 +156,21 @@ def score_different_alphas(dataset_name, datset_type, model_path):
 
     return df, time
 
-def get_model_predictions(model_path, batch_of_TS):
+def get_model_predictions(model_path: str, batch_of_TS: list) -> list:
     predicted_classes = model_batch_classify(model_path, batch_of_timeseries=batch_of_TS) 
     return predicted_classes
+    
+def save_simplifications(dataset_name: str, dataset_type: str, model_path: str, X: tuple[np.ndarray, list], y: list, classes: list, alpha: float) -> None:
+    if not os.path.exists(f"results/{dataset_name}/data"):
+        os.makedirs(f"results/{dataset_name}/data")
+
+    model = model_path.split("/")[-1].split("_")[0]
+    file_path = f"results/{dataset_name}/data/{model}_{dataset_type}.npy"
+    if not os.path.exists(file_path):
+        array = np.array([alpha, X, y, classes])
+        np.save(file_path, array, allow_pickle=False)
+    else:
+        data = np.load(file_path, allow_pickle=False)
+        data = np.append(data, np.array([alpha, X, y, classes]))
+        np.save(file_path, data, allow_pickle=False)
     

@@ -4,11 +4,11 @@ from rdp import rdp
 import logging
 import time
 
-from ORSalgorithm.ORS_algorithm import get_simplifications
 from Utils.dataTypes import SegmentedTS
 from SimplificationMethods.BottumUp.bottomUp import  get_swab_approx
 from SimplificationMethods.Visvalingam_whyattt.Visvalingam_Whyatt import  simplify as VC_simplify
 import SimplificationMethods.Seg_Least_Square as LS
+from SimplificationMethods.ORSalgorithm.ORS_algorithm import get_simplifications
 
 def get_OS_simplification(time_series: np.ndarray, alpha: float):
     """

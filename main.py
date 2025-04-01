@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def save_plots(dataset: str, model_type: str, knee: dict = None):
+def save_plots(dataset: str, model_type: str, knee: dict = None) -> None:
     if os.path.exists(f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv"):
         output_file = f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv"
         fig1 = plot_csv_alpha_mean_loyalty(output_file)
@@ -26,7 +26,7 @@ def save_plots(dataset: str, model_type: str, knee: dict = None):
     else:
         logging.error("Results not saved to CSV.")
 
-def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict, auc:dict, knee:dict):
+def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict, auc:dict, knee:dict) -> None:
     results_df = pd.read_csv(f"results/results.csv", header=0)
 
     simp_alg = ["OS", "RDP", "VC", "BU", "LSF"]
@@ -41,7 +41,7 @@ def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict,
     results_df.to_csv(f"results/results.csv", index=False)
 
 
-def main(dataset: str, dataset_type: str, model_type: str):
+def main(dataset: str, dataset_type: str, model_type: str) -> None:
     """
     Main function to evaluate simplifications.
     Checks that requested model exists, if not trains it.
