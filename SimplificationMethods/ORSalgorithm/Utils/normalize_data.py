@@ -1,4 +1,4 @@
-from Utils.load_data import normalize_data
+from .load_data import normalize_data
 
 if __name__ == "__main__":
     datasets = ["Chinatown", "ECG200", "ItalyPowerDemand"]

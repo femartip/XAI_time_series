@@ -1,6 +1,6 @@
 from typing import List
 import numpy as np
-from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
+from ..Perturbations.dataTypes import SegmentedTS
 
 
 def score_closeness(ts1: List[float], ts2: List[float] | np.ndarray,

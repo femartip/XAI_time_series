@@ -1,6 +1,6 @@
 from typing import List
 
-from ORSalgorithm.Utils.line import interpolate_points_to_line
+from ..Utils.line import interpolate_points_to_line
 
 
 class SegmentedTS:

@@ -1,4 +1,4 @@
-from ORSalgorithm.Utils.types import HeapStruct
+from ..Utils.types import HeapStruct
 from typing import Any
 
 

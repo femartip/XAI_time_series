@@ -21,7 +21,8 @@ year = {2021}
 }
 """
 import numpy as np
-from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
+from SimplificationMethods.ORSalgorithm.Perturbations.dataTypes import SegmentedTS
+
 def simplify(ts, alpha):
     alpha = alpha
     x_values = list(range(len(ts)))

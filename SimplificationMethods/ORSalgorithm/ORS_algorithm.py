@@ -2,11 +2,11 @@ import logging
 import numpy as np
 import random
 
-import ORSalgorithm.simplify.DPcustomAlgoKSmallest
-from ORSalgorithm.simplify.DPcustomAlgoKSmallest import solve_and_find_points
-from ORSalgorithm.Utils.data import get_min_and_max, dataset_sensitive_c
-from ORSalgorithm.Utils.line import interpolate_points_to_line
-from ORSalgorithm.Utils.loadModel import model_classify, model_confidence, model_batch_classify, batch_confidence
+from .simplify.DPcustomAlgoKSmallest import solve_and_find_points
+from .Utils.data import get_min_and_max, dataset_sensitive_c
+from .Utils.line import interpolate_points_to_line
+from .Utils.loadModel import model_classify, model_confidence, model_batch_classify, batch_confidence
+from .Perturbations.dataTypes import *
 
 logging.basicConfig(level=logging.INFO)
 

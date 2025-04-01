@@ -2,9 +2,9 @@ from typing import List, Tuple
 import random
 from collections import defaultdict
 
-from ORSalgorithm.simplify.DPcustomAlgoKSmallest import solve_and_find_points
-from Utils.load_data import load_dataset
-from ORSalgorithm.Perturbations.dataTypes import SegmentedTS
+from ..simplify.DPcustomAlgoKSmallest import solve_and_find_points
+from .load_data import load_dataset
+from ..Perturbations.dataTypes import SegmentedTS
 
 
 def get_min_and_max(ts_all) -> Tuple[float, float]:

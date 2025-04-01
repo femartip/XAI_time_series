@@ -6,10 +6,10 @@ from collections import namedtuple as T
 import logging
 import os
 
-from ORSalgorithm.simplify.plotting import plot
-from ORSalgorithm.simplify.MinHeap import MinHeap
-from ORSalgorithm.Utils.types import HeapStruct
-from ORSalgorithm.Utils.scoring_functions import score_closeness
+from .plotting import plot
+from .MinHeap import MinHeap
+from ..Utils.types import HeapStruct
+from ..Utils.scoring_functions import score_closeness
 
 
 Solution = T("Solution", "error currentIdx currentOrder prevIdx prevOrder last_seg")
