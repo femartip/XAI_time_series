@@ -56,7 +56,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
         row = ["OS", alpha, mean_loyalty_OS, kappa_loyalty_OS, complexity_OS, num_segments_OS]
         df.loc[len(df)] = row
 
-        save_simplifications(os_alg="OS", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_OS, y=batch_simplified_ts, classes=predicted_classes_simplifications_OS, alpha=alpha)
+        save_simplifications(os_alg="OS", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_OS, alpha=alpha)
 
         # Step 1 gen all simplified ts
         logging.debug("Running RDP")
@@ -77,7 +77,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
         row = ["RDP", alpha, mean_loyalty_RDP, kappa_loyalty_RDP, complexity_RDP, num_segments_RDP]
         df.loc[len(df)] = row
 
-        save_simplifications(os_alg="RDP", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_RDP, y=batch_simplified_ts, classes=predicted_classes_simplifications_RDP, alpha=alpha)
+        save_simplifications(os_alg="RDP", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_RDP, alpha=alpha)
 
         # Step 1 gen all simplified ts
         logging.debug("Running BU")
@@ -101,7 +101,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
         row = ["BU", alpha, mean_loyalty_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
         df.loc[len(df)] = row
 
-        save_simplifications(os_alg="BU", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_BU, y=batch_simplified_ts, classes=predicted_classes_simplifications_BU, alpha=alpha)
+        save_simplifications(os_alg="BU", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BU, alpha=alpha)
 
         # Step 1 gen all simplified ts
         logging.debug("Running VC")
@@ -125,7 +125,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
         row = ["VC", alpha, mean_loyalty_VC, kappa_loyalty_VC, complexity_VC, num_segments_VC]
         df.loc[len(df)] = row
 
-        save_simplifications(os_alg="VC", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=all_time_series_VC, y=batch_simplified_ts, classes=predicted_classes_simplifications_VC, alpha=alpha)
+        save_simplifications(os_alg="VC", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_VC, alpha=alpha)
 
         """
         logging.debug("Running LSF")
@@ -160,21 +160,21 @@ def get_model_predictions(model_path: str, batch_of_TS: list) -> list:
     predicted_classes = model_batch_classify(model_path, batch_of_timeseries=batch_of_TS) 
     return predicted_classes
     
-def save_simplifications(os_alg: str, dataset_name: str, dataset_type: str, model_path: str, X: tuple[np.ndarray, list], y: list, classes: list, alpha: float) -> None:
+def save_simplifications(os_alg: str, dataset_name: str, dataset_type: str, model_path: str, X: list[list[float]], classes: list[int], alpha: float) -> None:
     if not os.path.exists(f"results/{dataset_name}/data"):
         os.makedirs(f"results/{dataset_name}/data")
     
-    dim = X.shape[1] 
-    dtype = np.dtype([('alpha', np.float64, (1,)), ('class', np.int8, (1,)),('X', np.float64, (dim,)),('y', np.float64, (dim,))])
+    num_instances = len(X)
+    dim = len(X[0])
+    dtype = np.dtype([('alpha', np.float64, (1,)), ('class', np.int8, (1,)),('X', np.float64, (dim,))])
     alphas = np.array([alpha] * len(classes))[:, np.newaxis]
     classes = np.array(classes)[:, np.newaxis]
-    y = np.array(y)
+    X = np.array(X)
 
-    combined_data = np.zeros(100, dtype=dtype)
+    combined_data = np.zeros(num_instances, dtype=dtype)
     combined_data['alpha'] = alphas
     combined_data['class'] = classes
     combined_data['X'] = X
-    combined_data['y'] = y
 
     model = model_path.split("/")[-1].split("_")[0]
     file_path = f"results/{dataset_name}/data/{os_alg}_{model}_{dataset_type}.npy"

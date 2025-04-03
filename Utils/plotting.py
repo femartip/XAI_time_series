@@ -2,6 +2,8 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import argparse
 import numpy as np
+import os
+import random
 
 def plot_metrics(train_metrics, train_losses, val_metrics, val_losses):
     fig, ax = plt.subplots(2, 1, figsize=(10, 10))
@@ -112,12 +114,29 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
     return fig
 
 
+def plot_prototipes(alpha: np.float64, pred_class: np.int8, X: np.ndarray) -> plt.Figure:
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(X)
+    ax.set_title(f"Prototypes for Alpha: {alpha}, Predicted Class: {pred_class}")
+    return fig
+
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--file", type=str, help="File to plot")
     args = argparser.parse_args()
     file = args.file
-    fig1 = plot_csv_complexity_mean_loyalty(file)
-    plt.show()
-    fig2 = plot_csv_complexity_kappa_loyalty(file)
-    plt.show()
+    assert os.path.exists(file), f"File {file} does not exist"
+
+    if file.endswith(".csv"):
+        fig1 = plot_csv_complexity_mean_loyalty(file)
+        plt.show()
+        fig2 = plot_csv_complexity_kappa_loyalty(file)
+        plt.show()
+    elif file.endswith(".npy"):
+        data = np.load(file)
+        rand_num = random.randint(0, len(data) - 1)
+        alpha = data[rand_num][0]; pred_class = data[rand_num][1]; X = data[rand_num][-1]
+        fig = plot_prototipes(alpha, pred_class, X)
+        plt.show()
+    else:
+        raise ValueError(f"File format not supported")

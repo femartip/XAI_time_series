@@ -1,0 +1,5 @@
+model_type,train_acc,val_acc,test_acc
+cnn,tensor(0.),tensor(0.),tensor(0.)
+decision-tree,0.7222222222222222,0.8,0.5771812080536913
+logistic-regression,0.6666666666666666,0.6,0.46308724832214765
+knn,1.0,0.2,0.738255033557047
