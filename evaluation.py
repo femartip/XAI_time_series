@@ -4,6 +4,8 @@ import logging
 from tqdm import tqdm
 import datetime
 import os
+import random
+from sklearn.model_selection import train_test_split
 
 from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
     get_VC_simplification, get_LSF_simplification
@@ -26,7 +28,9 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
     # Algorithms grow in time complexity with the number of time series. If there are too many, we will only use the first 100
     if np.shape(all_time_series)[0] > 100:
         real_shape = np.shape(all_time_series)
-        all_time_series = all_time_series[:100]
+        #all_time_series = train_test_split(all_time_series, test_size=100, stratify=None, random_state=42)[0]
+        rand_numbers = random.sample(range(0, real_shape[0]), 100)
+        all_time_series = all_time_series[rand_numbers]
         logging.info(f"Number of instances {real_shape} > 100, so modified to: {np.shape(all_time_series)[0]}")
 
     time_os = []

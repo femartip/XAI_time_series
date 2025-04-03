@@ -1,2 +1,0 @@
-model_type,train_acc,val_acc,test_acc
-decision-tree,1.0,0.3333333333333333,0.7894736842105263
