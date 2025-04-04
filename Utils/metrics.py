@@ -1,7 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.metrics import cohen_kappa_score
-from typing import List
 import pandas as pd
 from kneed import KneeLocator
 
@@ -15,14 +14,15 @@ def score_simplicity(approximation: SegmentedTS) -> float:
             
         return simplicity
 
-def calculate_mean_loyalty(pred_class_original:List[int], pred_class_simplified:List[int])->float:
+def calculate_mean_loyalty(pred_class_original:list[int], pred_class_simplified:list[int])->float:
     """
     Calculate Mean score to measure agreement between original and simplified classifications.
     """
     loyalty = np.mean(np.equal(pred_class_original, pred_class_simplified))
+    loyalty = float(loyalty)
     return loyalty
 
-def calculate_kappa_loyalty(pred_class_original:List[int], pred_class_simplified:List[int])->float:
+def calculate_kappa_loyalty(pred_class_original:list[int], pred_class_simplified:list[int])->float:
     """
     Calculate Cohen's Kappa score to measure agreement between original and simplified classifications.
     """
@@ -34,14 +34,23 @@ def calculate_kappa_loyalty(pred_class_original:List[int], pred_class_simplified
     
     return kappa_loyalty
 
-def calculate_complexity(batch_simplified_ts: List[SegmentedTS])->float:
+def calculate_percentage_agreement(pred_class_original:list[int], pred_class_simplified:list[int]) -> int:
+    """
+    Calculate percentage of agreement between original and simplified classifications.
+    """
+    pa = sum(np.array(pred_class_original) == np.array(pred_class_simplified)) / len(pred_class_simplified)
+    pa = int(pa * 100)
+    return pa
+
+def calculate_complexity(batch_simplified_ts: list[SegmentedTS])->float:
     """
     Calculate complexity of simplified time series as mean number of segments.
     """
-    complexity = np.mean([score_simplicity(ts) for ts in batch_simplified_ts])
+    scores = [score_simplicity(ts) for ts in batch_simplified_ts]
+    complexity = sum(scores) / len(scores) if len(scores) > 0 else 0.0
     return complexity
 
-def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tuple[dict[str, float], dict[str,tuple[List, List]]]:
+def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tuple[dict[str, float], dict[str,tuple[list, list]]]:
     """
     Calculate the Area Under the Curve of the Complexity vs Loyalty curve for each simplification algorithm.
     This is used to compare the performance of the different simplification algorithms.
@@ -65,6 +74,10 @@ def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tu
         if show_fig:
             plt.plot(complexity, loyalty)
             plt.plot(filtered_complexity, filtered_loyalty)
+            plt.title(f"{algorithm} - {metric}")
+            plt.xlabel("Complexity")
+            plt.ylabel("Loyalty")
+            plt.legend(["Original", "Filtered"])
             plt.show()
 
         auc[algorithm] = np.trapz(filtered_loyalty, filtered_complexity)
@@ -73,7 +86,7 @@ def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tu
     return auc, filtered_curves
     
 
-def filter_anomalous_loyalty_curve(x_values: List, y_values: List) -> tuple[List, List]:
+def filter_anomalous_loyalty_curve(x_values: list, y_values: list) -> tuple[list, list]:
     """
     Filter out anomalous behavior in loyalty vs complexity curves where there's an initial high loyalty followed by a decrease and then the expected pattern of increasing loyalty with complexity.
     The function uses slope analysis to find the point where the curve begins to consistently increase, which is considered the start of the valid data.
@@ -93,7 +106,7 @@ def filter_anomalous_loyalty_curve(x_values: List, y_values: List) -> tuple[List
     return x[valid_idx:].tolist(), y[valid_idx:].tolist()
 
 
-def find_knee_curve(x_values: List, y_values: List) -> tuple[float, float]:
+def find_knee_curve(x_values: list, y_values: list) -> tuple[float, float]:
     """
     Find the knee point of the curve using the Kneedle algorithm from "Finding a “Kneedle” in a Haystack:Detecting Knee Points in System Behavior"
     https://github.com/arvkevi/kneed?tab=readme-ov-file#input-data
@@ -112,12 +125,13 @@ def find_knee_curve(x_values: List, y_values: List) -> tuple[float, float]:
 if __name__ == '__main__':
     #dataset = "Chinatown"
     dataset = "ItalyPowerDemand"
-    models = ["cnn", "decision-tree", "logistic-regression", "knn"]
+    #models = ["cnn", "decision-tree", "logistic-regression", "knn"]
+    models = ["decision-tree"]
     for model in models:
         df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
-        auc_value, filtered_tuple = auc(df, show_fig=False)
-        knee_point = find_knee_curve(filtered_tuple[0], filtered_tuple[1])
+        auc_value, filtered_tuple = auc(df, show_fig=True)
+        #knee_point = find_knee_curve(filtered_tuple[0], filtered_tuple[1])
         # Plot the filtered curve with the knee point
-        plt.plot(filtered_tuple[0], filtered_tuple[1])
-        plt.scatter(knee_point[0], knee_point[1], color='red')
-        plt.show()
+        #plt.plot(filtered_tuple[0], filtered_tuple[1])
+        #plt.scatter(knee_point[0], knee_point[1], color='red')
+        #plt.show()

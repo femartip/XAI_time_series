@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+from matplotlib.figure import Figure
 import pandas as pd
 import argparse
 import numpy as np
@@ -23,7 +24,7 @@ def plot_metrics(train_metrics, train_losses, val_metrics, val_losses):
 
     plt.show()
 
-def plot_csv_alpha_mean_loyalty(file:str) -> plt.Figure:
+def plot_csv_alpha_mean_loyalty(file:str) -> Figure:
     df = pd.read_csv(file)
     fig, ax = plt.subplots()
     for name, group in df.groupby("Type"):
@@ -34,7 +35,7 @@ def plot_csv_alpha_mean_loyalty(file:str) -> plt.Figure:
     ax.legend()
     return fig
 
-def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
+def plot_csv_complexity_mean_loyalty(file:str) -> Figure:
     df = pd.read_csv(file)
     representation_type = ["o", "x", '+', "|", "s"]
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -70,7 +71,12 @@ def plot_csv_complexity_mean_loyalty(file:str) -> plt.Figure:
     
     return fig
 
-def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
+def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
+    assert isinstance(points, dict), "Points should be a dictionary"
+    assert isinstance(file, str), "File should be a string"
+    assert os.path.exists(file), f"File {file} does not exist"
+    assert file.endswith(".csv"), "File should be a CSV file"
+    
     df = pd.read_csv(file)
     representation_type = ["o", "x", '+', "|", "s"]
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -80,7 +86,7 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
                             label=name, c=group['Alpha'], cmap='viridis', 
                             marker=representation_type[i])
         
-        if points is not None:
+        if points != {}:
             point_x = float(points[name][0])
             point_y = float(points[name][1])
             ax.scatter(point_x, point_y, color='red', marker=representation_type[i])
@@ -96,15 +102,26 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
     num_ticks = 6
     complexity_ticks = np.linspace(min_complexity, max_complexity, num_ticks)
     
-    labels = []
+    x_labels = []
     for comp in complexity_ticks:
         closest_comp = df["Complexity"].iloc[(df["Complexity"] - comp).abs().argsort()[:1]].values[0]
         segments = sorted(df[df["Complexity"] == closest_comp]["Num Segments"].unique())
         segments_str = ", ".join(map(str, segments))
-        labels.append(f"{comp:.1f}\n({segments_str})")
+        x_labels.append(f"{comp:.1f}\n({segments_str})")
+
+    if "Percentage Agreement" in df.columns:
+        loyalty_ticks = np.linspace(df["Kappa Loyalty"].min(), df["Kappa Loyalty"].max(), num_ticks)
+        y_labels = []
+        for loyalty in loyalty_ticks:
+            closest_loyalty = df["Kappa Loyalty"].iloc[(df["Kappa Loyalty"] - loyalty).abs().argsort()[:1]].values[0]
+            segments = sorted(df[df["Kappa Loyalty"] == closest_loyalty]["Percentage Agreement"].unique())
+            segments_str = ", ".join(map(str, segments))
+            y_labels.append(f"{loyalty:.1f}\n({segments_str}%)")
+        ax.set_yticks(loyalty_ticks)
+        ax.set_yticklabels(y_labels) 
     
     ax.set_xticks(complexity_ticks)
-    ax.set_xticklabels(labels)
+    ax.set_xticklabels(x_labels)
 
     ax.legend()
     cbar = plt.colorbar(scatter, ax=ax)
@@ -114,7 +131,7 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict=None) -> plt.Figure:
     return fig
 
 
-def plot_prototipes(alpha: np.float64, pred_class: np.int8, X: np.ndarray) -> plt.Figure:
+def plot_prototipes(alpha: np.float64, pred_class: np.int8, X: np.ndarray) -> Figure:
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(X)
     ax.set_title(f"Prototypes for Alpha: {alpha}, Predicted Class: {pred_class}")
@@ -134,15 +151,14 @@ if __name__ == "__main__":
         plt.show()
     elif file.endswith(".npy"):
         data = np.load(file)
-        #rand_num = rando
-        # m.randint(0, len(data) - 1)
+        rand_num = random.randint(0, len(data) - 1)
         pred_classes = [data[i][1] for i in range(len(data))]
         unique_classes = np.unique(pred_classes)
         print(f"Unique classes: {unique_classes}")
-        #for i in range(10):
-            #rand_num = random.randint(200, 399)
-            #alpha = data[rand_num][0]; pred_class = data[rand_num][1]; X = data[rand_num][-1]
-            #fig = plot_prototipes(alpha, pred_class, X)
-            #plt.show()
+        for i in range(10):
+            rand_num = random.randint(1,99)
+            alpha = data[rand_num][0]; pred_class = data[rand_num][1]; X = data[rand_num][-1]
+            fig = plot_prototipes(alpha, pred_class, X)
+            plt.show()
     else:
         raise ValueError(f"File format not supported")

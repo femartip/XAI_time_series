@@ -6,11 +6,11 @@ import time
 
 from Utils.dataTypes import SegmentedTS
 from SimplificationMethods.BottumUp.bottomUp import  get_swab_approx
-from SimplificationMethods.Visvalingam_whyattt.Visvalingam_Whyatt import  simplify as VC_simplify
+from SimplificationMethods.Visvalingam_whyattt.Visvalingam_Whyatt import  simplify as VW_simplify
 import SimplificationMethods.Seg_Least_Square as LS
 from SimplificationMethods.ORSalgorithm.ORS_algorithm import get_simplifications
 
-def get_OS_simplification(time_series: np.ndarray, alpha: float):
+def get_OS_simplification(time_series: np.ndarray, alpha: float) -> list[SegmentedTS]:
     """
     Apply OS algorithm to simplify all time series in the dataset.
     """
@@ -36,10 +36,10 @@ def get_OS_simplification(time_series: np.ndarray, alpha: float):
         segTS = SegmentedTS(x_pivots=selcted_xs[0], y_pivots=selectd_ys[0], ts_length=len(ts_y))
         ts_simplifications.append(segTS)
     
-    return time_series, ts_simplifications
+    return ts_simplifications
 
 
-def get_RDP_simplification(time_series: np.ndarray, epsilon: float):
+def get_RDP_simplification(time_series: np.ndarray, epsilon: float) -> list[SegmentedTS]:
     """
     Apply Ramer-Douglas-Peucker (RDP) algorithm to simplify all time series in the dataset.
     """
@@ -50,7 +50,7 @@ def get_RDP_simplification(time_series: np.ndarray, epsilon: float):
     for ts_y in time_series:
         ts_x = list(range(len(ts_y)))
         init_time = time.time()
-        simp_mask = rdp(np.array(list(zip(ts_x,ts_y))), epsilon=epsilon, return_mask=True)
+        simp_mask = rdp(np.array(list(zip(ts_x,ts_y))), epsilon=epsilon, return_mask=True)  # type: ignore
         logging.debug(f"Time: {(time.time()-init_time)}")
         simp_y = [y for y,bool in zip(ts_y, simp_mask) if bool]
         simp_x = [x for x,bool in zip(ts_x, simp_mask) if bool]
@@ -63,10 +63,10 @@ def get_RDP_simplification(time_series: np.ndarray, epsilon: float):
             first = False
         ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
     
-    return time_series, ts_simplifications
+    return ts_simplifications
 
 
-def get_bottom_up_simplification(time_series: np.ndarray, max_error: float):
+def get_bottom_up_simplification(time_series: np.ndarray, max_error: float) -> list[SegmentedTS]:
     """
     Apply Bottom Up algorithm to simplify all time series in the dataset.
     """
@@ -92,9 +92,9 @@ def get_bottom_up_simplification(time_series: np.ndarray, max_error: float):
             first = False
         ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y), num_real_segments=num_segments))
 
-    return time_series, ts_simplifications
+    return ts_simplifications
 
-def get_VC_simplification(time_series: np.ndarray, alpha: float):
+def get_VW_simplification(time_series: np.ndarray, alpha: float) -> list[SegmentedTS]:
     """
     Apply Visvalingam Whyatt algorithm to simplify all time series in the dataset.
     """
@@ -104,7 +104,7 @@ def get_VC_simplification(time_series: np.ndarray, alpha: float):
     logging.debug("alpha:", alpha)
     for ts_y in time_series:
         ts_x = list(range(len(ts_y)))
-        simplification = VC_simplify(ts_y, alpha=alpha)
+        simplification = VW_simplify(ts_y, alpha=alpha)
         simp_x = simplification.x_pivots
         simp_y = simplification.y_pivots
         if first:
@@ -118,10 +118,10 @@ def get_VC_simplification(time_series: np.ndarray, alpha: float):
             first = False
         ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
 
-    return time_series, ts_simplifications
+    return ts_simplifications
 
 
-def get_LSF_simplification(time_series: np.ndarray, alpha: float):
+def get_LSF_simplification(time_series: np.ndarray, alpha: float) -> list[SegmentedTS]:
     """
     Apply Segmented Least Square Fit algorithm to simplify all time series in the dataset.
     """
@@ -148,7 +148,7 @@ def get_LSF_simplification(time_series: np.ndarray, alpha: float):
             first = False
         ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y), num_real_segments=real_seg))
 
-    return time_series, ts_simplifications
+    return ts_simplifications
 
 def main():
     X = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

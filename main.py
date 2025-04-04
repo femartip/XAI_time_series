@@ -9,27 +9,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def save_plots(dataset: str, model_type: str, knee: dict = None) -> None:
+def save_plots(dataset: str, model_type: str, knee: dict = {}) -> None:
     if os.path.exists(f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv"):
         output_file = f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv"
-        fig1 = plot_csv_alpha_mean_loyalty(output_file)
-        fig1.savefig(f"results/{dataset}/{model_type}_alpha_mean_loyalty.png")
-        fig1.clear()
+        #fig1 = plot_csv_alpha_mean_loyalty(output_file)
+        #fig1.savefig(f"results/{dataset}/{model_type}_alpha_mean_loyalty.png")
+        #fig1.clear()
 
         fig2 = plot_csv_complexity_kappa_loyalty(output_file, knee)
         fig2.savefig(f"results/{dataset}/{model_type}_complexity_kappa_loyalty.png")
         fig2.clear()
-
-        fig3 = plot_csv_complexity_mean_loyalty(output_file)
-        fig3.savefig(f"results/{dataset}/{model_type}_complexity_mean_loyalty.png")
-        fig3.clear()
     else:
         logging.error("Results not saved to CSV.")
 
 def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict, auc:dict, knee:dict) -> None:
     results_df = pd.read_csv(f"results/results.csv", header=0)
 
-    simp_alg = ["OS", "RDP", "VC", "BU", "LSF"]
+    simp_alg = ["OS", "RDP", "VW", "BU", "LSF"]
 
     for alg in simp_alg:
         if results_df.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}' & simp_algorithm == '{alg}'") is not None:

@@ -1,7 +1,8 @@
 import numpy as np
 import torch
 import joblib
-
+import os
+from Utils.dataTypes import SegmentedTS
 from Utils.conv_model import ConvClassifier
 
 MODELS = {}
@@ -31,7 +32,9 @@ def classify_sklearn_model(model_path, time_series):
         return 1 if prediction[0] > 0.5 else 0
     return prediction[0]
 
-def model_classify(model_path, time_series):
+def model_classify(model_path: str, time_series: list[float]) -> int:
+    assert os.path.exists(model_path), f"Model path {model_path} does not exist"
+
     if model_path.split("_")[1] == "cnn":
         model = load_pytorch_model(model_path)
         return classify_pytorch_model(model, time_series)
@@ -55,7 +58,9 @@ def batch_classify_sklearn_model(model_path, batch_of_timeseries):
     predictions = [1 if pred > 0.5 else 0 for pred in predictions]
     return predictions
 
-def model_batch_classify(model_path, batch_of_timeseries):
+def model_batch_classify(model_path: str, batch_of_timeseries: list[list[float]]) -> list[int]:
+    assert os.path.exists(model_path), f"Model path {model_path} does not exist"
+
     if model_path.endswith(".pth"):
         model = load_pytorch_model(model_path)
         return batch_classify_pytorch_model(model, batch_of_timeseries)
