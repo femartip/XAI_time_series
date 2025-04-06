@@ -34,7 +34,13 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
     if np.shape(all_time_series)[0] > 100:
         real_shape = np.shape(all_time_series)
         porcentage_data = 100/real_shape[0]
-        all_time_series, _ = train_test_split(all_time_series, train_size=porcentage_data, stratify=labels, random_state=42)
+        try:
+            all_time_series, _ = train_test_split(all_time_series, train_size=porcentage_data, stratify=labels, random_state=42)
+        except ValueError as e:
+            logging.warning(f"Stratified sampling failed: {e}")
+            rand_idx = random.sample(range(real_shape[0]), 100)
+            all_time_series = [all_time_series[i] for i in rand_idx]
+
         logging.info(f"Number of instances {real_shape} > 100, so modified to: {np.shape(all_time_series)[0]}")
 
     #predicted_classes_original = get_model_predictions(model_path, all_time_series) #type: ignore
