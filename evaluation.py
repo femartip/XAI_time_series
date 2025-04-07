@@ -29,6 +29,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
     df = pd.DataFrame(columns=["Type","Alpha", "Percentage Agreement", "Kappa Loyalty", "Complexity", "Num Segments"])
     all_time_series = load_dataset(dataset_name, data_type=datset_type)
     labels = load_dataset_labels(dataset_name, data_type=datset_type)
+    num_classes = len(set(labels))
     
     # Algorithms grow in time complexity with the number of time series. If there are too many, we will stratify the data to get 100 samples
     if np.shape(all_time_series)[0] > 100:
@@ -45,7 +46,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
     #predicted_classes_original = get_model_predictions(model_path, all_time_series) #type: ignore
 
-    args = [(alpha, all_time_series, model_path, dataset_name, datset_type) for alpha in diff_alpha_values]
+    args = [(alpha, all_time_series, model_path, dataset_name, datset_type, num_classes) for alpha in diff_alpha_values]
 
     results = []
     with Pool(processes=12) as pool:
@@ -61,12 +62,12 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
     return df, time
 
 def process_alpha(args):
-    alpha, all_time_series, model_path, dataset_name, datset_type = args
+    alpha, all_time_series, model_path, dataset_name, datset_type, num_classes = args
     results = []
 
     assert model_path.endswith(".pth"), "Model path must be a cnn"
-    model = load_pytorch_model(model_path)
-    predicted_classes_original = batch_classify_pytorch_model(model, all_time_series) 
+    model = load_pytorch_model(model_path, num_classes)
+    predicted_classes_original = batch_classify_pytorch_model(model, all_time_series, num_classes) 
     # Step 1 gen all simplified ts
     logging.debug(f"Alpha: {alpha}")
 
@@ -78,11 +79,11 @@ def process_alpha(args):
     #Step 2 get model predictions
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_OS]
     #predicted_classes_simplifications_OS = get_model_predictions(model_path, batch_simplified_ts) 
-    predicted_classes_simplifications_OS = batch_classify_pytorch_model(model, batch_simplified_ts)
+    predicted_classes_simplifications_OS = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
 
     # Step 3 calculate loyalty and complexity
     #mean_loyalty_OS = calculate_mean_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_OS)
-    kappa_loyalty_OS = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_OS)
+    kappa_loyalty_OS = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_OS, num_classes=num_classes)
     percentage_agreement_OS = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_OS)
     complexity_OS = calculate_complexity(batch_simplified_ts=all_simplifications_OS)
     num_segments_OS = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_OS])
@@ -100,11 +101,11 @@ def process_alpha(args):
     #Step 2 get model predictions
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_RDP]
     #predicted_classes_simplifications_RDP = get_model_predictions(model_path, batch_simplified_ts)   
-    predicted_classes_simplifications_RDP = batch_classify_pytorch_model(model, batch_simplified_ts)
+    predicted_classes_simplifications_RDP = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
 
     # Step 3 calculate loyalty and complexity
     #mean_loyalty_RDP = calculate_mean_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_RDP)
-    kappa_loyalty_RDP = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_RDP)
+    kappa_loyalty_RDP = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_RDP, num_classes=num_classes)
     percentage_agreement_RDP = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_RDP)
     complexity_RDP = calculate_complexity(batch_simplified_ts=all_simplifications_RDP)
     num_segments_RDP = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_RDP])
@@ -122,11 +123,11 @@ def process_alpha(args):
     # Step 2 get model predictions
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
     #predicted_classes_simplifications_BU = get_model_predictions(model_path, batch_simplified_ts)  #type: ignore I will say this and all_time_series_OS are the same, but just in case
-    predicted_classes_simplifications_BU = batch_classify_pytorch_model(model, batch_simplified_ts)
+    predicted_classes_simplifications_BU = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
 
     # Step 3 calculate loyalty and complexity
     #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
-    kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
+    kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU, num_classes=num_classes)
     percentage_agreement_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
     complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
     num_segments_BU = np.mean([ts.num_real_segments for ts in all_simplifications_BU])
@@ -144,11 +145,11 @@ def process_alpha(args):
     # Step 2 get model predictions
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_VW]
     #predicted_classes_simplifications_VW = get_model_predictions(model_path, batch_simplified_ts)  #type: ignore I will say this and all_time_series_OS are the same, but just in case
-    predicted_classes_simplifications_VW = batch_classify_pytorch_model(model, batch_simplified_ts)
+    predicted_classes_simplifications_VW = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
 
     # Step 3 calculate loyalty and complexity
     #mean_loyalty_VW = calculate_mean_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW)
-    kappa_loyalty_VW = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW)
+    kappa_loyalty_VW = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW, num_classes=num_classes)
     percentage_agreement_VW = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW)
     complexity_VW = calculate_complexity(batch_simplified_ts=all_simplifications_VW)
     num_segments_VW = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_VW])
@@ -163,8 +164,8 @@ def process_alpha(args):
     
     return results
 
-def get_model_predictions(model_path: str, batch_of_TS: list[list[float]]) -> list[int]:
-    predicted_classes = model_batch_classify(model_path, batch_of_timeseries=batch_of_TS) 
+def get_model_predictions(model_path: str, batch_of_TS: list[list[float]], num_classes: int) -> list[int]:
+    predicted_classes = model_batch_classify(model_path, batch_of_TS, num_classes) 
     return predicted_classes
 
 def clear_saved_simplifications(dataset_name: str, dataset_type: str, model_path: str) -> None:

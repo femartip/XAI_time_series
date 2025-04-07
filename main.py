@@ -37,7 +37,7 @@ def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict,
     results_df.to_csv(f"results/results.csv", index=False)
 
 
-def main(dataset: str, dataset_type: str, model_type: str) -> None:
+def main(dataset: str, dataset_type: str, model_type: str, retrein: bool = False) -> None:
     """
     Main function to evaluate simplifications.
     Checks that requested model exists, if not trains it.
@@ -56,7 +56,7 @@ def main(dataset: str, dataset_type: str, model_type: str) -> None:
 
     if model_type == "cnn":
         model_path = f"models/{dataset}/cnn_norm.pth" if normalized else f"models/{dataset}/cnn.pth"
-        if not os.path.exists(model_path):
+        if not os.path.exists(model_path) or retrein:
             model, metrics = train_model(dataset, model_type, normalized=normalized)  
             if os.path.exists(model_csv):
                 model_df = pd.read_csv(model_csv, header=0)
@@ -68,7 +68,7 @@ def main(dataset: str, dataset_type: str, model_type: str) -> None:
             save_model(model, model_path, model_type)
     else: 
         model_path = f"models/{dataset}/{model_type}_norm.pkl" if normalized else f"models/{dataset}/{model_type}.pkl"
-        if not os.path.exists(model_path):
+        if not os.path.exists(model_path) or retrein:
             model, metrics = train_model(dataset, model_type, normalized=normalized)  
             if os.path.exists(model_csv):
                 model_df = pd.read_csv(model_csv, header=0)
@@ -103,6 +103,7 @@ if __name__ == "__main__":
     parser.add_argument('--datasets', type=str, nargs='+', help='List of dataset names, if not specified will evaluate all datasets in data folder.')
     parser.add_argument('--dataset_type', type=str, default="TEST_normalized", help='Dataset type, can be either TRAIN, TEST, VALIDATION with or without _normalized')
     parser.add_argument('--model_type', type=str, help='Model type, can be either cnn, decision-tree, knn. If not specified will use all models.')
+    parser.add_argument('--retrain', action='store_true', help='If specified, will retrain the model even if it already exists.')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
@@ -119,4 +120,4 @@ if __name__ == "__main__":
         for model_type in model_types:
             logging.info("Configuration:")
             logging.info(f"Dataset: {dataset}, Dataset Type: {args.dataset_type}, Model Type: {model_type}")
-            main(dataset=dataset, dataset_type=args.dataset_type, model_type=model_type)
+            main(dataset=dataset, dataset_type=args.dataset_type, model_type=model_type, retrein=args.retrain)

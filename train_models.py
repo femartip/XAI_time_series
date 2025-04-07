@@ -9,9 +9,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from tslearn.neighbors import KNeighborsTimeSeriesClassifier
 import joblib
+import pandas as pd
 
 from Utils.plotting import plot_metrics
 from Utils.load_data import load_dataset, load_dataset_labels
+import os
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 SEED = 42
@@ -51,17 +53,26 @@ def train_knn(X_train, y_train, X_val, y_val):
     return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
 
 def test_conv_model(X, y, model, plot=False):
-    X = torch.tensor(X, dtype=torch.float32).to(DEVICE)
-    X = X.unsqueeze(1)
-    y = torch.tensor(y, dtype=torch.float32).to(DEVICE)
+    num_classes = len(set(y))
+    if num_classes == 2:
+        X = torch.tensor(X, dtype=torch.float32).to(DEVICE)
+        X = X.unsqueeze(1)
+        y = torch.tensor(y, dtype=torch.float32).to(DEVICE)
+    else:
+        X = torch.tensor(X, dtype=torch.float32).to(DEVICE)
+        X = X.unsqueeze(1)
+        y = torch.tensor(y, dtype=torch.long).to(DEVICE)
     model.eval()
     with torch.no_grad():
         output = model(X)
-        output = torch.squeeze(output, 1)
-        if len(set(y)) == 2:
+        
+        if num_classes == 2:
+            output = torch.sigmoid(input=output)
+            output = output.squeeze(1)
             metric = BinaryAccuracy()
         else:
-            metric = MulticlassAccuracy()
+            output = torch.softmax(input=output, dim=1)
+            metric = MulticlassAccuracy(num_classes=num_classes)
         metric.update(output, y)
         if plot:
             print(f'Test Accuracy: {metric.compute()}')
@@ -77,27 +88,36 @@ def train_conv_model(X,y, X_val, y_val, plot=False):
     val_metrics = []
     val_losses = []
 
-    X_val = torch.tensor(X_val, dtype=torch.float32).to(DEVICE)
-    X_val = X_val.unsqueeze(1)
-    y_val = torch.tensor(y_val, dtype=torch.float32).to(DEVICE)
     input_size = X.shape[1]
     logging.info("Input size: " + str(input_size))
     num_classes = len(set(y))
     logging.info("Number of classes: " + str(num_classes))
     logging.debug(f"y: {y}")
 
-    model = conv_model.ConvClassifier()
-    model.train()
-    model.to(DEVICE)
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     if num_classes == 2:
-        criterion = torch.nn.BCELoss()
+        X_val = torch.tensor(X_val, dtype=torch.float32).to(DEVICE)
+        X_val = X_val.unsqueeze(1)
+        y_val = torch.tensor(y_val, dtype=torch.float32).to(DEVICE)
+    else:
+        X_val = torch.tensor(X_val, dtype=torch.float32).to(DEVICE)
+        X_val = X_val.unsqueeze(1)
+        y_val = torch.tensor(y_val, dtype=torch.long).to(DEVICE)
+    
+    if num_classes == 2:
+        model = conv_model.ConvClassifier(num_classes=1)
+        model.train()
+        model.to(DEVICE)
+        criterion = torch.nn.BCEWithLogitsLoss()
         metric = BinaryAccuracy()
         metric_val = BinaryAccuracy()
     else:
+        model = conv_model.ConvClassifier(num_classes=num_classes)
+        model.train()
+        model.to(DEVICE)
         criterion = torch.nn.CrossEntropyLoss()
-        metric = MulticlassAccuracy()
-        metric_val = MulticlassAccuracy()
+        metric = MulticlassAccuracy(num_classes=num_classes)
+        metric_val = MulticlassAccuracy(num_classes=num_classes)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     #scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, factor=0.5, verbose=True)
 
     for epoch in range(epochs):
@@ -105,20 +125,26 @@ def train_conv_model(X,y, X_val, y_val, plot=False):
             X_batch = torch.tensor(X[i:i+batch_size], dtype=torch.float32).to(DEVICE)
             X_batch = X_batch.unsqueeze(1)
             logging.debug("X_batch shape: " + str(X_batch.shape))
-            logging.debug(f"X_batch: {X_batch}")
+            
             X_batch = X_batch.to(DEVICE)
-            y_batch = torch.tensor(y[i:i+batch_size], dtype=torch.float32).to(DEVICE)
-            #y_batch = y_batch.unsqueeze(1)
+            if num_classes == 2:
+                y_batch = torch.tensor(y[i:i+batch_size], dtype=torch.float32).to(DEVICE)
+                y_batch = y_batch.unsqueeze(1)
+                y_batch = y_batch.clip(0,1)
+            else:
+                y_batch = torch.tensor(y[i:i+batch_size], dtype=torch.long).to(DEVICE)
+            
             logging.debug("y_batch shape: " + str(y_batch.shape))
 
             optimizer.zero_grad()
             output = model(X_batch)
-            output = torch.squeeze(output, 1)
-            logging.debug("Output shape: " + str(output.shape))
+            logging.debug("Output shape: " + str(output.shape))            
+        
             loss = criterion(output, y_batch)
             loss.backward()
             optimizer.step()
-            #scheduler.step(loss)
+            output = torch.sigmoid(output).squeeze(1) if num_classes == 2 else output 
+            y_batch = y_batch.squeeze(1) if num_classes == 2 else y_batch
             metric.update(output, y_batch)
 
             if i % 1 == 0:
@@ -174,6 +200,7 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
         model, metrics = train_conv_model(X_train, y_train, X_val, y_val)
         test_metric = test_conv_model(X_test, y_test, model)
         metrics.update(test_metric)
+        metrics = {key: value.item() if isinstance(value, torch.Tensor) else value for key, value in metrics.items()}
         return model, metrics
     
     elif model_type == 'decision-tree':
@@ -199,20 +226,38 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_name', type=str, help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
+    parser.add_argument('--datasets', type=str, nargs='+', help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
     parser.add_argument('--normalized', action='store_true', help='True or False')
     parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn, decision-tree, logistic-regression')
-    parser.add_argument('--model_file_name', type=str, help='Path to save the model')
+    parser.add_argument('--save_model', action='store_true', help='Path to save the model')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
-    if args.dataset_name not in ['Chinatown', 'ECG200', 'ItalyPowerDemand']:
-        logging.error("Dataset not supported")
-        exit(1)
+    if args.datasets is not None:
+        datasets = args.datasets
+    else:
+        datasets = [x for x in os.listdir("./data/") if os.path.isdir(f"./data/{x}")]
+    strange_results = []
+    for dataset in datasets:
+        model, metrics = train_model(dataset, args.model_type, args.normalized)
+        print(f"Train accuracy: {metrics['train_acc']}, Validation accuracy: {metrics['val_acc']}, Test accuracy: {metrics['test_acc']}")
+        logging.info("Model trained")
+        if metrics["train_acc"] == 0:
+            strange_results.append(dataset)
 
-    model, metrics = train_model(args.dataset_name, args.model_type, args.normalized)
-    print(f"Train accuracy: {metrics['train_acc']}, Validation accuracy: {metrics['val_acc']}, Test accuracy: {metrics['test_acc']}")
-    logging.info("Model trained")
-    if args.model_file_name:
-        save_model(model, args.model_file_name, args.model_type)
+        if args.save_model:
+            model_path = f"models/{dataset}/cnn_norm.pth" if args.normalized else f"models/{dataset}/cnn.pth"
+            model_csv = f"results/{dataset}/models.csv"
+            if os.path.exists(model_csv):
+                model_df = pd.read_csv(model_csv, header=0)
+            else:
+                model_df = pd.DataFrame(columns=["model_type", "train_acc", "val_acc", "test_acc"])
+
+            model_df.loc[len(model_df)] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
+            model_df.to_csv(model_csv, index=False)
+            save_model(model, model_path, args.model_type)
+            print("Model saved")
+
+    print("Datasets with 0 training accuracy:")
+    print(" ".join(strange_results))
     

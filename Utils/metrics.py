@@ -22,7 +22,7 @@ def calculate_mean_loyalty(pred_class_original:list[int], pred_class_simplified:
     loyalty = float(loyalty)
     return loyalty
 
-def calculate_kappa_loyalty(pred_class_original:list[int], pred_class_simplified:list[int])->float:
+def calculate_kappa_loyalty(pred_class_original:list[int], pred_class_simplified:list[int], num_classes)->float:
     """
     Calculate Cohen's Kappa score to measure agreement between original and simplified classifications.
     """
@@ -30,7 +30,8 @@ def calculate_kappa_loyalty(pred_class_original:list[int], pred_class_simplified
     if len(set(pred_class_original).union(set(pred_class_simplified))) == 1:
         kappa_loyalty = 1.0
     else:
-        kappa_loyalty = cohen_kappa_score(pred_class_original, pred_class_simplified, labels=[0,1])
+        list_classes = [i for i in range(num_classes)]
+        kappa_loyalty = cohen_kappa_score(pred_class_original, pred_class_simplified, labels=list_classes)
     
     return kappa_loyalty
 
