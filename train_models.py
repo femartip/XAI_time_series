@@ -229,7 +229,7 @@ if __name__ == '__main__':
     parser.add_argument('--datasets', type=str, nargs='+', help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
     parser.add_argument('--normalized', action='store_true', help='True or False')
     parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn, decision-tree, logistic-regression')
-    parser.add_argument('--save_model', action='store_true', help='Path to save the model')
+    parser.add_argument('--save_model', action='store_true', help='Save the model in results file')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
@@ -253,9 +253,14 @@ if __name__ == '__main__':
             else:
                 model_df = pd.DataFrame(columns=["model_type", "train_acc", "val_acc", "test_acc"])
 
-            model_df.loc[len(model_df)] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
-            model_df.to_csv(model_csv, index=False)
-            save_model(model, model_path, args.model_type)
+            if args.model_type not in model_df["model_type"].unique(): 
+                model_df.loc[len(model_df)] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
+                model_df.to_csv(model_csv, index=False)
+                save_model(model, model_path, args.model_type)
+            else:
+                model_df[model_df["model_type"] == args.model_type] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
+                model_df.to_csv(model_csv, index=False)
+                save_model(model, model_path, args.model_type)
             print("Model saved")
 
     print("Datasets with 0 training accuracy:")
