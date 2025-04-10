@@ -290,4 +290,23 @@ def save_simplifications(os_alg: str, dataset_name: str, dataset_type: str, mode
         data = np.append(data, combined_data, axis=0)
         np.save(file_path, data, allow_pickle=False)
     
-    
+
+
+
+if __name__ == "__main__":
+    import random
+    import matplotlib.pyplot as plt
+    ts = np.array([[random.randint(1,10) for _ in range(0,100,1)]])
+
+    alphas = list(np.arange(0,3,0.0001))
+    complexities = []
+    for alpha in alphas:
+        #os_simp = get_OS_simplification(ts, alpha)  
+        simp = get_RDP_simplification(ts, alpha)
+        comp = calculate_complexity(simp)
+        complexities.append(comp)
+
+    plt.scatter(alphas, complexities)
+    plt.xlabel("alphas")
+    plt.ylabel("Complexity")
+    plt.show()

@@ -4,7 +4,7 @@ from sklearn.metrics import cohen_kappa_score
 import pandas as pd
 from kneed import KneeLocator
 
-from Utils.dataTypes import SegmentedTS 
+from dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
         if approximation.num_real_segments is None:
@@ -59,32 +59,46 @@ def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tu
     assert metric != "Kappa Loyalty" or metric != "Mean Loyalty", "Metric must be either Kappa Loyalty or Mean Loyalty"
 
     algorithms = df["Type"].unique()
-    auc = {}
+    all_auc = {}
     filtered_curves = {}
     for algorithm in algorithms:
         complexity = df["Complexity"].copy().where(df["Type"] == algorithm).dropna().to_list()
         loyalty = df[metric].copy().where(df["Type"] == algorithm).dropna().to_list()
 
-        if algorithm != "OS":
-            # As OS vs rest of alg have opposite trends for the value of alpha, we need to reverse the order of the lists    
-            complexity = complexity[::-1]
-            loyalty = loyalty[::-1]
+        sort_id = sorted(range(len(complexity)), key=lambda x: complexity[x])
+        complexity = [complexity[x] for x in sort_id]
+        loyalty = [loyalty[x] for x in sort_id]
+
+        if loyalty[-1] != 1 or complexity[-1] != 1:
+            complexity.append(1)
+            loyalty.append(1)
 
         filtered_complexity, filtered_loyalty = filter_anomalous_loyalty_curve(complexity, loyalty)
-        
+
+        auc = 0.0
+        for i in range(len(complexity) -1):
+            x_1 = complexity[i]
+            x_2 = complexity[i+1]
+
+            y_1 = loyalty[i]
+            y_2 = loyalty[i+1]
+
+            auc += abs(((x_2 - x_1)*(y_1 + y_2))/2)
+
+        all_auc[algorithm] = auc
+        filtered_curves[algorithm] = (filtered_complexity, filtered_loyalty)
+
         if show_fig:
+            print("AUC",auc)
             plt.plot(complexity, loyalty)
-            plt.plot(filtered_complexity, filtered_loyalty)
+            #plt.plot(filtered_complexity, filtered_loyalty)
             plt.title(f"{algorithm} - {metric}")
             plt.xlabel("Complexity")
             plt.ylabel("Loyalty")
             plt.legend(["Original", "Filtered"])
             plt.show()
 
-        auc[algorithm] = np.trapz(filtered_loyalty, filtered_complexity)
-        filtered_curves[algorithm] = (filtered_complexity, filtered_loyalty)
-
-    return auc, filtered_curves
+    return all_auc, filtered_curves
     
 
 def filter_anomalous_loyalty_curve(x_values: list, y_values: list) -> tuple[list, list]:
@@ -125,14 +139,15 @@ def find_knee_curve(x_values: list, y_values: list) -> tuple[float, float]:
 
 if __name__ == '__main__':
     #dataset = "Chinatown"
-    dataset = "ItalyPowerDemand"
+    datasets = ["ElectricDevices", "Chinatown", "GunPointAgeSpan", "UMD", "TwoPatterns"]
     #models = ["cnn", "decision-tree", "logistic-regression", "knn"]
-    models = ["decision-tree"]
-    for model in models:
-        df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
-        auc_value, filtered_tuple = auc(df, show_fig=True)
-        #knee_point = find_knee_curve(filtered_tuple[0], filtered_tuple[1])
-        # Plot the filtered curve with the knee point
-        #plt.plot(filtered_tuple[0], filtered_tuple[1])
-        #plt.scatter(knee_point[0], knee_point[1], color='red')
-        #plt.show()
+    models = ["cnn"]
+    for dataset in datasets:
+        for model in models:
+            df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
+            auc_value, filtered_tuple = auc(df, show_fig=True)
+            #knee_point = find_knee_curve(filtered_tuple[0], filtered_tuple[1])
+            # Plot the filtered curve with the knee point
+            #plt.plot(filtered_tuple[0], filtered_tuple[1])
+            #plt.scatter(knee_point[0], knee_point[1], color='red')
+            #plt.show()
