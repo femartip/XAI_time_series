@@ -4,7 +4,7 @@ from sklearn.metrics import cohen_kappa_score
 import pandas as pd
 from kneed import KneeLocator
 
-from dataTypes import SegmentedTS 
+from Utils.dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
         if approximation.num_real_segments is None:
