@@ -7,12 +7,12 @@ from kneed import KneeLocator
 from Utils.dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
-        if approximation.num_real_segments is None:
-            simplicity = (len(approximation.x_pivots) - 1)  * (1 / (len(approximation.line_version) - 1))
-        else:
-            simplicity = approximation.num_real_segments  * (1 / (len(approximation.line_version) - 1))
-            
-        return simplicity
+    if approximation.num_real_segments is None:
+        simplicity = (len(approximation.x_pivots) - 1)  * (1 / (len(approximation.line_version) - 1))
+    else:
+        simplicity = approximation.num_real_segments  * (1 / (len(approximation.line_version) - 1))
+        
+    return simplicity
 
 def calculate_mean_loyalty(pred_class_original:list[int], pred_class_simplified:list[int])->float:
     """
@@ -138,16 +138,28 @@ def find_knee_curve(x_values: list, y_values: list) -> tuple[float, float]:
 
 
 if __name__ == '__main__':
-    #dataset = "Chinatown"
-    datasets = ["ElectricDevices", "Chinatown", "GunPointAgeSpan", "UMD", "TwoPatterns"]
+    import pandas as pd
+    results_df = pd.read_csv("./results/results_copy.csv")
+
+    datasets_names = results_df["dataset"].unique().tolist()
+    datasets = [dataset.replace("TEST_normalized","") for dataset in datasets_names]
+
+    #datasets = ["ElectricDevices", "Chinatown", "GunPointAgeSpan", "UMD", "TwoPatterns"]
     #models = ["cnn", "decision-tree", "logistic-regression", "knn"]
     models = ["cnn"]
-    for dataset in datasets:
+    for i, dataset in enumerate(datasets):
         for model in models:
             df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
-            auc_value, filtered_tuple = auc(df, show_fig=True)
+            auc_values, filtered_tuple = auc(df, show_fig=False)
+
+            for key in auc_values:
+                value = auc_values[key]
+                results_df["performance"].mask((results_df["dataset"] == datasets_names[i]) | (results_df["model"] == f"{model}_norm.pkl") | (results_df["simp_algorithm"] == key.upper()),value , inplace=True)
             #knee_point = find_knee_curve(filtered_tuple[0], filtered_tuple[1])
             # Plot the filtered curve with the knee point
             #plt.plot(filtered_tuple[0], filtered_tuple[1])
             #plt.scatter(knee_point[0], knee_point[1], color='red')
             #plt.show()
+        
+    #results_df.to_csv("./results/results_copy.csv")
+    print("done")
