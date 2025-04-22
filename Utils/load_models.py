@@ -35,8 +35,7 @@ def classify_sklearn_model(model_path, time_series):
 
 def model_classify(model_path: str, time_series: list[float], num_classes: int) -> int:
     assert os.path.exists(model_path), f"Model path {model_path} does not exist"
-
-    if model_path.split("_")[1] == "cnn":
+    if model_path.endswith(".pth"):
         model = load_pytorch_model(model_path, num_classes)
         return classify_pytorch_model(model, time_series)
     elif model_path.endswith(".pkl"):

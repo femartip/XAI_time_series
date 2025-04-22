@@ -1,0 +1,42 @@
+.FileComponent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.InteractiveTool{
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+    margin-left: 80px;
+}
+
+.button{
+  width: 100%;
+}
+
+/* Assuming you have HTML elements with class names "float-left" and "float-right" */
+
+.float-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+}
+
+.float-left, .float-right {
+    /* Add any other styling you need for these elements */
+    /* For demonstration purposes, I'm setting a border and padding */
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px; /* Add a small space between the elements */
+}
+
+.float-left {
+    /* Style for the left element */
+    /* You can add more specific styling here */
+}
+
+.float-right {
+    /* Style for the right element */
+    /* You can add more specific styling here */
+}

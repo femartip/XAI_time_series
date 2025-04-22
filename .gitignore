@@ -185,3 +185,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+pythonServer/server_venv/
+webPage/public
+webPage/node_modules
