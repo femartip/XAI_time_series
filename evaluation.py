@@ -8,6 +8,7 @@ import random
 from sklearn.model_selection import train_test_split
 import re
 from multiprocessing import Pool, Manager
+import math
 
 from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
     get_VW_simplification, get_LSF_simplification
@@ -42,7 +43,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
             rand_idx = random.sample(range(real_shape[0]), 100)
             all_time_series = [all_time_series[i] for i in rand_idx]
 
-    predicted_classes_original = get_model_predictions(model_path, all_time_series, num_classes)    #type: ignore
+    predicted_classes_original = labels
 
     time_os = []
     time_rdp = []
@@ -60,7 +61,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
         #Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_OS]
-        predicted_classes_simplifications_OS = get_model_predictions(model_path, batch_simplified_ts, num_classes) 
+        predicted_classes_simplifications_OS = get_hard_coded_classifier(batch_simplified_ts, num_classes) 
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_OS = calculate_mean_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_OS)
@@ -81,7 +82,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
         #Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_RDP]
-        predicted_classes_simplifications_RDP = get_model_predictions(model_path, batch_simplified_ts, num_classes)   
+        predicted_classes_simplifications_RDP = get_hard_coded_classifier(batch_simplified_ts, num_classes)   
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_RDP = calculate_mean_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_RDP)
@@ -102,7 +103,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
         # Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
-        predicted_classes_simplifications_BU = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+        predicted_classes_simplifications_BU = get_hard_coded_classifier(batch_simplified_ts, num_classes) 
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
@@ -123,7 +124,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
         # Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_VW]
-        predicted_classes_simplifications_VW = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+        predicted_classes_simplifications_VW = get_hard_coded_classifier(batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_VW = calculate_mean_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW)
@@ -250,6 +251,14 @@ def process_alpha_mp(args):
     results.append(row)
     
     return results
+
+def get_hard_coded_classifier(batch_of_TS: list[list[float]], num_classes: int) -> list[int]:
+    labels = []
+    for time_series in batch_of_TS:
+        odd_flour_count = sum([0 if math.floor(x)%2==0 else 1 for x in time_series])
+        label = odd_flour_count%num_classes
+        labels.append(label)
+    return labels
 
 def get_model_predictions(model_path: str, batch_of_TS: list[list[float]], num_classes: int) -> list[int]:
     predicted_classes = model_batch_classify(model_path, batch_of_TS, num_classes) 
