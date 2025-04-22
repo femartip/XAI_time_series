@@ -1,0 +1,2 @@
+model_type,train_acc,val_acc,test_acc
+cnn,0.9879000186920166,0.9785000085830688,1.0
