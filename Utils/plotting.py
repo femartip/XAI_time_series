@@ -82,14 +82,14 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for i, (name, group) in enumerate(df.groupby("Type")):
-        scatter = ax.scatter(group["Complexity"], group["Kappa Loyalty"], 
-                            label=name, c=group['Alpha'], cmap='viridis', 
-                            marker=representation_type[i])
+        line_plot = ax.plot(group["Complexity"], group["Kappa Loyalty"], 
+                            label=name, 
+                            marker=representation_type[i]) #c=group['Alpha'], cmap='viridis'`
         
         if points != {}:
             point_x = float(points[name][0])
             point_y = float(points[name][1])
-            ax.scatter(point_x, point_y, color='red', marker=representation_type[i])
+            ax.plot(point_x, point_y, color='red', marker=representation_type[i])
             #ax.axhline(y=point_y, color='red', linestyle='--', alpha=0.2)
             #ax.axvline(x=point_x, color='red', linestyle='--', alpha=0.2)
     
@@ -124,8 +124,8 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
     ax.set_xticklabels(x_labels)
 
     ax.legend()
-    cbar = plt.colorbar(scatter, ax=ax)
-    cbar.set_label('Alpha/Epsilon')
+    #cbar = plt.colorbar(line_plot, ax=ax)
+    #cbar.set_label('Alpha/Epsilon')
     plt.tight_layout()
     
     return fig
@@ -145,8 +145,8 @@ if __name__ == "__main__":
     assert os.path.exists(file), f"File {file} does not exist"
 
     if file.endswith(".csv"):
-        fig1 = plot_csv_complexity_mean_loyalty(file)
-        plt.show()
+        #fig1 = plot_csv_complexity_mean_loyalty(file)
+        #plt.show()
         fig2 = plot_csv_complexity_kappa_loyalty(file)
         plt.show()
     elif file.endswith(".npy"):

@@ -66,7 +66,7 @@ def get_RDP_simplification(time_series: np.ndarray, epsilon: float) -> list[Segm
     return ts_simplifications
 
 
-def get_bottom_up_simplification(time_series: np.ndarray, max_error: float) -> list[SegmentedTS]:
+def get_bottom_up_simplification(time_series: np.ndarray, max_error: float, interpolate_segments: bool) -> list[SegmentedTS]:
     """
     Apply Bottom Up algorithm to simplify all time series in the dataset.
     """
@@ -90,7 +90,10 @@ def get_bottom_up_simplification(time_series: np.ndarray, max_error: float) -> l
                      label="Line Simplified", linestyle="--")
             plt.show()
             first = False
-        ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y), num_real_segments=num_segments))
+        if interpolate_segments:
+            ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y), num_real_segments=num_segments))
+        else:
+            ts_simplifications.append(SegmentedTS(x_pivots=simp_x, y_pivots=simp_y, ts_length=len(ts_y)))
 
     return ts_simplifications
 

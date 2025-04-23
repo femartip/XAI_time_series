@@ -47,7 +47,9 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
     time_os = []
     time_rdp = []
     time_vw = []
-    time_bu = []
+    time_bu_1 = []
+    time_bu_2 = []
+
 
     for alpha in tqdm(diff_alpha_values):
         # Step 1 gen all simplified ts
@@ -95,26 +97,47 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
         save_simplifications(os_alg="RDP", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_RDP, alpha=alpha)
 
         # Step 1 gen all simplified ts
-        logging.debug("Running BU")
+        logging.debug("Running BU_1")
         init_time = datetime.datetime.now()
-        all_simplifications_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha) #type: ignore
-        time_bu.append((datetime.datetime.now()-init_time).total_seconds())
+        all_simplifications_BU_1 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
+        time_bu_1.append((datetime.datetime.now()-init_time).total_seconds())
 
         # Step 2 get model predictions
-        batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
-        predicted_classes_simplifications_BU = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_1]
+        predicted_classes_simplifications_BU_1 = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
-        kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU, num_classes=num_classes)
-        percentage_agreement_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
-        complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
-        num_segments_BU = np.mean([ts.num_real_segments for ts in all_simplifications_BU])
-        row = ["BU", alpha, percentage_agreement_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
+        kappa_loyalty_BU_1 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1, num_classes=num_classes)
+        percentage_agreement_BU_1 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1)
+        complexity_BU_1 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_1)
+        num_segments_BU_1 = np.mean([ts.num_real_segments for ts in all_simplifications_BU_1])
+        row = ["BU_1", alpha, percentage_agreement_BU_1, kappa_loyalty_BU_1, complexity_BU_1, num_segments_BU_1]
         df.loc[len(df)] = row
 
-        save_simplifications(os_alg="BU", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BU, alpha=alpha)
+        save_simplifications(os_alg="BU_1", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BU_1, alpha=alpha)
 
+        # Step 1 gen all simplified ts
+        logging.debug("Running BU_2")
+        init_time = datetime.datetime.now()
+        all_simplifications_BU_2 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
+        time_bu_2.append((datetime.datetime.now()-init_time).total_seconds())
+
+        # Step 2 get model predictions
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_2]
+        predicted_classes_simplifications_BU_2 = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+
+        # Step 3 calculate loyalty and complexity
+        #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
+        kappa_loyalty_BU_2 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2, num_classes=num_classes)
+        percentage_agreement_BU_2 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2)
+        complexity_BU_2 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_2)
+        num_segments_BU_2 = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU_2])
+        row = ["BU_2", alpha, percentage_agreement_BU_2, kappa_loyalty_BU_2, complexity_BU_2, num_segments_BU_2]
+        df.loc[len(df)] = row
+
+        save_simplifications(os_alg="BU_2", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BU_2, alpha=alpha)
+        
         # Step 1 gen all simplified ts
         logging.debug("Running VW")
         init_time = datetime.datetime.now()
@@ -136,11 +159,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
         save_simplifications(os_alg="VW", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_VW, alpha=alpha)
 
-        row = ["LSF", alpha, 0, 0, 0, 0]
-        time_lsf = 0
-        df.loc[len(df)] = row
-
-    time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VW": np.mean(time_vw), "BU": np.mean(time_bu), "LSF": time_lsf}
+    time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VW": np.mean(time_vw), "BU_1": np.mean(time_bu_1), "BU_2": np.mean(time_bu_2)}
 
     return df, time
 
