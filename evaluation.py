@@ -201,7 +201,7 @@ def score_different_alphas_mp(dataset_name: str, datset_type: str, model_path: s
         for row in result:
             df.loc[len(df)] = row
 
-    time = {"OS": 0, "RDP": 0, "VW": 0, "BU": 0, "LSF": 0}
+    time = {"OS": 0, "RDP": 0, "VW": 0, "BU_1": 0, "BU_2": 0}
 
     return df, time
 
@@ -239,17 +239,28 @@ def process_alpha_mp(args):
     row = ["RDP", alpha, percentage_agreement_RDP, kappa_loyalty_RDP, complexity_RDP, num_segments_RDP]
     results.append(row)
 
-    logging.debug("Running BU")
-    all_simplifications_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha)   #type: ignore
+    all_simplifications_BU_1 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
+    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_1]
+    predicted_classes_simplifications_BU_1 = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
 
-    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
-    predicted_classes_simplifications_BU = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
+        # Step 3 calculate loyalty and complexity
+        #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
+    kappa_loyalty_BU_1 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1, num_classes=num_classes)
+    percentage_agreement_BU_1 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1)
+    complexity_BU_1 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_1)
+    num_segments_BU_1 = np.mean([ts.num_real_segments for ts in all_simplifications_BU_1])
+    row = ["BU_1", alpha, percentage_agreement_BU_1, kappa_loyalty_BU_1, complexity_BU_1, num_segments_BU_1]
+    results.append(row)
 
-    kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU, num_classes=num_classes)
-    percentage_agreement_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
-    complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
-    num_segments_BU = np.mean([ts.num_real_segments for ts in all_simplifications_BU])
-    row = ["BU", alpha, percentage_agreement_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
+    all_simplifications_BU_2 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
+    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_2]
+    predicted_classes_simplifications_BU_2 = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+
+    kappa_loyalty_BU_2 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2, num_classes=num_classes)
+    percentage_agreement_BU_2 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2)
+    complexity_BU_2 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_2)
+    num_segments_BU_2 = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU_2])
+    row = ["BU_2", alpha, percentage_agreement_BU_2, kappa_loyalty_BU_2, complexity_BU_2, num_segments_BU_2]
     results.append(row)
 
     logging.debug("Running VW")
@@ -262,10 +273,6 @@ def process_alpha_mp(args):
     complexity_VW = calculate_complexity(batch_simplified_ts=all_simplifications_VW)
     num_segments_VW = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_VW])
     row = ["VW", alpha, percentage_agreement_VW, kappa_loyalty_VW, complexity_VW, num_segments_VW]
-    results.append(row)
-
-
-    row = ["LSF", alpha, 0, 0, 0, 0]
     results.append(row)
     
     return results
