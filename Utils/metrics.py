@@ -144,22 +144,41 @@ if __name__ == '__main__':
     datasets_names = results_df["dataset"].unique().tolist()
     datasets = [dataset.replace("TEST_normalized","") for dataset in datasets_names]
 
-    #datasets = ["ElectricDevices", "Chinatown", "GunPointAgeSpan", "UMD", "TwoPatterns"]
+    #datasets = ['ProximalPhalanxOutlineCorrect', 'ItalyPowerDemand', 'MoteStrain', 'GunPointOldVersusYoung', 'MiddlePhalanxTW', 'ECG200', 'SonyAIBORobotSurface1', 'ElectricDevices', 'BME', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'MedicalImages', 'TwoPatterns', 'UMD', 'ECG5000', 'TwoLeadECG', 'GunPointAgeSpan', 'MiddlePhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxTW', 'SmoothSubspace', 'Plane', 'MiddlePhalanxOutlineCorrect', 'Adiac', 'SwedishLeaf', 'ECGFiveDays', 'PhalangesOutlinesCorrect', 'FacesUCR', 'CBF', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'Wafer']
     #models = ["cnn", "decision-tree", "logistic-regression", "knn"]
     models = ["cnn"]
+    rows_to_drop = []
+    rows_to_update=[]
     for i, dataset in enumerate(datasets):
+        print(f"Dataset {dataset}")
         for model in models:
+            print(f"Model {model}")
             df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
-            auc_values, filtered_tuple = auc(df, show_fig=False)
+            auc_values, filtered_curves = auc(df, show_fig=False)
+            
+            knees = {}
+            for simp_alg in filtered_curves.keys():
+                filtered_curve = filtered_curves[simp_alg]
+                filtered_complexity = filtered_curve[0]
+                filtered_kappa_loyalty = filtered_curve[1]
+                knee = find_knee_curve(filtered_complexity, filtered_kappa_loyalty)
+                knees[simp_alg] = knee
 
-            for key in auc_values:
-                value = auc_values[key]
-                results_df["performance"].mask((results_df["dataset"] == datasets_names[i]) | (results_df["model"] == f"{model}_norm.pkl") | (results_df["simp_algorithm"] == key.upper()),value , inplace=True)
-            #knee_point = find_knee_curve(filtered_tuple[0], filtered_tuple[1])
-            # Plot the filtered curve with the knee point
-            #plt.plot(filtered_tuple[0], filtered_tuple[1])
-            #plt.scatter(knee_point[0], knee_point[1], color='red')
-            #plt.show()
+            simp_alg = ["OS", "RDP", "VW", "BU_1", "BU_2"]
+
+            for alg in simp_alg:
+                query_mask = ((results_df["dataset"] == f"{dataset}TEST_normalized") & (results_df["model"] == f"{model}_norm.pth") & (results_df["simp_algorithm"] == alg))
+                
+                if query_mask.any(): rows_to_drop.extend(results_df[query_mask].index.tolist())
+                
+                new_row = {"dataset": f"{dataset}TEST_normalized","model": f"{model}_norm.pth","simp_algorithm": alg,"performance": auc_values[alg],"knee(x,y)": str(knees[alg]),"time": 0.0}
+                rows_to_update.append(new_row)
+    
+    if rows_to_drop: results_df = results_df.drop(index=rows_to_drop)
+    
+    new_rows_df = pd.DataFrame(rows_to_update)
+    results_df = pd.concat([results_df, new_rows_df], ignore_index=True)
+
         
-    #results_df.to_csv("./results/results_copy.csv")
+    results_df.to_csv("./results/results_copy.csv", index=False)
     print("done")

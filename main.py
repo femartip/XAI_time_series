@@ -27,12 +27,21 @@ def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict,
 
     simp_alg = ["OS", "RDP", "VW", "BU_1", "BU_2"]
 
-    for alg in simp_alg:
-        if results_df.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}' & simp_algorithm == '{alg}'") is not None:
-            df_index = results_df.query(f"dataset == '{dataset_name + datset_type}' & model == '{model_path.split('/')[-1]}' & simp_algorithm == '{alg}'").copy().index
-            results_df = results_df.drop(index=df_index)
+    rows_to_drop = []
+    rows_to_update=[]
+    for i,alg in enumerate(simp_alg):
+        query_mask = ((results_df["dataset"] == f'{dataset_name + datset_type}') & (results_df["model"] == f'{model_path.split("/")[-1]}') & (results_df["simp_algorithm"] == f'{alg}'))
+        if query_mask.any():
+            rows_to_drop.extend(results_df[query_mask].index.tolist())
 
-        results_df.loc[len(results_df)] = [dataset_name + datset_type, model_path.split("/")[-1], alg, auc[alg], str(knee[alg]), time[alg]]
+        
+        new_row = {"dataset": f"{dataset_name + datset_type}","model": f"{model_type.split('/')[-1]}","simp_algorithm": alg,"performance": auc[alg],"knee(x,y)": str(knee[alg]),"time": time[alg]}
+        rows_to_update.append(new_row)
+
+    if rows_to_drop: results_df = results_df.drop(index=rows_to_drop)
+    
+    new_rows_df = pd.DataFrame(rows_to_update)
+    results_df = pd.concat([results_df, new_rows_df], ignore_index=True)
 
     results_df.to_csv(f"results/results.csv", index=False)
 
