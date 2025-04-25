@@ -55,7 +55,7 @@ def load_dataset(dataset_name: str, data_type: str = "TRAIN") -> np.ndarray:
     
     # Remove the first column (index 0) along axis 1 (columns)
     data = np.delete(array_2d, 0, axis=1)
-    return array_2d
+    return data
 
 
 def load_dataset_org_labels(dataset_name: str, data_type: str = "TRAIN") -> np.ndarray:

@@ -89,6 +89,7 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
         if points != {}:
             point_x = float(points[name][0])
             point_y = float(points[name][1])
+            
             ax.plot(point_x, point_y, color='red', marker=representation_type[i])
             #ax.axhline(y=point_y, color='red', linestyle='--', alpha=0.2)
             #ax.axvline(x=point_x, color='red', linestyle='--', alpha=0.2)
@@ -105,18 +106,17 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
     x_labels = []
     for comp in complexity_ticks:
         closest_comp = df["Complexity"].iloc[(df["Complexity"] - comp).abs().argsort()[:1]].values[0]
-        segments = sorted(df[df["Complexity"] == closest_comp]["Num Segments"].unique())
-        segments_str = ", ".join(map(str, segments))
-        x_labels.append(f"{comp:.1f}\n({segments_str})")
+        segment = sorted(df[df["Complexity"] == closest_comp]["Num Segments"].unique())[0]
+        segment = round(segment,2)
+        x_labels.append(f"{comp:.1f}\n({segment})")
 
     if "Percentage Agreement" in df.columns:
-        loyalty_ticks = np.linspace(df["Kappa Loyalty"].min(), df["Kappa Loyalty"].max(), num_ticks)
+        loyalty_ticks = np.linspace(df["Kappa Loyalty"].min(), df["Kappa Loyalty"].max(), num_ticks)    #Sampled points of kappa
         y_labels = []
         for loyalty in loyalty_ticks:
             closest_loyalty = df["Kappa Loyalty"].iloc[(df["Kappa Loyalty"] - loyalty).abs().argsort()[:1]].values[0]
-            segments = sorted(df[df["Kappa Loyalty"] == closest_loyalty]["Percentage Agreement"].unique())
-            segments_str = ", ".join(map(str, segments))
-            y_labels.append(f"{loyalty:.1f}\n({segments_str}%)")
+            segments = sorted(df[df["Kappa Loyalty"] == closest_loyalty]["Percentage Agreement"].unique())[0]
+            y_labels.append(f"{loyalty:.1f}\n({segments}%)")
         ax.set_yticks(loyalty_ticks)
         ax.set_yticklabels(y_labels) 
     

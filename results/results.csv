@@ -1,4 +1,4 @@
-dataset,model,simp_algorithm,performance,"knee(x,y)",time
+dataset,model,simp_algorithm,performance,comp@loy=0.8,time
 ProximalPhalanxOutlineCorrectTEST_normalized,logistic-regression_norm.pkl,LSF,0.5,"(0.0, 0.0)",0
 ProximalPhalanxOutlineCorrectTEST_normalized,logistic-regression_norm.pkl,BU_1,0.914798280763729,"(0.04443037974683545, 0.0)",0.28244
 ProximalPhalanxOutlineCorrectTEST_normalized,logistic-regression_norm.pkl,VW,0.796375308840383,"(1.0, 1.0)",0.0163426

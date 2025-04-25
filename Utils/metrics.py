@@ -3,8 +3,9 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import cohen_kappa_score
 import pandas as pd
 from kneed import KneeLocator
+import pandas as pd
 
-from Utils.dataTypes import SegmentedTS 
+from dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
     if approximation.num_real_segments is None:
@@ -137,10 +138,7 @@ def find_knee_curve(x_values: list, y_values: list) -> tuple[float, float]:
     return knee_x, knee_y
 
 
-if __name__ == '__main__':
-    import pandas as pd
-    results_df = pd.read_csv("./results/results_copy.csv")
-
+def update_auc(results_df: pd.DataFrame) -> None:
     datasets_names = results_df["dataset"].unique().tolist()
     datasets = [dataset.replace("TEST_normalized","") for dataset in datasets_names]
 
@@ -155,14 +153,8 @@ if __name__ == '__main__':
             print(f"Model {model}")
             df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
             auc_values, filtered_curves = auc(df, show_fig=False)
-            
-            knees = {}
-            for simp_alg in filtered_curves.keys():
-                filtered_curve = filtered_curves[simp_alg]
-                filtered_complexity = filtered_curve[0]
-                filtered_kappa_loyalty = filtered_curve[1]
-                knee = find_knee_curve(filtered_complexity, filtered_kappa_loyalty)
-                knees[simp_alg] = knee
+            comp_threshold = get_loylaty_by_threshold(df, 0.8)
+                
 
             simp_alg = ["OS", "RDP", "VW", "BU_1", "BU_2"]
 
@@ -171,7 +163,7 @@ if __name__ == '__main__':
                 
                 if query_mask.any(): rows_to_drop.extend(results_df[query_mask].index.tolist())
                 
-                new_row = {"dataset": f"{dataset}TEST_normalized","model": f"{model}_norm.pth","simp_algorithm": alg,"performance": auc_values[alg],"knee(x,y)": str(knees[alg]),"time": 0.0}
+                new_row = {"dataset": f"{dataset}TEST_normalized","model": f"{model}_norm.pth","simp_algorithm": alg,"performance": auc_values[alg],"comp@loy=0.8": comp_threshold[alg],"time": 0.0}
                 rows_to_update.append(new_row)
     
     if rows_to_drop: results_df = results_df.drop(index=rows_to_drop)
@@ -182,3 +174,70 @@ if __name__ == '__main__':
         
     results_df.to_csv("./results/results_copy.csv", index=False)
     print("done")
+
+def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:str="Kappa Loyalty") -> dict[str, float]:
+    algorithms = df["Type"].unique()
+    threshold_comp = {}
+    
+    for algorithm in algorithms:
+        complexity = df["Complexity"].copy().where(df["Type"] == algorithm).dropna().to_list()
+        loyalty = df[metric].copy().where(df["Type"] == algorithm).dropna().to_list()
+
+        sort_id = sorted(range(len(complexity)), key=lambda x: complexity[x])
+        complexity = [complexity[x] for x in sort_id]
+        loyalty = [loyalty[x] for x in sort_id]
+        
+        if loyalty[-1] != 1 or complexity[-1] != 1:
+            complexity.append(1)
+            loyalty.append(1)
+
+        #print(min(complexity), max(complexity))
+
+        if loyalty_threshold in loyalty:
+            threshold_idx = loyalty.index(loyalty_threshold)
+            threshold_comp[algorithm] = complexity[threshold_idx]
+        else:
+            interpolated_comp  = np.inf
+            for i in range(len(complexity)-1):
+                if loyalty[i] < loyalty_threshold and loyalty[i+1] > loyalty_threshold:
+                    interpolated_comp = np.interp(x=[0.8],xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
+                    threshold_comp[algorithm] = interpolated_comp
+                    assert interpolated_comp < 1.0, "Interpolated value greater than one"
+                    break
+                elif loyalty[i] > loyalty_threshold and loyalty[i+1] > loyalty_threshold:
+                    interpolated_comp = 1.0
+                    threshold_comp[algorithm] = interpolated_comp
+
+            if interpolated_comp == np.inf:
+                print("No interpolartion found")
+                raise ValueError
+
+    return threshold_comp
+
+
+if __name__ == '__main__':
+    from plotting import plot_csv_complexity_kappa_loyalty
+    datasets = ['ProximalPhalanxOutlineCorrect', 'ItalyPowerDemand', 'MoteStrain', 'GunPointOldVersusYoung', 'MiddlePhalanxTW', 'ECG200', 'SonyAIBORobotSurface1', 'ElectricDevices', 'BME', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'MedicalImages', 'TwoPatterns', 'UMD', 'ECG5000', 'TwoLeadECG', 'GunPointAgeSpan', 'MiddlePhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxTW', 'SmoothSubspace', 'Plane', 'MiddlePhalanxOutlineCorrect', 'Adiac', 'SwedishLeaf', 'ECGFiveDays', 'PhalangesOutlinesCorrect', 'FacesUCR', 'CBF', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'Wafer']
+    #datasets = ['MoteStrain', 'ECG5000', 'ECGFiveDays', 'Wafer']
+    model = "cnn"
+    for dataset in datasets:
+        print(dataset)
+        results_file = f"results/{dataset}/{model}_alpha_complexity_loyalty.csv"
+        df = pd.read_csv(results_file)
+        values = get_loylaty_by_threshold(df, 0.8)
+        #for alg in values:
+        #    if values[alg] > 1:
+        #        print(dataset)
+        #        print(alg)
+        #        print(values[alg])
+        #fig = plot_csv_complexity_kappa_loyalty(results_file)
+        #plt.show()
+        #plt.show(block=False)
+        #plt.pause(3)
+        #plt.close()
+
+    
+    if False:
+        results_df = pd.read_csv("./results/results_copy.csv")
+        update_auc(results_df=results_df)
+
