@@ -1,7 +1,7 @@
 import logging
 from evaluation import score_different_alphas, score_different_alphas_mp
 from Utils.plotting import plot_csv_complexity_kappa_loyalty, plot_csv_alpha_mean_loyalty, plot_csv_complexity_mean_loyalty
-from Utils.metrics import auc, find_knee_curve
+from Utils.metrics import auc, find_knee_curve, get_loylaty_by_threshold
 import argparse
 import os
 from train_models import train_model, save_model
@@ -9,23 +9,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def save_plots(dataset: str, model_type: str, knee: dict = {}) -> None:
+def save_plots(dataset: str, model_type: str) -> None:
     if os.path.exists(f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv"):
         output_file = f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv"
         #fig1 = plot_csv_alpha_mean_loyalty(output_file)
         #fig1.savefig(f"results/{dataset}/{model_type}_alpha_mean_loyalty.png")
         #fig1.clear()
 
-        fig2 = plot_csv_complexity_kappa_loyalty(output_file, knee)
+        fig2 = plot_csv_complexity_kappa_loyalty(output_file)
         fig2.savefig(f"results/{dataset}/{model_type}_complexity_kappa_loyalty.png")
         fig2.clear()
     else:
         logging.error("Results not saved to CSV.")
 
-def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict, auc:dict, knee:dict) -> None:
+def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict, auc:dict, comp_perf:dict) -> None:
     results_df = pd.read_csv(f"results/results.csv", header=0)
 
-    simp_alg = ["OS", "RDP", "VW", "BU_1", "BU_2"]
+    simp_alg = ["OS", "RDP", "VW", "GAP-BU", "BU", "GAP-BULSF", "BULSF"]
 
     rows_to_drop = []
     rows_to_update=[]
@@ -35,7 +35,7 @@ def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict,
             rows_to_drop.extend(results_df[query_mask].index.tolist())
 
         
-        new_row = {"dataset": f"{dataset_name + datset_type}","model": f"{model_type.split('/')[-1]}","simp_algorithm": alg,"performance": auc[alg],"knee(x,y)": str(knee[alg]),"time": time[alg]}
+        new_row = {"dataset": f"{dataset_name + datset_type}","model": f"{model_path.split('/')[-1]}","simp_algorithm": alg,"performance": auc[alg],"comp@loy=0.8": comp_perf[alg],"time": time[alg]}
         rows_to_update.append(new_row)
 
     if rows_to_drop: results_df = results_df.drop(index=rows_to_drop)
@@ -98,19 +98,11 @@ def main(dataset: str, dataset_type: str, model_type: str, args: argparse.Namesp
     df.to_csv(f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv", index=False)
 
     auc_dict, filtered_curves = auc(df)
-
-    knees = {}
-    for simp_alg in filtered_curves.keys():
-        filtered_curve = filtered_curves[simp_alg]
-        filtered_complexity = filtered_curve[0]
-        filtered_kappa_loyalty = filtered_curve[1]
-        knee = find_knee_curve(filtered_complexity, filtered_kappa_loyalty)
-        
-        knees[simp_alg] = knee
+    comp_performance = get_loylaty_by_threshold(df, loyalty_threshold=0.8)
     
-    update_results(dataset, dataset_type, model_path, time_dict, auc_dict, knees)
+    update_results(dataset, dataset_type, model_path, time_dict, auc_dict, comp_performance)
 
-    save_plots(dataset, model_type, knees)
+    save_plots(dataset, model_type)
 
 
 if __name__ == "__main__":

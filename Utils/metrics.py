@@ -5,7 +5,7 @@ import pandas as pd
 from kneed import KneeLocator
 import pandas as pd
 
-from dataTypes import SegmentedTS 
+from Utils.dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
     if approximation.num_real_segments is None:
@@ -200,7 +200,7 @@ def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
             interpolated_comp  = np.inf
             for i in range(len(complexity)-1):
                 if loyalty[i] < loyalty_threshold and loyalty[i+1] > loyalty_threshold:
-                    interpolated_comp = np.interp(x=[0.8],xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
+                    interpolated_comp = np.interp(x=0.8,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
                     threshold_comp[algorithm] = interpolated_comp
                     assert interpolated_comp < 1.0, "Interpolated value greater than one"
                     break

@@ -78,7 +78,7 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
     assert file.endswith(".csv"), "File should be a CSV file"
     
     df = pd.read_csv(file)
-    representation_type = ["o", "x", '+', "|", "s"]
+    representation_type = ["o", "x", '+', "|", "s", "^", "v", "D", "*"]
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for i, (name, group) in enumerate(df.groupby("Type")):

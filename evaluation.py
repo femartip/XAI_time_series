@@ -10,7 +10,7 @@ import re
 from multiprocessing import Pool, Manager
 
 from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
-    get_VW_simplification, get_LSF_simplification
+    get_VW_simplification, get_LSF_simplification, get_bottom_up_lsf_simplification
 from Utils.metrics import calculate_mean_loyalty, calculate_kappa_loyalty, calculate_complexity, score_simplicity, calculate_percentage_agreement
 from Utils.load_models import model_batch_classify, load_pytorch_model, batch_classify_pytorch_model # type: ignore
 from Utils.load_data import load_dataset, load_dataset_labels
@@ -47,9 +47,10 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
     time_os = []
     time_rdp = []
     time_vw = []
-    time_bu_1 = []
-    time_bu_2 = []
-
+    time_gap_bu = []
+    time_bu = []
+    time_gap_bulsf = []
+    time_bulsf = []
 
     for alpha in tqdm(diff_alpha_values):
         # Step 1 gen all simplified ts
@@ -97,47 +98,90 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
         save_simplifications(os_alg="RDP", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_RDP, alpha=alpha)
 
         # Step 1 gen all simplified ts
-        logging.debug("Running BU_1")
+        logging.debug("Running gap_BU")
         init_time = datetime.datetime.now()
-        all_simplifications_BU_1 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
-        time_bu_1.append((datetime.datetime.now()-init_time).total_seconds())
+        all_simplifications_gap_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
+        time_gap_bu.append((datetime.datetime.now()-init_time).total_seconds())
 
         # Step 2 get model predictions
-        batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_1]
-        predicted_classes_simplifications_BU_1 = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_gap_BU]
+        predicted_classes_simplifications_gap_BU = get_model_predictions(model_path, batch_simplified_ts, num_classes)  
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
-        kappa_loyalty_BU_1 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1, num_classes=num_classes)
-        percentage_agreement_BU_1 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1)
-        complexity_BU_1 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_1)
-        num_segments_BU_1 = np.mean([ts.num_real_segments for ts in all_simplifications_BU_1])
-        row = ["BU_1", alpha, percentage_agreement_BU_1, kappa_loyalty_BU_1, complexity_BU_1, num_segments_BU_1]
+        kappa_loyalty_gap_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BU, num_classes=num_classes)
+        percentage_agreement_gap_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BU)
+        complexity_gap_BU = calculate_complexity(batch_simplified_ts=all_simplifications_gap_BU)
+        num_segments_gap_BU = np.mean([ts.num_real_segments for ts in all_simplifications_gap_BU])
+        row = ["GAP-BU", alpha, percentage_agreement_gap_BU, kappa_loyalty_gap_BU, complexity_gap_BU, num_segments_gap_BU]
         df.loc[len(df)] = row
 
-        save_simplifications(os_alg="BU_1", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BU_1, alpha=alpha)
+        save_simplifications(os_alg="GAP-BU", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_gap_BU, alpha=alpha)
 
         # Step 1 gen all simplified ts
-        logging.debug("Running BU_2")
+        logging.debug("Running BU")
         init_time = datetime.datetime.now()
-        all_simplifications_BU_2 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
-        time_bu_2.append((datetime.datetime.now()-init_time).total_seconds())
+        all_simplifications_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
+        time_bu.append((datetime.datetime.now()-init_time).total_seconds())
 
         # Step 2 get model predictions
-        batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_2]
-        predicted_classes_simplifications_BU_2 = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
+        predicted_classes_simplifications_BU = get_model_predictions(model_path, batch_simplified_ts, num_classes)  
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
-        kappa_loyalty_BU_2 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2, num_classes=num_classes)
-        percentage_agreement_BU_2 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2)
-        complexity_BU_2 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_2)
-        num_segments_BU_2 = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU_2])
-        row = ["BU_2", alpha, percentage_agreement_BU_2, kappa_loyalty_BU_2, complexity_BU_2, num_segments_BU_2]
+        kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU, num_classes=num_classes)
+        percentage_agreement_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
+        complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
+        num_segments_BU = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU])
+        row = ["BU", alpha, percentage_agreement_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
         df.loc[len(df)] = row
 
-        save_simplifications(os_alg="BU_2", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BU_2, alpha=alpha)
+        save_simplifications(os_alg="BU", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BU, alpha=alpha)
         
+        # Step 1 gen all simplified ts
+        logging.debug("Running GAP-BULSF")
+        init_time = datetime.datetime.now()
+        all_simplifications_gap_BUlsf = get_bottom_up_lsf_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
+        time_gap_bulsf.append((datetime.datetime.now()-init_time).total_seconds())
+
+        # Step 2 get model predictions
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_gap_BUlsf]
+        predicted_classes_simplifications_gap_BUlsf = get_model_predictions(model_path, batch_simplified_ts, num_classes)  
+
+        # Step 3 calculate loyalty and complexity
+        #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
+        kappa_loyalty_gap_BUlsf = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BUlsf, num_classes=num_classes)
+        percentage_agreement_gap_BUlsf = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BUlsf)
+        complexity_gap_BUlsf = calculate_complexity(batch_simplified_ts=all_simplifications_gap_BUlsf)
+        num_segments_gap_BUlsf = np.mean([ts.num_real_segments for ts in all_simplifications_gap_BUlsf])
+        row = ["GAP-BULSF", alpha, percentage_agreement_gap_BUlsf, kappa_loyalty_gap_BUlsf, complexity_gap_BUlsf, num_segments_gap_BUlsf]
+        df.loc[len(df)] = row
+
+        save_simplifications(os_alg="GAP-BULSF", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_gap_BUlsf, alpha=alpha)
+
+        # Step 1 gen all simplified ts
+        logging.debug("Running BULSF")
+        init_time = datetime.datetime.now()
+        all_simplifications_BUlsf = get_bottom_up_lsf_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
+        time_bulsf.append((datetime.datetime.now()-init_time).total_seconds())
+
+        # Step 2 get model predictions
+        batch_simplified_ts = [ts.line_version for ts in all_simplifications_BUlsf]
+        predicted_classes_simplifications_BUlsf = get_model_predictions(model_path, batch_simplified_ts, num_classes)  
+
+        # Step 3 calculate loyalty and complexity
+        #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
+        kappa_loyalty_BUlsf = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BUlsf, num_classes=num_classes)
+        percentage_agreement_BUlsf = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BUlsf)
+        complexity_BUlsf = calculate_complexity(batch_simplified_ts=all_simplifications_BUlsf)
+        num_segments_BUlsf = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BUlsf])
+        row = ["BULSF", alpha, percentage_agreement_BUlsf, kappa_loyalty_BUlsf, complexity_BUlsf, num_segments_BUlsf]
+        df.loc[len(df)] = row
+
+        save_simplifications(os_alg="BULSF", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_BUlsf, alpha=alpha)
+        
+
         # Step 1 gen all simplified ts
         logging.debug("Running VW")
         init_time = datetime.datetime.now()
@@ -146,7 +190,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
         # Step 2 get model predictions
         batch_simplified_ts = [ts.line_version for ts in all_simplifications_VW]
-        predicted_classes_simplifications_VW = get_model_predictions(model_path, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+        predicted_classes_simplifications_VW = get_model_predictions(model_path, batch_simplified_ts, num_classes)  
 
         # Step 3 calculate loyalty and complexity
         #mean_loyalty_VW = calculate_mean_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW)
@@ -159,7 +203,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
         save_simplifications(os_alg="VW", dataset_name=dataset_name, dataset_type=datset_type, model_path=model_path, X=batch_simplified_ts, classes=predicted_classes_simplifications_VW, alpha=alpha)
 
-    time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VW": np.mean(time_vw), "BU_1": np.mean(time_bu_1), "BU_2": np.mean(time_bu_2)}
+    time = {"OS": np.mean(time_os), "RDP": np.mean(time_rdp), "VW": np.mean(time_vw), "GAP-BU": np.mean(time_gap_bu), "BU": np.mean(time_bu), "GAP-BULSF": np.mean(time_gap_bulsf), "BULSF": np.mean(time_bulsf)}
 
     return df, time
 
@@ -201,7 +245,7 @@ def score_different_alphas_mp(dataset_name: str, datset_type: str, model_path: s
         for row in result:
             df.loc[len(df)] = row
 
-    time = {"OS": 0, "RDP": 0, "VW": 0, "BU_1": 0, "BU_2": 0}
+    time = {"OS": 0, "RDP": 0, "VW": 0, "GAP-BU": 0, "BU": 0, "GAP-BULSF": 0, "BULSF": 0}
 
     return df, time
 
@@ -239,29 +283,54 @@ def process_alpha_mp(args):
     row = ["RDP", alpha, percentage_agreement_RDP, kappa_loyalty_RDP, complexity_RDP, num_segments_RDP]
     results.append(row)
 
-    all_simplifications_BU_1 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
-    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_1]
-    predicted_classes_simplifications_BU_1 = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+    logging.debug("Running  GAP-BU")
+    all_simplifications_gap_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
+    batch_simplified_ts = [ts.line_version for ts in all_simplifications_gap_BU]
+    predicted_classes_simplifications_gap_BU = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
 
-        # Step 3 calculate loyalty and complexity
-        #mean_loyalty_BU = calculate_mean_loyalty(pred_class_original=predicted_classes_original,pred_class_simplified=predicted_classes_simplifications_BU)
-    kappa_loyalty_BU_1 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1, num_classes=num_classes)
-    percentage_agreement_BU_1 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_1)
-    complexity_BU_1 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_1)
-    num_segments_BU_1 = np.mean([ts.num_real_segments for ts in all_simplifications_BU_1])
-    row = ["BU_1", alpha, percentage_agreement_BU_1, kappa_loyalty_BU_1, complexity_BU_1, num_segments_BU_1]
+    kappa_loyalty_gap_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BU, num_classes=num_classes)
+    percentage_agreement_gap_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BU)
+    complexity_gap_BU = calculate_complexity(batch_simplified_ts=all_simplifications_gap_BU)
+    num_segments_gap_BU = np.mean([ts.num_real_segments for ts in all_simplifications_gap_BU])
+    row = ["GAP-BU", alpha, percentage_agreement_gap_BU, kappa_loyalty_gap_BU, complexity_gap_BU, num_segments_gap_BU]
     results.append(row)
 
-    all_simplifications_BU_2 = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
-    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU_2]
-    predicted_classes_simplifications_BU_2 = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  # I will say this and all_time_series_OS are the same, but just in case
+    logging.debug("Running BU")
+    all_simplifications_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
+    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
+    predicted_classes_simplifications_BU = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
 
-    kappa_loyalty_BU_2 = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2, num_classes=num_classes)
-    percentage_agreement_BU_2 = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU_2)
-    complexity_BU_2 = calculate_complexity(batch_simplified_ts=all_simplifications_BU_2)
-    num_segments_BU_2 = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU_2])
-    row = ["BU_2", alpha, percentage_agreement_BU_2, kappa_loyalty_BU_2, complexity_BU_2, num_segments_BU_2]
+    kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU, num_classes=num_classes)
+    percentage_agreement_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
+    complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
+    num_segments_BU = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU])
+    row = ["BU", alpha, percentage_agreement_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
     results.append(row)
+
+    logging.debug("Running  GAP-BULSF")
+    all_simplifications_gap_BUlsf = get_bottom_up_lsf_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
+    batch_simplified_ts = [ts.line_version for ts in all_simplifications_gap_BUlsf]
+    predicted_classes_simplifications_gap_BUlsf = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
+
+    kappa_loyalty_gap_BUlsf = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BUlsf, num_classes=num_classes)
+    percentage_agreement_gap_BUlsf = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_gap_BUlsf)
+    complexity_gap_BUlsf = calculate_complexity(batch_simplified_ts=all_simplifications_gap_BUlsf)
+    num_segments_gap_BUlsf = np.mean([ts.num_real_segments for ts in all_simplifications_gap_BUlsf])
+    row = ["GAP-BULSF", alpha, percentage_agreement_gap_BUlsf, kappa_loyalty_gap_BUlsf, complexity_gap_BUlsf, num_segments_gap_BUlsf]
+    results.append(row)
+
+    logging.debug("Running BU")
+    all_simplifications_BUlsf = get_bottom_up_lsf_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
+    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BUlsf]
+    predicted_classes_simplifications_BUlsf = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
+
+    kappa_loyalty_BUlsf = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BUlsf, num_classes=num_classes)
+    percentage_agreement_BUlsf = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BUlsf)
+    complexity_BUlsf = calculate_complexity(batch_simplified_ts=all_simplifications_BUlsf)
+    num_segments_BUlsf = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BUlsf])
+    row = ["BULSF", alpha, percentage_agreement_BUlsf, kappa_loyalty_BUlsf, complexity_BUlsf, num_segments_BUlsf]
+    results.append(row)
+
 
     logging.debug("Running VW")
     all_simplifications_VW = get_VW_simplification(time_series=all_time_series,alpha=alpha)   #type: ignore
