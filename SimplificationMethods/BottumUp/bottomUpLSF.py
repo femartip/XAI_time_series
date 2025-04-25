@@ -5,53 +5,79 @@ from SimplificationMethods.BottumUp.Heap import new_heapify,new_heappop, peek
 from Utils.dataTypes import SegmentedTS
 import numpy as np
 
+
+def best_fit_line(ts, xi, xj):
+    """
+    Find the best fit line for a subset of time series ts from index xi to xj (inclusive).
+    Returns slope (m) and y-intercept (b).
+    """
+    # Extract the subset of y values
+    y_subset = ts[xi:xj + 1]
+
+    # Create corresponding x values (indices)
+    x_subset = list(range(xi, xj + 1))
+
+    n = len(x_subset)
+
+    # Calculate sums needed for the least squares formula
+    sum_x = sum(x_subset)
+    sum_y = sum(y_subset)
+    sum_xy = sum(x * y for x, y in zip(x_subset, y_subset))
+    sum_x_squared = sum(x ** 2 for x in x_subset)
+
+    # Calculate slope using the least squares formula
+    # m = (n * sum_xy - sum_x * sum_y) / (n * sum_x_squared - sum_x**2)
+    numerator = n * sum_xy - sum_x * sum_y
+    denominator = n * sum_x_squared - sum_x ** 2
+
+    # Handle potential division by zero
+    if denominator == 0:
+        m = 0  # Horizontal line for perfectly vertical data
+    else:
+        m = numerator / denominator
+
+    # Calculate y-intercept
+    # b = (sum_y - m * sum_x) / n
+    b = (sum_y - m * sum_x) / n
+
+    return m, b
+
+
 class Segment:
-    def __init__(self, x_1:int, x_2:int, y_1:float, y_2:float):
+    def __init__(self, x_1:int, x_2:int,m:float,b:float):
         self.start_x = x_1
         self.end_x = x_2
-        self.start_y = y_1
-        self.end_y = y_2
-        if x_1 == x_2:
-            self.m = float('inf')
-        else:
-            self.m = (y_2 - y_1) / (x_2 - x_1)
-        self.b =  y_1-self.m*x_1
+        self.m = m
+        self.b = b
 
     def error(self, x_tests, y_tests):
         self_y = [self.m*x+self.b for x in x_tests]
         return np.sum([abs(y_self-y_test) for y_self, y_test in zip(self_y, y_tests)])
 
     def evaluate_at(self,x):
-        if x==self.start_x:
-            return self.start_y
-        elif x==self.end_x:
-            return self.end_y
-
         return x*self.m+self.b
 
     def __repr__(self):
-        return f"({self.start_x}, {self.start_y})--( {self.end_x}, {self.end_y})"
+        return f"({self.start_x}, {self.evaluate_at(self.start_x)})--( {self.end_x}, {self.evaluate_at(self.end_x)})"
 
-def merge(segment1 :Segment, segment2:Segment)->Segment:
+def merge(segment1 :Segment, segment2:Segment, ts)->Segment:
     """
-    We merge to segments by making a straight line from the start of the left most segment to the end of the right most segment
+    We merge two segments by making a Least Square Fit over all y in the area
     """
     if segment1.start_x < segment2.start_x:
         leftmost_x = segment1.start_x
-        leftmost_y = segment1.evaluate_at(leftmost_x)
         rightmost_x = segment2.end_x
-        rightmost_y = segment2.evaluate_at(rightmost_x)
+        m,b = best_fit_line(ts=ts,xi=leftmost_x,xj=rightmost_x)
     else:
         leftmost_x = segment2.start_x
-        leftmost_y = segment2.evaluate_at(leftmost_x)
         rightmost_x = segment1.end_x
-        rightmost_y = segment1.evaluate_at(rightmost_x)
+        m, b = best_fit_line(ts=ts, xi=leftmost_x, xj=rightmost_x)
 
-    newSegment = Segment(x_1=leftmost_x, x_2=rightmost_x, y_1=leftmost_y, y_2=rightmost_y)
+    newSegment = Segment(x_1=leftmost_x, x_2=rightmost_x,m=m,b=b)
     return newSegment
 
 def merge_and_score_error(segment1:Segment,segment2:Segment, ts):
-    mergeSegs = merge(segment1, segment2)
+    mergeSegs = merge(segment1, segment2,ts)
     x_test = list(range(mergeSegs.start_x, mergeSegs.end_x + 1))
     y_test = [ts[i] for i in x_test]
     merge_cost = mergeSegs.error(x_tests=x_test, y_tests=y_test)
@@ -63,7 +89,7 @@ def bottom_up(ts:List[float], max_error):
     for i in range(len(ts)):
         x1=i
         y1=ts[x1]
-        segTS.append(Segment(x_1=x1, x_2=x1, y_1=y1, y_2=y1))
+        segTS.append(Segment(x_1=x1, x_2=x1, m=0,b=x1))
 
     mergeCosts : List[float] = []
 
@@ -76,7 +102,7 @@ def bottom_up(ts:List[float], max_error):
 
     while len(mergeCosts) >1 and min(mergeCosts) < max_error:
         i = mergeCosts.index(min(mergeCosts))
-        segTS[i] = merge(segTS[i], segTS[i+1]) # Overwrite with new bigger segment
+        segTS[i] = merge(segTS[i], segTS[i+1],ts) # Overwrite with new bigger segment
 
         # Delete the joint segment
         segTS = segTS[:i+1] + segTS[i+2:]
@@ -126,8 +152,8 @@ def get_swab_approx(ts, max_error):
 
 
 if __name__ == "__main__":
-    ts = [0,20,0,1,5,20,20,20,5,4,3,2,1]
-    segments = bottom_up(ts, 10)    #type:ignore
+    ts = [0,20,0,1,5,20,20,20,1.9,2+10**3,2+2*10**3,2.1+3*10**3]
+    segments = bottom_up(ts, 10)
     for seg in segments:
         print(seg,end="\t")
 
