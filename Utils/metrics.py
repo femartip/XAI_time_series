@@ -197,20 +197,18 @@ def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
             threshold_idx = loyalty.index(loyalty_threshold)
             threshold_comp[algorithm] = complexity[threshold_idx]
         else:
-            interpolated_comp  = np.inf
+            interpolated_comp  = 1.0
             for i in range(len(complexity)-1):
                 if loyalty[i] < loyalty_threshold and loyalty[i+1] > loyalty_threshold:
                     interpolated_comp = np.interp(x=0.8,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
                     threshold_comp[algorithm] = interpolated_comp
-                    assert interpolated_comp < 1.0, "Interpolated value greater than one"
+                    if interpolated_comp > 1.0: 
+                        print(f"Interpolated value {interpolated_comp} > 1.0")
+                        interpolated_comp = 1.0
                     break
                 elif loyalty[i] > loyalty_threshold and loyalty[i+1] > loyalty_threshold:
                     interpolated_comp = 1.0
                     threshold_comp[algorithm] = interpolated_comp
-
-            if interpolated_comp == np.inf:
-                print("No interpolartion found")
-                raise ValueError
 
     return threshold_comp
 

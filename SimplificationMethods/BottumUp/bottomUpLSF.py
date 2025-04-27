@@ -89,7 +89,7 @@ def bottom_up(ts:List[float], max_error):
     for i in range(len(ts)):
         x1=i
         y1=ts[x1]
-        segTS.append(Segment(x_1=x1, x_2=x1, m=0,b=x1))
+        segTS.append(Segment(x_1=x1, x_2=x1, m=0,b=y1))
 
     mergeCosts : List[float] = []
 
