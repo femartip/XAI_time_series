@@ -89,7 +89,7 @@ def bottom_up(ts:List[float], max_error):
     for i in range(len(ts)):
         x1=i
         y1=ts[x1]
-        segTS.append(Segment(x_1=x1, x_2=x1, m=0,b=x1))
+        segTS.append(Segment(x_1=x1, x_2=x1, m=0,b=y1))
 
     mergeCosts : List[float] = []
 
@@ -153,7 +153,7 @@ def get_swab_approx(ts, max_error):
 
 if __name__ == "__main__":
     ts = [0,20,0,1,5,20,20,20,1.9,2+10**3,2+2*10**3,2.1+3*10**3]
-    segments = bottom_up(ts, 10)
+    segments = bottom_up(ts, 0)
     for seg in segments:
         print(seg,end="\t")
 
