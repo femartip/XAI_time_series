@@ -1,6 +1,7 @@
 Resources
 venv
 .venv
+llm_tests/*
 
 .idea
 __pycache__/*

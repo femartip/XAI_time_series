@@ -72,31 +72,28 @@ def plot_csv_complexity_mean_loyalty(file:str) -> Figure:
     return fig
 
 def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
-    assert isinstance(points, dict), "Points should be a dictionary"
     assert isinstance(file, str), "File should be a string"
     assert os.path.exists(file), f"File {file} does not exist"
     assert file.endswith(".csv"), "File should be a CSV file"
     
     df = pd.read_csv(file)
-    representation_type = ["o", "x", '+', "|", "s", "^", "v", "D", "*"]
+    #representation_type = ["o", "x", '+', "|", "s", "^", "v", "D", "*"]
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for i, (name, group) in enumerate(df.groupby("Type")):
-        line_plot = ax.plot(group["Complexity"], group["Kappa Loyalty"], 
-                            label=name, 
-                            marker=representation_type[i]) #c=group['Alpha'], cmap='viridis'`
+        if name == 'BU_1':
+            continue
+        elif name == 'BU_2':
+            label = "BU"
+        else:
+            label = name
+        ax.plot(group["Complexity"], group["Kappa Loyalty"], 
+                            label=label, 
+                            ) #c=group['Alpha'], cmap='viridis'` marker=representation_type[i]
         
-        if points != {}:
-            point_x = float(points[name][0])
-            point_y = float(points[name][1])
-            
-            ax.plot(point_x, point_y, color='red', marker=representation_type[i])
-            #ax.axhline(y=point_y, color='red', linestyle='--', alpha=0.2)
-            #ax.axvline(x=point_x, color='red', linestyle='--', alpha=0.2)
-    
-    ax.set_title(f"Kappa Loyalty")
+    #ax.set_title(f"Kappa Loyalty")
     ax.set_xlabel("Complexity\n(Abs. Num. Segments)")
-    ax.set_ylabel("Kappa Loyalty")
+    ax.set_ylabel("Kappa Loyalty\n(% Agreement)")
     
     min_complexity = df["Complexity"].min()
     max_complexity = df["Complexity"].max()
@@ -123,9 +120,7 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
     ax.set_xticks(complexity_ticks)
     ax.set_xticklabels(x_labels)
 
-    ax.legend()
-    #cbar = plt.colorbar(line_plot, ax=ax)
-    #cbar.set_label('Alpha/Epsilon')
+    ax.legend(loc='lower right')
     plt.tight_layout()
     
     return fig
@@ -145,8 +140,14 @@ if __name__ == "__main__":
     assert os.path.exists(file), f"File {file} does not exist"
 
     if file.endswith(".csv"):
-        #fig1 = plot_csv_complexity_mean_loyalty(file)
-        #plt.show()
+        plt.rcParams.update({
+            "font.size": 18,        
+            "axes.titlesize": 22,   
+            "axes.labelsize": 20,   
+            "xtick.labelsize": 16,  
+            "ytick.labelsize": 16,  
+            "legend.fontsize": 16,  
+        })
         fig2 = plot_csv_complexity_kappa_loyalty(file)
         plt.show()
     elif file.endswith(".npy"):
