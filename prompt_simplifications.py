@@ -18,7 +18,7 @@ from Utils.selectPrototypes import select_prototypes
 #logging.basicConfig()
 load_dotenv()
 OPENAI_API_KEY=os.getenv('OPENAI_API_KEY')
-DEBUG = True
+DEBUG =False
 
 def get_response(prompt: list[dict], client: OpenAI):
     response = client.chat.completions.create(
@@ -122,7 +122,7 @@ def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], 
         print(f"Real label {test_ts_label}, predicted label {predicted_labels_int} = {accuracy}")
         print("\n------------------------------------------")
         input("Press Enter to continue...")
-
+    print(f"Real label {test_ts_label}, predicted label {predicted_labels_int} = {accuracy}")
     return accuracy
 
 def argparser():
@@ -140,39 +140,40 @@ if __name__ == '__main__':
 
     global INTERACTIVE
     INTERACTIVE = True if args.interactive else False
-    steps = 1
+    steps = 10
 
-    print("Testing without simplifications:")
-    dataset_ts_norm = select_prototypes(args.dataset, num_instances=args.k, data_type="TRAIN_normalized") 
-    labels = np.array(load_dataset_labels(args.dataset, data_type='TEST_normalized'))
-    
-    test_ts_norm = load_dataset(args.dataset, data_type="TEST_normalized")
-    test_ts_norm = test_ts_norm[np.random.randint(0, test_ts_norm.shape[0], size=(10))]
-    
-    classifier_file = f"{args.classifier}_norm.pth" if args.classifier == "cnn" else f"{args.classifier}_norm.pkl"
-    dataset_ts_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm, len(set(labels)))   #type: ignore
-    test_ts_label = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm, len(set(labels)))  #type: ignore
-    
     results = []
+    results_simp = []
     for i in range(steps):
+        print("Testing without simplifications:")
+        dataset_ts_norm = select_prototypes(args.dataset, num_instances=args.k, data_type="TRAIN_normalized") 
+        labels = np.array(load_dataset_labels(args.dataset, data_type='TEST_normalized'))
+        
+        test_ts_norm = load_dataset(args.dataset, data_type="TEST_normalized")
+        test_ts_norm = test_ts_norm[np.random.randint(0, test_ts_norm.shape[0], size=(10))]
+        
+        classifier_file = f"{args.classifier}_norm.pth" if args.classifier == "cnn" else f"{args.classifier}_norm.pkl"
+        dataset_ts_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm, len(set(labels)))   #type: ignore
+        test_ts_label = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm, len(set(labels)))  #type: ignore
+        
         out = get_and_test_examples(dataset_ts_norm, dataset_ts_labels, test_ts_norm, test_ts_label, len(set(labels))) 
         results.append(out)
 
-    print("Testing with simplifications:")
-    dataset_ts_norm_simp = get_OS_simplification(dataset_ts_norm, alpha=0.2)
-    dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
+        print("Testing with simplifications:")
+        dataset_ts_norm_simp = get_OS_simplification(dataset_ts_norm, alpha=0.2)
+        dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
 
-    test_ts_norm_simp = get_OS_simplification(test_ts_norm, alpha=0.2)
-    test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
-    
-    dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
-    test_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm_simp, len(set(labels)))       #type: ignore
-    
-    results_simp = []
-    for i in range(steps):
+        test_ts_norm_simp = get_OS_simplification(test_ts_norm, alpha=0.2)
+        test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
+        
+        dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
+        test_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm_simp, len(set(labels)))       #type: ignore
+        
         out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)))
         results_simp.append(out)
     
+    print(results)
+    print(results_simp)
 
 
 

@@ -5,7 +5,7 @@ import pandas as pd
 from kneed import KneeLocator
 import pandas as pd
 
-from Utils.dataTypes import SegmentedTS 
+from dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
     if approximation.num_real_segments is None:
@@ -175,12 +175,14 @@ def update_auc(results_df: pd.DataFrame) -> None:
     results_df.to_csv("./results/results_copy.csv", index=False)
     print("done")
 
-def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:str="Kappa Loyalty") -> dict[str, float]:
+def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:str="Kappa Loyalty") -> tuple[dict[str, float], dict[str, float]]:
     algorithms = df["Type"].unique()
     threshold_comp = {}
+    threshold_num_segm = {}
     
     for algorithm in algorithms:
         complexity = df["Complexity"].copy().where(df["Type"] == algorithm).dropna().to_list()
+        num_seg = df["Num Segments"].copy().where(df["Type"] == algorithm).dropna().to_list()
         loyalty = df[metric].copy().where(df["Type"] == algorithm).dropna().to_list()
 
         sort_id = sorted(range(len(complexity)), key=lambda x: complexity[x])
@@ -196,33 +198,43 @@ def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
         if loyalty_threshold in loyalty:
             threshold_idx = loyalty.index(loyalty_threshold)
             threshold_comp[algorithm] = complexity[threshold_idx]
+            threshold_num_segm[algorithm] = num_seg[threshold_idx]
         else:
             interpolated_comp  = 1.0
             for i in range(len(complexity)-1):
                 if loyalty[i] < loyalty_threshold and loyalty[i+1] > loyalty_threshold:
                     interpolated_comp = np.interp(x=0.8,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
+                    interpolated_num_segm = np.interp(x=0.8,xp=[loyalty[i], loyalty[i+1]], fp=[num_seg[i], num_seg[i+1]])
                     threshold_comp[algorithm] = interpolated_comp
+                    threshold_num_segm[algorithm] = interpolated_num_segm
                     if interpolated_comp > 1.0: 
                         print(f"Interpolated value {interpolated_comp} > 1.0")
                         interpolated_comp = 1.0
                     break
                 elif loyalty[i] > loyalty_threshold and loyalty[i+1] > loyalty_threshold:
                     interpolated_comp = 1.0
+                    interpolated_num_segm = 1.0
                     threshold_comp[algorithm] = interpolated_comp
+                    threshold_num_segm[algorithm] = interpolated_num_segm
 
-    return threshold_comp
+    return threshold_comp, threshold_num_segm
 
 
 if __name__ == '__main__':
     from plotting import plot_csv_complexity_kappa_loyalty
-    datasets = ['ProximalPhalanxOutlineCorrect', 'ItalyPowerDemand', 'MoteStrain', 'GunPointOldVersusYoung', 'MiddlePhalanxTW', 'ECG200', 'SonyAIBORobotSurface1', 'ElectricDevices', 'BME', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'MedicalImages', 'TwoPatterns', 'UMD', 'ECG5000', 'TwoLeadECG', 'GunPointAgeSpan', 'MiddlePhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxTW', 'SmoothSubspace', 'Plane', 'MiddlePhalanxOutlineCorrect', 'Adiac', 'SwedishLeaf', 'ECGFiveDays', 'PhalangesOutlinesCorrect', 'FacesUCR', 'CBF', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'Wafer']
+    datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ECG5000', 'ECGFiveDays', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'MoteStrain', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD', 'Wafer']
     #datasets = ['MoteStrain', 'ECG5000', 'ECGFiveDays', 'Wafer']
     model = "cnn"
+    row_comp = []
+    row_segm = []
     for dataset in datasets:
         print(dataset)
         results_file = f"results/{dataset}/{model}_alpha_complexity_loyalty.csv"
         df = pd.read_csv(results_file)
-        values = get_loylaty_by_threshold(df, 0.8)
+        values_comp, values_segm = get_loylaty_by_threshold(df, 0.8)
+        #print(values_comp, values_segm)
+        row_comp.append(values_comp)
+        row_segm.append(values_segm)
         #for alg in values:
         #    if values[alg] > 1:
         #        print(dataset)
@@ -233,7 +245,40 @@ if __name__ == '__main__':
         #plt.show(block=False)
         #plt.pause(3)
         #plt.close()
+    comp_df = pd.DataFrame.from_dict(row_comp)
+    comp_df.index = datasets
+    segm_df = pd.DataFrame.from_dict(row_segm)
+    segm_df.index = datasets
+    comp_df_reset = comp_df.reset_index().rename(columns={'index': 'Dataset'})
 
+    # Now melt the DataFrame to create the long format
+    comp_df_long = pd.melt(
+        comp_df_reset, 
+        id_vars=['Dataset'],  # The dataset names column stays as is
+        var_name='Method',    # The column names become values in a 'Method' column
+        value_name='Value'    # The values go into a 'Value' column
+    )
+
+    # Reorder the Method column as specified
+    method_order = ['OS', 'RDP', 'VW', 'BU_1', 'BU_2']
+    comp_df_long['Method'] = pd.Categorical(comp_df_long['Method'], categories=method_order, ordered=True)
+    comp_df_long = comp_df_long.sort_values(['Dataset', 'Method'])
+
+    print(comp_df_long)
+
+    # Do the same for segm_df if needed
+    segm_df_reset = segm_df.reset_index().rename(columns={'index': 'Dataset'})
+    segm_df_long = pd.melt(
+        segm_df_reset,
+        id_vars=['Dataset'],
+        var_name='Method',
+        value_name='Value'
+    )
+    segm_df_long['Method'] = pd.Categorical(segm_df_long['Method'], categories=method_order, ordered=True)
+    segm_df_long = segm_df_long.sort_values(['Dataset', 'Method'])
+
+    # Save to CSV
+    segm_df_long.to_csv("num_segments.csv", index=False)
     
     if False:
         results_df = pd.read_csv("./results/results_copy.csv")

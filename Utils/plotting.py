@@ -156,10 +156,13 @@ if __name__ == "__main__":
         pred_classes = [data[i][1] for i in range(len(data))]
         unique_classes = np.unique(pred_classes)
         print(f"Unique classes: {unique_classes}")
-        for i in range(10):
-            rand_num = random.randint(1,99)
+        for i in range(100):
+            rand_num = random.randint(0,399)
             alpha = data[rand_num][0]; pred_class = data[rand_num][1]; X = data[rand_num][-1]
-            fig = plot_prototipes(alpha, pred_class, X)
-            plt.show()
+            if pred_class != 0:
+                fig = plot_prototipes(alpha, pred_class, X)
+                plt.show(block=False)
+                plt.pause(0.5)
+                plt.close()
     else:
         raise ValueError(f"File format not supported")
