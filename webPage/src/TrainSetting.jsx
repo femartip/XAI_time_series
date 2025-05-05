@@ -154,6 +154,7 @@ export const TrainSetting = ({ datasetName, instanceNumber, simpMethod, alphaVal
         updateConfidence(setConfidence, dataSetCurr, datasetName);
     }, [dataSetCurr, datasetName]);
 
+    const button_show = false
     return (
         <div>
             <BasicExample currValue={confidence} />
@@ -161,8 +162,9 @@ export const TrainSetting = ({ datasetName, instanceNumber, simpMethod, alphaVal
                 dataSetOriginal={dataSetOriginal} updateData={updateData} dataSetSimp={dataSetSimp}
                 lineColorCurr={lineColorCurr} lineColorOrg={lineColorOrg} lineColorSimp={lineColorSimp}
             />
-            <button className={"button"} onClick={reset} >RESET TO PROTOTYPE</button>
-
+            {(button_show) ?
+            <button className={"button"} onClick={reset} >RESET TO PROTOTYPE</button> :
+            <div/>}
         </div>
     );
 };

@@ -105,14 +105,16 @@ const DraggableGraph = ({ dataSetCurrent, setDataCurrent, dataSetSimp, dataSetOr
         data: state.dataSet[0],
         lineTension: 0,
         borderColor: lineColorCurr,
-        borderWidth: 5,
-        pointRadius: 7,//7
+        borderWidth: 3,
+        pointRadius: 2,//7
         pointHoverRadius: 12,
         pointBackgroundColor: "black",
         pointBorderWidth: 0,
         spanGaps: false,
         dragData: true,
-        fill: false
+        fill: false,
+        borderDash: [6, 6]
+
       },
 
 
@@ -129,9 +131,8 @@ const DraggableGraph = ({ dataSetCurrent, setDataCurrent, dataSetSimp, dataSetOr
         spanGaps: false,
         dragData: false,
         fill: false,
-        borderDash: [3, 6]
 
-      },
+      }/*,
       {
         label: "Prototype",
         data: state.dataSet[2],
@@ -146,7 +147,7 @@ const DraggableGraph = ({ dataSetCurrent, setDataCurrent, dataSetSimp, dataSetOr
         dragData: false,
         fill: false
 
-      }
+      }*/
     ]
   };
   return (

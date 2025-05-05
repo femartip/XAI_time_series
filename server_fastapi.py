@@ -1,11 +1,11 @@
 import numpy as np
 from fastapi import FastAPI, Query, UploadFile, File
 from pythonServer.classifyTimeSeries import _classify
-from Utils.load_data import get_time_series
 from fastapi.middleware.cors import CORSMiddleware
 from pythonServer.getConfidence import get_confidence
 from pythonServer.simplification import simplify_ts
 from pythonServer.generateCF import generate_native_cf, generate_subseq_cf
+from pythonServer.getTimeSeries import get_time_series
 import shutil
 
 
@@ -91,7 +91,7 @@ async def get_class(time_series: str = Query(None, description=''), dataset_name
 @ app.get('/getTS')
 async def get_ts(dataset_name: str = Query(None, description='Name of domain'), index: int = Query(None, description='Index of entry in train data')):
     dataset_name = dataset_name
-    time_series = get_time_series(dataset_name=dataset_name,data_type="TEST", instance_nr=index).flatten().tolist()
+    time_series = get_time_series(dataset_name=dataset_name,data_type="TEST_normalized", index=index).flatten().tolist()
     return time_series
 
 @ app.get("/")

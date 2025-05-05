@@ -43,7 +43,7 @@ export default () => {
         <div className="float-container">
 
             <div className="float-right">
-                <h3> Select Simplification method</h3>
+                <h3> Select Dataset</h3>
                 <select name="cars" id="cars" defaultValue={"Chinatown"} onInputCapture={(event) => {setDatasetNameFunc(event.target.value)}}>
                     <option value="Chinatown" >Chinatown</option>
                     <option value="ItalyPowerDemand">ItalyPowerDemand</option>
