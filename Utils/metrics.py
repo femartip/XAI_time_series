@@ -163,7 +163,7 @@ def update_auc(results_df: pd.DataFrame) -> None:
                 
                 if query_mask.any(): rows_to_drop.extend(results_df[query_mask].index.tolist())
                 
-                new_row = {"dataset": f"{dataset}TEST_normalized","model": f"{model}_norm.pth","simp_algorithm": alg,"performance": auc_values[alg],"comp@loy=0.8": comp_threshold[alg],"time": 0.0}
+                new_row = {"dataset": f"{dataset}TEST_normalized","model": f"{model}_norm.pth","simp_algorithm": alg,"performance": auc_values[alg],"comp@loy=0.8": comp_threshold[alg],"time": 0.0}        #type: ignore
                 rows_to_update.append(new_row)
     
     if rows_to_drop: results_df = results_df.drop(index=rows_to_drop)
@@ -201,7 +201,7 @@ def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
         #print(min(complexity), max(complexity))
 
         if loyalty_threshold in loyalty:
-            threshold_idx = loyalty.index(loyalty_threshold)
+            threshold_idx = loyalty.index(loyalty_threshold)        #type: ignore
             threshold_comp[algorithm] = complexity[threshold_idx]
             threshold_num_segm[algorithm] = num_seg[threshold_idx]
         else:
@@ -257,10 +257,10 @@ if __name__ == '__main__':
         #plt.show(block=False)
         #plt.pause(3)
         #plt.close()
-    comp_df = pd.DataFrame.from_dict(row_comp)
-    comp_df.index = datasets
-    segm_df = pd.DataFrame.from_dict(row_segm)
-    segm_df.index = datasets
+    comp_df = pd.DataFrame.from_dict(row_comp)  #type: ignore
+    comp_df.index = datasets    #type: ignore
+    segm_df = pd.DataFrame.from_dict(row_segm)  #type: ignore
+    segm_df.index = datasets    #type: ignore
     comp_df_long = comp_df.reset_index().rename(columns={'index': 'Dataset'})
 
     #comp_df_long = pd.melt(comp_df_reset, id_vars=['Dataset'], var_name='Method',value_name='Value')
