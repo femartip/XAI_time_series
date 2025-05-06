@@ -1,40 +1,29 @@
 ID,Type,Name,Train ,Test ,Class,Length,ED (w=0),DTW (learned_w) ,DTW (w=100),Default rate,Data donor/editor,Stationary,Seasonal,Entropy
 1,Image,Adiac,390,391,37,176,0.3887,0.3913 (3),0.3964,0.9591,A. Jalba,True,True,0.267802457534121
-90,Simulated,BME,30,150,3,128,0.1667,0.0200 (4),0.1,0.6667,Joseph Fourier University,False,True,0.11614654358236254
-7,Simulated,CBF,30,900,3,128,0.1478,0.0044 (11),0.0033,0.6644,N. Saito,False,False,0.8259196172686835
-91,Traffic,Chinatown,20,343,2,24,0.0466,0.0466 (0),0.0437,0.2741,H.A. Dau,False,False,0.23429133634600946
-92,Image,Crop,7200,16800,24,46,0.2883,0.2883 (0),0.3348,0.9583,F. Petitjean,False,False,0.37443396361786135
-16,Image,DistalPhalanxOutlineAgeGroup,400,139,3,80,0.3741,0.3741 (0),0.2302,0.5324,L. Davis & A. Bagnall,False,False,0.2667722442948828
-17,Image,DistalPhalanxOutlineCorrect,600,276,2,80,0.2826,0.2754 (1),0.2826,0.4167,L. Davis & A. Bagnall,False,False,0.29962700554474897
-18,Image,DistalPhalanxTW,400,139,6,80,0.3669,0.3669 (0),0.4101,0.6978,L. Davis & A. Bagnall,False,False,0.2718752920215777
-20,ECG,ECG200,100,100,2,96,0.12,0.1200 (0),0.23,0.36,R. Olszewski,False,False,0.4631615113606222
-21,ECG,ECG5000,500,4500,5,140,0.0751,0.0749 (1),0.0756,0.4162,Y. Chen & E. Keogh,False,False,0.2419820836345535
-22,ECG,ECGFiveDays,23,861,2,136,0.2033,0.2033 (0),0.2323,0.4971,"physionet.org, Y. Chen & E. Keogh",Partial,False,0.1987145511641661
-23,Device,ElectricDevices,8926,7711,7,96,0.4492,0.3806 (14),0.3988,0.7463,A. Bagnall & J. Lines,Partial,False,0.29263600224093933
-24,Image,FaceAll,560,1690,14,131,0.2864,0.1917 (3),0.1923,0.8302,X. Xi & E. Keogh,True,False,0.5833396862814588
-26,Image,FacesUCR,200,2050,14,131,0.2307,0.0878 (12),0.0951,0.8566,X. Xi & E. Keogh,True,False,0.5502048647296832
-31,Motion,GunPoint,50,150,2,150,0.0867, 0.0867 (0) ,0.0933,0.4933,A. Ratanamahatana & E. Keogh,False,True,0.10711792814737937
-107,Motion,GunPointAgeSpan,135,316,2,150,0.1013,0.0348 (3),0.0823,0.4937,A. Ratanamahatana & E. Keogh,False,True,0.12622463851964613
-108,Motion,GunPointMaleVersusFemale,135,316,2,150,0.0253,0.0253 (0),0.0032,0.4747,A. Ratanamahatana & E. Keogh,False,True,0.12493103015736448
-109,Motion,GunPointOldVersusYoung,136,315,2,150,0.0476,0.0349 (4),0.1619,0.4762,A. Ratanamahatana & E. Keogh,False,True,0.12189438774082205
+90,Simulated,BME,30,150,3,128,0.1667,0.0200 (4),0.1,0.6667,Joseph Fourier University,False,True,0.116146543582363
+7,Simulated,CBF,30,900,3,128,0.1478,0.0044 (11),0.0033,0.6644,N. Saito,False,False,0.825919617268684
+91,Traffic,Chinatown,20,343,2,24,0.0466,0.0466 (0),0.0437,0.2741,H.A. Dau,False,False,0.234291336346009
+16,Image,DistalPhalanxOutlineAgeGroup,400,139,3,80,0.3741,0.3741 (0),0.2302,0.5324,L. Davis & A. Bagnall,False,False,0.266772244294883
+17,Image,DistalPhalanxOutlineCorrect,600,276,2,80,0.2826,0.2754 (1),0.2826,0.4167,L. Davis & A. Bagnall,False,False,0.299627005544749
+18,Image,DistalPhalanxTW,400,139,6,80,0.3669,0.3669 (0),0.4101,0.6978,L. Davis & A. Bagnall,False,False,0.271875292021578
+20,ECG,ECG200,100,100,2,96,0.12,0.1200 (0),0.23,0.36,R. Olszewski,False,False,0.463161511360622
+23,Device,ElectricDevices,8926,7711,7,96,0.4492,0.3806 (14),0.3988,0.7463,A. Bagnall & J. Lines,Partial,False,0.292636002240939
+26,Image,FacesUCR,200,2050,14,131,0.2307,0.0878 (12),0.0951,0.8566,X. Xi & E. Keogh,True,False,0.550204864729683
+107,Motion,GunPointAgeSpan,135,316,2,150,0.1013,0.0348 (3),0.0823,0.4937,A. Ratanamahatana & E. Keogh,False,True,0.126224638519646
+108,Motion,GunPointMaleVersusFemale,135,316,2,150,0.0253,0.0253 (0),0.0032,0.4747,A. Ratanamahatana & E. Keogh,False,True,0.124931030157364
+109,Motion,GunPointOldVersusYoung,136,315,2,150,0.0476,0.0349 (4),0.1619,0.4762,A. Ratanamahatana & E. Keogh,False,True,0.121894387740822
 38,Sensor,ItalyPowerDemand,67,1029,2,24,0.0447,0.0447 (0),0.0496,0.4985,"JJ van Wijk, E. Keogh & L. Wi",False,False,0.23634165738623
-44,Image,MedicalImages,381,760,10,99,0.3158,0.2526 (20),0.2632,0.4855,J. Felipe & C. Traina,False,False,0.17525042146203082
-45,Image,MiddlePhalanxOutlineAgeGroup,400,154,3,80,0.4805,0.4805 (0),0.5,0.4286,L. Davis & A. Bagnall,False,False,0.2338168135297142
-46,Image,MiddlePhalanxOutlineCorrect,600,291,2,80,0.2337,0.2337 (0),0.3024,0.4296,L. Davis & A. Bagnall,False,False,0.2380108766654651
-47,Image,MiddlePhalanxTW,399,154,6,80,0.487,0.4935 (3),0.4935,0.7143,L. Davis & A. Bagnall,False,False,0.24505423463097778
-48,Sensor,MoteStrain,20,1252,2,84,0.1214,0.1342 (1),0.1653,0.4609,C. Guestrin & J. Sun,False,False,0.30705172495013583
-53,Image,PhalangesOutlinesCorrect,1800,858,2,80,0.2389,0.2389 (0),0.2716,0.3869,A. Bagnall,False,False,0.25263539902174886
-55,Sensor,Plane,105,105,7,144,0.0381,0.0000 (5),0.0,0.8,J. Gao,False,False,0.35295401636056734
-121,Power,PowerCons,180,180,2,144,0.0667,0.0778 (3),0.1222,0.5,"EDF R&D, France",False,False,0.3554232683894533
-56,Image,ProximalPhalanxOutlineAgeGroup,400,205,3,80,0.2146,0.2146 (0),0.1951,0.5122,L. Davis & A. Bagnall,Partial,False,0.24357866438877393
-57,Image,ProximalPhalanxOutlineCorrect,600,291,2,80,0.1924,0.2096 (1),0.2165,0.3162,L. Davis & A. Bagnall,False,False,0.22838458443101733
-58,Image,ProximalPhalanxTW,400,205,6,80,0.2927,0.2439 (2),0.2439,0.6488,L. Davis & A. Bagnall,False,False,0.22757459304287309
-127,Simulated,SmoothSubspace,150,150,3,15,0.0933,0.0533 (1),0.1733,0.6667,X. Huang,False,False,0.04079289118816303
-64,Sensor,SonyAIBORobotSurface1,20,601,2,70,0.3045,0.3045 (0),0.2745,0.4293,"D. Vail, M. Velso & E. Keogh",True,False,0.3467572357040191
-65,Sensor,SonyAIBORobotSurface2,27,953,2,65,0.1406,0.1406 (0),0.1689,0.383,"D. Vail, M. Velso & E. Keogh",True,False,0.3805059035669806
+44,Image,MedicalImages,381,760,10,99,0.3158,0.2526 (20),0.2632,0.4855,J. Felipe & C. Traina,False,False,0.175250421462031
+45,Image,MiddlePhalanxOutlineAgeGroup,400,154,3,80,0.4805,0.4805 (0),0.5,0.4286,L. Davis & A. Bagnall,False,False,0.233816813529714
+46,Image,MiddlePhalanxOutlineCorrect,600,291,2,80,0.2337,0.2337 (0),0.3024,0.4296,L. Davis & A. Bagnall,False,False,0.238010876665465
+47,Image,MiddlePhalanxTW,399,154,6,80,0.487,0.4935 (3),0.4935,0.7143,L. Davis & A. Bagnall,False,False,0.245054234630978
+53,Image,PhalangesOutlinesCorrect,1800,858,2,80,0.2389,0.2389 (0),0.2716,0.3869,A. Bagnall,False,False,0.252635399021749
+56,Image,ProximalPhalanxOutlineAgeGroup,400,205,3,80,0.2146,0.2146 (0),0.1951,0.5122,L. Davis & A. Bagnall,Partial,False,0.243578664388774
+57,Image,ProximalPhalanxOutlineCorrect,600,291,2,80,0.1924,0.2096 (1),0.2165,0.3162,L. Davis & A. Bagnall,False,False,0.228384584431017
+58,Image,ProximalPhalanxTW,400,205,6,80,0.2927,0.2439 (2),0.2439,0.6488,L. Davis & A. Bagnall,False,False,0.227574593042873
+127,Simulated,SmoothSubspace,150,150,3,15,0.0933,0.0533 (1),0.1733,0.6667,X. Huang,False,False,0.040792891188163
+64,Sensor,SonyAIBORobotSurface1,20,601,2,70,0.3045,0.3045 (0),0.2745,0.4293,"D. Vail, M. Velso & E. Keogh",True,False,0.346757235704019
 68,Image,SwedishLeaf,500,625,15,128,0.2112,0.1536 (2),0.208,0.9216,O. Soderkvist,False,True,0.421669753367285
-70,Simulated,SyntheticControl,300,300,6,60,0.12,0.0167 (6),0.0067,0.8333,R. Alcock & Y. Manolopoulos,False,False,0.45921042947836976
-74,ECG,TwoLeadECG,23,1139,2,82,0.2529,0.1317 (4),0.0957,0.4996,physionet.org & E. Keogh,False,False,0.32568998019433276
-75,Simulated,TwoPatterns,1000,4000,4,128,0.0932,0.0015 (4),0.0,0.7412,P. Geurts,True,False,0.7002426618907232
-128,Simulated,UMD,36,144,3,150,0.2361,0.0278 (6),0.0069,0.6667,Joseph Fourier University,False,True,0.11510977446777228
-80,Sensor,Wafer,1000,6164,2,152,0.0045,0.0045 (1),0.0201,0.1079,R. Olszewski,False,False,0.12998990870533278
+74,ECG,TwoLeadECG,23,1139,2,82,0.2529,0.1317 (4),0.0957,0.4996,physionet.org & E. Keogh,False,False,0.325689980194333
+75,Simulated,TwoPatterns,1000,4000,4,128,0.0932,0.0015 (4),0,0.7412,P. Geurts,True,False,0.700242661890723
+128,Simulated,UMD,36,144,3,150,0.2361,0.0278 (6),0.0069,0.6667,Joseph Fourier University,False,True,0.115109774467772

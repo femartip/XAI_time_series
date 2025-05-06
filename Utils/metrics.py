@@ -5,7 +5,7 @@ import pandas as pd
 from kneed import KneeLocator
 import pandas as pd
 
-from dataTypes import SegmentedTS 
+from Utils.dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
     if approximation.num_real_segments is None:
@@ -187,11 +187,16 @@ def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
 
         sort_id = sorted(range(len(complexity)), key=lambda x: complexity[x])
         complexity = [complexity[x] for x in sort_id]
-        loyalty = [loyalty[x] for x in sort_id]
+        num_seg = [num_seg[x] for x in sort_id]
+        loyalty = [loyalty[x]/100 if metric == "Percentage Agreement" else loyalty[x] for x in sort_id]
+
         
         if loyalty[-1] != 1 or complexity[-1] != 1:
             complexity.append(1)
             loyalty.append(1)
+        loyalty = [0] + loyalty
+        complexity = [1/num_seg[-1]] + complexity
+        num_seg = [1] + num_seg
 
         #print(min(complexity), max(complexity))
 
@@ -203,26 +208,33 @@ def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
             interpolated_comp  = 1.0
             for i in range(len(complexity)-1):
                 if loyalty[i] < loyalty_threshold and loyalty[i+1] > loyalty_threshold:
-                    interpolated_comp = np.interp(x=0.8,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
-                    interpolated_num_segm = np.interp(x=0.8,xp=[loyalty[i], loyalty[i+1]], fp=[num_seg[i], num_seg[i+1]])
+                    interpolated_comp = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
+                    interpolated_num_segm = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[num_seg[i], num_seg[i+1]])
                     threshold_comp[algorithm] = interpolated_comp
                     threshold_num_segm[algorithm] = interpolated_num_segm
                     if interpolated_comp > 1.0: 
                         print(f"Interpolated value {interpolated_comp} > 1.0")
                         interpolated_comp = 1.0
                     break
-                elif loyalty[i] > loyalty_threshold and loyalty[i+1] > loyalty_threshold:
-                    interpolated_comp = 1.0
-                    interpolated_num_segm = 1.0
+                elif loyalty[i] == loyalty[len(complexity)-1]:
+                    interpolated_comp = np.interp(x=loyalty_threshold,xp=[loyalty[i], 1], fp=[complexity[i], 1])
+                    interpolated_num_segm = np.interp(x=loyalty_threshold,xp=[loyalty[i], 1], fp=[num_seg[i], num_seg[-1]])
                     threshold_comp[algorithm] = interpolated_comp
                     threshold_num_segm[algorithm] = interpolated_num_segm
-
+                elif loyalty[i] == 1.0:
+                    interpolated_comp = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
+                    interpolated_num_segm = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[num_seg[i], num_seg[i+1]])
+                    threshold_comp[algorithm] = interpolated_comp
+                    threshold_num_segm[algorithm] = interpolated_num_segm
+                    break
+                    
     return threshold_comp, threshold_num_segm
 
 
 if __name__ == '__main__':
     from plotting import plot_csv_complexity_kappa_loyalty
-    datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ECG5000', 'ECGFiveDays', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'MoteStrain', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD', 'Wafer']
+    datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD']
+    print(len(datasets))
     #datasets = ['MoteStrain', 'ECG5000', 'ECGFiveDays', 'Wafer']
     model = "cnn"
     row_comp = []
@@ -231,7 +243,7 @@ if __name__ == '__main__':
         print(dataset)
         results_file = f"results/{dataset}/{model}_alpha_complexity_loyalty.csv"
         df = pd.read_csv(results_file)
-        values_comp, values_segm = get_loylaty_by_threshold(df, 0.8)
+        values_comp, values_segm = get_loylaty_by_threshold(df, 0.95, metric="Percentage Agreement")
         #print(values_comp, values_segm)
         row_comp.append(values_comp)
         row_segm.append(values_segm)
@@ -249,36 +261,25 @@ if __name__ == '__main__':
     comp_df.index = datasets
     segm_df = pd.DataFrame.from_dict(row_segm)
     segm_df.index = datasets
-    comp_df_reset = comp_df.reset_index().rename(columns={'index': 'Dataset'})
+    comp_df_long = comp_df.reset_index().rename(columns={'index': 'Dataset'})
 
-    # Now melt the DataFrame to create the long format
-    comp_df_long = pd.melt(
-        comp_df_reset, 
-        id_vars=['Dataset'],  # The dataset names column stays as is
-        var_name='Method',    # The column names become values in a 'Method' column
-        value_name='Value'    # The values go into a 'Value' column
-    )
+    #comp_df_long = pd.melt(comp_df_reset, id_vars=['Dataset'], var_name='Method',value_name='Value')
 
-    # Reorder the Method column as specified
-    method_order = ['OS', 'RDP', 'VW', 'BU_1', 'BU_2']
-    comp_df_long['Method'] = pd.Categorical(comp_df_long['Method'], categories=method_order, ordered=True)
-    comp_df_long = comp_df_long.sort_values(['Dataset', 'Method'])
+    #method_order = ['OS', 'RDP', 'VW', 'BU_1', 'BU_2']
+    #method_order = ['OS', 'RDP']
+    #comp_df_long['Method'] = pd.Categorical(comp_df_long['Method'], categories=method_order, ordered=True)
+    #comp_df_long = comp_df_long.sort_values(['Dataset', 'Method'])
 
-    print(comp_df_long)
+    #print(comp_df_long)
 
-    # Do the same for segm_df if needed
-    segm_df_reset = segm_df.reset_index().rename(columns={'index': 'Dataset'})
-    segm_df_long = pd.melt(
-        segm_df_reset,
-        id_vars=['Dataset'],
-        var_name='Method',
-        value_name='Value'
-    )
-    segm_df_long['Method'] = pd.Categorical(segm_df_long['Method'], categories=method_order, ordered=True)
-    segm_df_long = segm_df_long.sort_values(['Dataset', 'Method'])
+    segm_df_long = segm_df.reset_index().rename(columns={'index': 'Dataset'})
+    #segm_df_long = pd.melt(segm_df_reset,id_vars=['Dataset'],var_name='Method',value_name='Value')
+    #segm_df_long['Method'] = pd.Categorical(segm_df_long['Method'], categories=method_order, ordered=True)
+    #segm_df_long = segm_df_long.sort_values(['Dataset', 'Method'])
 
-    # Save to CSV
+    comp_df_long.to_csv("complexity.csv", index=False)
     segm_df_long.to_csv("num_segments.csv", index=False)
+    print(segm_df_long)
     
     if False:
         results_df = pd.read_csv("./results/results_copy.csv")
