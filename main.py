@@ -98,7 +98,7 @@ def main(dataset: str, dataset_type: str, model_type: str, args: argparse.Namesp
     df.to_csv(f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv", index=False)
 
     auc_dict, filtered_curves = auc(df)
-    comp_performance = get_loylaty_by_threshold(df, loyalty_threshold=0.8)
+    comp_performance, segm_performance = get_loylaty_by_threshold(df, loyalty_threshold=0.8)
     
     update_results(dataset, dataset_type, model_path, time_dict, auc_dict, comp_performance)    #type: ignore
 
