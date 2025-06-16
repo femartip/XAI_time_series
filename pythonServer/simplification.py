@@ -52,19 +52,40 @@ def interpolate_points_to_line(ts_length: int, x_selected: List[int], y_selected
 
     return interpolation_ts
 
-def simplify_ts(algo, alpha, time_series):
-    algo = algo.lower()
+
+def find_alpha_giving_target_loyalty(loyalty,dataset_name, algo):
+    import pandas as pd
+    df = pd.read_csv(f"results/{dataset_name}/cnn_alpha_complexity_loyalty.csv")
+    df_algo = df[df["Type"] == algo]
+    df_threshold = df_algo[df_algo["Percentage Agreement"] >= loyalty]
+    df_min_row_idx = df_threshold["Complexity"].idxmin()
+
+    min_row = df.loc[[df_min_row_idx]]
+    return min_row["Alpha"].tolist()[0]
+
+
+
+
+def simplify_ts_by_loyalty(algo,loyalty, time_series, dataset_name):
+    algo = algo.upper()
+    alpha = find_alpha_giving_target_loyalty(loyalty,dataset_name,algo)
+    print("alpha:", alpha)
+    return simplify_ts_by_alpha(algo,alpha,time_series)
+
+
+def simplify_ts_by_alpha(algo, alpha, time_series):
+    algo = algo.upper()
     all_ts = [time_series]
     all_ts = np.array(all_ts)
-    if algo == "os":
+    if algo == "OS":
         simp = get_OS_simplification(all_ts, alpha)
-    elif algo == "rdp":
+    elif algo == "RDP":
         simp = get_RDP_simplification(all_ts, alpha)
-    elif algo == "bottom-up":
+    elif algo == "BOTTOM-UP":
         simp = get_bottom_up_simplification(all_ts, alpha)
-    elif algo == "vw":
+    elif algo == "VW":
         simp = get_VW_simplification(all_ts, alpha)
-    elif algo == "lsf":
+    elif algo == "LSF":
         simp = get_LSF_simplification(all_ts, alpha)
     else:
         raise ValueError("Unknown algorithm '{}'".format(algo))

@@ -18,13 +18,15 @@ export const TrainSetting = ({ datasetName, instanceNumber, simpMethod, alphaVal
         "0": "rgba(0,100,255,0.5)",
         "1": "rgba(217,2,250,0.5)"
     }
-    const updateColor = (dataSet, colorSet, dataSetName) => {
-        if (!dataSet) {
+
+
+    const updateColor = (timeSeries, colorSet, dataSetName) => {
+        if (!timeSeries) {
             return;
         }
         axios.get(make_full_url('getClass'), {
             params: {
-                time_series: JSON.stringify(dataSet),
+                time_series: JSON.stringify(timeSeries),
                 dataset_name: dataSetName
             }
         })
@@ -91,7 +93,7 @@ export const TrainSetting = ({ datasetName, instanceNumber, simpMethod, alphaVal
     const [dataSetSimp, setDataSetSimp] = useState(null)
     const [lineColorSimp, setLineColorSimp] = useState("rgba(159,159,171,0.25)");
 
-    const getSimpData = (dataSetCurr,simp_mode, alpha) => {
+    const getSimpData = (dataSetCurr,simp_mode, alpha, dataset_name) => {
         if (!dataSetCurr || !simp_mode) {
             return;
         }
@@ -99,7 +101,8 @@ export const TrainSetting = ({ datasetName, instanceNumber, simpMethod, alphaVal
             params: {
                 time_series: JSON.stringify(dataSetCurr),// Convert dataSet to a JSON string
                 simp_algo: simp_mode,
-                alpha: alpha
+                alpha: alpha,
+                dataset_name: dataset_name
             }
         })
             .then((res) => {
@@ -115,7 +118,7 @@ export const TrainSetting = ({ datasetName, instanceNumber, simpMethod, alphaVal
                 console.error('Error:', error);
             });
     };
-    useEffect(() => { getSimpData(dataSetCurr,simp_mode, alphaValue); }, [dataSetCurr, simp_mode, alphaValue]);
+    useEffect(() => { getSimpData(dataSetCurr,simp_mode, alphaValue, datasetName); }, [dataSetCurr, simp_mode, alphaValue, datasetName]);
     useEffect(() => { updateColor(dataSetSimp, setLineColorSimp, datasetName) }, [dataSetSimp, datasetName]);
 
 
@@ -154,10 +157,10 @@ export const TrainSetting = ({ datasetName, instanceNumber, simpMethod, alphaVal
         updateConfidence(setConfidence, dataSetCurr, datasetName);
     }, [dataSetCurr, datasetName]);
 
-    const button_show = false
+    const button_show = true
     return (
         <div>
-            <BasicExample currValue={confidence} />
+            {false && <BasicExample currValue={confidence} />}
             <DraggableGraph dataSetCurrent={dataSetCurr} setDataCurrent={setDataSetCurr}
                 dataSetOriginal={dataSetOriginal} updateData={updateData} dataSetSimp={dataSetSimp}
                 lineColorCurr={lineColorCurr} lineColorOrg={lineColorOrg} lineColorSimp={lineColorSimp}
