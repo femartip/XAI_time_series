@@ -12,23 +12,30 @@ const ImportPage = () => {
 
     useEffect(() => {
         if (taskId) {
-            const ws = new WebSocket(`ws://localhost:8000/ws/${taskId}`);
-
+            console.log("Connecting to", taskId)
+            const ws = new WebSocket(`ws://localhost:8000/ws/progress/${taskId}`);
+            console.log("Connected")
             ws.onmessage = (event) => {
+                console.log("Message", event.data)
                 const data = JSON.parse(event.data);
                 setProgress(data.progress);
                 setStatusMessage(data.message);
 
                 if (data.status === 'completed') {
                     setIsUploading(false);
+                    console.log("Completed")
                     ws.close();
                 } else if (data.status === 'error') {
                     setIsUploading(false);
+                    console.log("Error")
                     ws.close();
                 }
             };
 
-            return () => ws.close();
+            return () => {
+                console.log("Cleaning Websoket")
+                ws.close()
+            };
         }
     }, [taskId]);
 
@@ -46,6 +53,7 @@ const ImportPage = () => {
             setIsUploading(true);
             setProgress(0);
             setStatusMessage('Starting upload...');
+            console.log("Starting upload...")
 
             const formData = new FormData();
             formData.append('model_file', modelFile);
@@ -65,12 +73,14 @@ const ImportPage = () => {
                 } else {
                     alert(result.detail || 'Upload failed');
                     setStatusMessage("Error")
-                    //setIsUploading(false);
+                    console.log("Error")
+                    setIsUploading(false);
                 }
             } catch (error) {
                 alert('Upload failed');
                 setStatusMessage("Error")
-                //setIsUploading(false);
+                console.log("Error")
+                setIsUploading(false);
             }
         }
     };
@@ -126,10 +136,17 @@ const ImportPage = () => {
                     <p className="progress-message">{statusMessage}</p>
                 </div>
             )}
+            {!isUploading && statusMessage && (
+                <div className={`status-alert ${statusMessage.includes('successfully') ? 'status-success pulse' :
+                    statusMessage.includes('Error') || statusMessage.includes('failed') ? 'status-error' : ''}`}>
+                    {statusMessage.includes('successfully') ? '🎉 ' : statusMessage.includes('Error') ? '❌ ' : ''}
+                    {statusMessage}
+                </div>
+            )}
             <button
                 className="upload-btn"
                 onClick={handleSubmit}
-                disabled={!modelFile && !datasetFile && !datasetName.trim() || isUploading}
+                disabled={!modelFile || !datasetFile || !datasetName.trim() || isUploading}
             >
                 {isUploading ? 'Processing...' : '🚀 Upload Files'}
             </button>
