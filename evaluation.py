@@ -28,6 +28,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
     diff_alpha_values = np.arange(0,1,0.01)     #Bigger steps of alpha skew the results
     df = pd.DataFrame(columns=["Type","Alpha", "Percentage Agreement", "Kappa Loyalty", "Complexity", "Num Segments"])
     all_time_series = load_dataset(dataset_name, data_type=datset_type)
+    
     labels = load_dataset_labels(dataset_name, data_type=datset_type)
     num_classes = len(set(labels))
     

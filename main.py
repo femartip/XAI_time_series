@@ -37,7 +37,7 @@ def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict,
     results_df.to_csv(f"results/results.csv", index=False)
 
 
-def main(dataset: str, dataset_type: str, model_type: str, args: argparse.Namespace) -> None:
+def main(dataset: str, dataset_type: str, model_type: str, args=None) -> None:
     """
     Main function to evaluate simplifications.
     Checks that requested model exists, if not trains it.
@@ -45,8 +45,9 @@ def main(dataset: str, dataset_type: str, model_type: str, args: argparse.Namesp
     Saves plots of results.
     """
     normalized = True if "normalized" in dataset_type else False
-    multiproc = True if args.multiprocess else False
-    retrain = True if args.retrain else False
+    if args != None:
+        multiproc = True if args.multiprocess else False
+        retrain = True if args.retrain else False
 
     if not os.path.exists(f"results/{dataset}"):
         os.makedirs(f"results/{dataset}")

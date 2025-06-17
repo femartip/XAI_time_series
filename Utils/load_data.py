@@ -21,7 +21,7 @@ def read_numpy(dataset_name: str) -> np.ndarray:
     return array_2d
 
 
-def zero_indexing_labels(current_labels: np.ndarray, dataset: str) -> np.ndarray:
+def zero_indexing_labels(current_labels: np.ndarray, dataset: str, dataset_type: str) -> np.ndarray:
     """
     Encodes the labels as zero index.
     For instance: labels: e.g. 1,2,3,4,... -> go to -> labels: 0,1,2,3,...
@@ -30,13 +30,17 @@ def zero_indexing_labels(current_labels: np.ndarray, dataset: str) -> np.ndarray
     :param dataset:
     :return:
     """
-    training_labels = load_dataset_org_labels(dataset, data_type="TRAIN")
-    test_labels = load_dataset_org_labels(dataset, data_type="TEST")
-    validation_labels = load_dataset_org_labels(dataset, data_type="VALIDATION")
+    try:
+        training_labels = load_dataset_org_labels(dataset, data_type="TRAIN")
+        test_labels = load_dataset_org_labels(dataset, data_type="TEST")
+        validation_labels = load_dataset_org_labels(dataset, data_type="VALIDATION")
+        orig_labels = np.concatenate([training_labels, test_labels, validation_labels], axis=0)
+    except:
+        orig_labels = load_dataset_org_labels(dataset, dataset_type)
     le = preprocessing.LabelEncoder()
-    le.fit(np.concatenate([training_labels, test_labels, validation_labels], axis=0))
+    le.fit(orig_labels)
     transformed_labels = le.transform(current_labels)
-    return transformed_labels
+    return np.asarray(transformed_labels)
 
 
 def load_data_set_full(dataset_name: str, data_type: str = "TRAIN") -> np.ndarray:
@@ -80,7 +84,7 @@ def load_dataset_labels(dataset_name, data_type: str = "TRAIN") -> np.ndarray:
     :return:
     """
     labels_current = load_dataset_org_labels(dataset_name, data_type=data_type)
-    zero_indexed = zero_indexing_labels(labels_current, dataset_name)
+    zero_indexed = zero_indexing_labels(labels_current, dataset_name, data_type)
     return zero_indexed
 
 def load_raw_dataset_labels(dataset_name, data_type: str = "TRAIN") -> np.ndarray:

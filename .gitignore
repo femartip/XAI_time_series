@@ -1,3 +1,6 @@
+webPage/src/node_modules
+webPage/package-lock.json
+
 Resources
 venv
 .venv
