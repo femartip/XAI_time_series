@@ -1,6 +1,5 @@
-from openai import OpenAI
 import argparse
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
 import numpy as np
 import pandas as pd
@@ -17,21 +16,38 @@ import logging
 from Utils.selectPrototypes import select_prototypes
 import statistics
 
+import openai
+from openai import AzureOpenAI
+from openai import OpenAI as OpenAIClient
+#from azure.ai.inference import ChatCompletionsClient
+#from azure.ai.inference.models import TextContentItem, ImageContentItem, ImageUrl
+#from azure.core.credentials import AzureKeyCredential
+#from azure.core.exceptions import HttpResponseError
+
 #logging.basicConfig()
-load_dotenv()
-OPENAI_API_KEY=os.getenv('OPENAI_API_KEY')
+#load_dotenv()
+openai.api_key = dotenv_values(".env")["API_KEY"]
+openai.api_type = dotenv_values(".env")["API_TYPE"]
+openai.api_version = dotenv_values(".env")["API_VERSION"]
+#openai.api_base = dotenv_values(".env")["API_BASE"] 
+os.environ["AZURE_OPENAI_API_KEY"] = dotenv_values(".env").get("API_KEY")
+os.environ["AZURE_OPENAI_ENDPOINT"] = dotenv_values(".env").get("API_BASE")
 DEBUG =False
 
-def get_response(prompt: list[dict], client: OpenAI):
+def get_response(prompt: list[dict], model:str):
+    client = AzureOpenAI(
+        api_key=dotenv_values(".env")["API_KEY"],
+        azure_endpoint=dotenv_values(".env")["API_BASE"],
+        api_version=dotenv_values(".env")["API_VERSION"],
+    )
     response = client.chat.completions.create(
-        model="gpt-4.1",
-        messages= [
-            {"role": "user", "content": prompt} #type: ignore
+        model=model,
+        messages=[
+            {"role": "user", "content": prompt}
         ],
-        temperature=0.0,
     )
     return response.choices[0].message.content
-
+    
 def build_prompt(images: list[str], test_samples: list[str], num_labels: int, print_prompt:bool=False) -> list[dict]:
     labels = range(0, num_labels)
     num_images = len(images)
@@ -98,7 +114,7 @@ def ts_to_image(ts: np.ndarray, show_fig: bool = False, name: str = ""):
     return f"data:image/png;base64,{img_b64}"
 
 
-def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], test_ts: np.ndarray, test_ts_label: list[int], labels: int) -> float:
+def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], test_ts: np.ndarray, test_ts_label: list[int], labels: int, llm_model: str) -> float:
     dataset_ts = dataset_ts
     dataset_ts_labels = dataset_ts_labels
     test_ts = test_ts
@@ -109,8 +125,7 @@ def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], 
 
     prompt = build_prompt(k_img, test_samples= test_sample, num_labels=labels, print_prompt=DEBUG)
 
-    client = OpenAI()
-    response = get_response(prompt, client)
+    response = get_response(prompt, llm_model)
     #print(response)
 
     pattern = r"Predicted class:\s+(\d+)"
@@ -135,16 +150,16 @@ def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], 
 def argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', type=str, help="Dataset to feed samples from.")
-    parser.add_argument('--alphas', type=float, default=0.2, nargs='+', help="Values of alpha to iterate over.")
+    parser.add_argument('--alphas', type=float, default=[0.2], nargs='+', help="Values of alpha to iterate over.")
     parser.add_argument('--classifier', type=str, default="cnn", help="Classifier to compare with." )
-    #parser.add_argument('--llm', type=str, default="",help="LLM within the OpenAI API.")
+    parser.add_argument('--llm', type=str, default="gpt4o",help="LLM within the OpenAI API.")
     parser.add_argument('--k', type=int, default=3, help="Number of total examples to use.")
     parser.add_argument('--interactive', action='store_true', help='Make code interactive')
     return parser.parse_args()
     
 if __name__ == '__main__':
     args = argparser()
-    print(f"Testing {args.dataset } for classifier {args.classifier} on LLM GPT4-1")
+    print(f"Testing {args.dataset } for classifier {args.classifier} on LLM {args.llm}")
 
     global INTERACTIVE
     INTERACTIVE = True if args.interactive else False
@@ -183,7 +198,7 @@ if __name__ == '__main__':
             #test_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm_simp, len(set(labels)))       #type: ignore
             test_ts_simp_labels = test_ts_label
 
-            out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)))
+            out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)), args.llm)
             results_simp.append(out)
 
         print(f"Alpha value of:{alpha}")
