@@ -30,20 +30,20 @@ openai.api_key = dotenv_values(".env")["API_KEY"]
 openai.api_type = dotenv_values(".env")["API_TYPE"]
 openai.api_version = dotenv_values(".env")["API_VERSION"]
 #openai.api_base = dotenv_values(".env")["API_BASE"] 
-os.environ["AZURE_OPENAI_API_KEY"] = dotenv_values(".env").get("API_KEY")
-os.environ["AZURE_OPENAI_ENDPOINT"] = dotenv_values(".env").get("API_BASE")
+os.environ["AZURE_OPENAI_API_KEY"] = dotenv_values(".env").get("API_KEY")       #type: ignore
+os.environ["AZURE_OPENAI_ENDPOINT"] = dotenv_values(".env").get("API_BASE")     #type: ignore
 DEBUG =False
 
 def get_response(prompt: list[dict], model:str):
     client = AzureOpenAI(
         api_key=dotenv_values(".env")["API_KEY"],
-        azure_endpoint=dotenv_values(".env")["API_BASE"],
+        azure_endpoint=dotenv_values(".env")["API_BASE"],       #type: ignore
         api_version=dotenv_values(".env")["API_VERSION"],
     )
     response = client.chat.completions.create(
         model=model,
         messages=[
-            {"role": "user", "content": prompt}
+            {"role": "user", "content": prompt}     #type: ignore
         ],
     )
     return response.choices[0].message.content
@@ -152,8 +152,9 @@ def argparser():
     parser.add_argument('--dataset', type=str, help="Dataset to feed samples from.")
     parser.add_argument('--alphas', type=float, default=[0.2], nargs='+', help="Values of alpha to iterate over.")
     parser.add_argument('--classifier', type=str, default="cnn", help="Classifier to compare with." )
-    parser.add_argument('--llm', type=str, default="gpt4o",help="LLM within the OpenAI API.")
+    parser.add_argument('--llm', type=str, default="gpt4o",help="LLM within the OpenAI API. Models supported: gpt4o, o4-mini, gpt-4.1")
     parser.add_argument('--k', type=int, default=3, help="Number of total examples to use.")
+    parser.add_argument('--xaimethods', type=str, nargs='+', default=["OS", "RDP"], help="Get results selected explainability methods. Can be: OS, RDP")
     parser.add_argument('--interactive', action='store_true', help='Make code interactive')
     return parser.parse_args()
     
@@ -182,28 +183,35 @@ if __name__ == '__main__':
     
     results_per_alpah = {}
     for alpha in args.alphas:
-        results_simp = []
+        results = {}
         for i in range(steps):
+            if "OS" in args.simplification:
+                dataset_ts_norm_simp = get_OS_simplification(dataset_ts_norm, alpha=alpha)
+                dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
+                test_ts_norm_simp = get_OS_simplification(test_ts_norm, alpha=alpha)
+                num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
+                test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
+                dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
+                test_ts_simp_labels = test_ts_label
+                out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)), args.llm)
+                results["OS"][i] = out
 
-            #print("Testing with simplifications:")
-            dataset_ts_norm_simp = get_OS_simplification(dataset_ts_norm, alpha=alpha)
-            dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
-
-            test_ts_norm_simp = get_OS_simplification(test_ts_norm, alpha=alpha)
-            num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
-            test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
-            
-            
-            dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
-            #test_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm_simp, len(set(labels)))       #type: ignore
-            test_ts_simp_labels = test_ts_label
-
-            out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)), args.llm)
-            results_simp.append(out)
+            if "RDP" in args.simplification:
+                dataset_ts_norm_simp = get_RDP_simplification(dataset_ts_norm, alpha=alpha)     #type: ignore
+                dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
+                test_ts_norm_simp = get_RDP_simplification(test_ts_norm, alpha=alpha)       #type: ignore
+                num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
+                test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
+                dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
+                test_ts_simp_labels = test_ts_label
+                out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)), args.llm)
+                results["OS"][i] = out
 
         print(f"Alpha value of:{alpha}")
-        print(statistics.mean(results_simp))
-        results_per_alpah[alpha] = {"accuracy":statistics.mean(results_simp), "segments":num_segments}
+        for xmethod in results.keys():
+            result_xmethod = results[xmethod]
+            print(statistics.mean(list(result_xmethod.values())))
+            results_per_alpah[alpha] = {"method": xmethod,"accuracy":statistics.mean(list(result_xmethod.values())), "segments":num_segments}
 
     df = pd.DataFrame.from_dict(results_per_alpah)
 
