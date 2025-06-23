@@ -150,23 +150,24 @@ def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], 
 def argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', type=str, help="Dataset to feed samples from.")
-    parser.add_argument('--alphas', type=float, default=[0.2], nargs='+', help="Values of alpha to iterate over.")
     parser.add_argument('--classifier', type=str, default="cnn", help="Classifier to compare with." )
-    parser.add_argument('--llm', type=str, default="gpt4o",help="LLM within the OpenAI API. Models supported: gpt4o, o4-mini, gpt-4.1")
+    parser.add_argument('--llm', type=str, default="gpt4o",help="LLM within the OpenAI API. Models supported: gpt4o, o4-mini, gpt-4.1 and o3")
     parser.add_argument('--k', type=int, default=3, help="Number of total examples to use.")
-    parser.add_argument('--xaimethods', type=str, nargs='+', default=["OS", "RDP"], help="Get results selected explainability methods. Can be: OS, RDP")
+    parser.add_argument('--methods', type=str, nargs='+', default=["OS", "RDP"], help="Get results selected explainability methods. Can be: OS, RDP")
+    parser.add_argument('--alphas', type=float, default=[0.2], nargs='+', help="If a simplification method selected. Set values of alpha to iterate over.")
     parser.add_argument('--interactive', action='store_true', help='Make code interactive')
     return parser.parse_args()
     
 if __name__ == '__main__':
     args = argparser()
+    assert args.llm in ["gpt4o", "o4-mini", "gpt-4.1","o3"], "Invalid model type"
+    assert set.intersection(set(["OS", "RDP"]), set(args.methods)), "Invalid XAI method"
     print(f"Testing {args.dataset } for classifier {args.classifier} on LLM {args.llm}")
 
     global INTERACTIVE
     INTERACTIVE = True if args.interactive else False
     steps = 5
     
-    #print("Testing without simplifications:")
     dataset_ts_norm = select_prototypes(args.dataset, num_instances=args.k, data_type="TRAIN_normalized") 
     labels = np.array(load_dataset_labels(args.dataset, data_type='TEST_normalized'))
     
@@ -177,48 +178,33 @@ if __name__ == '__main__':
     dataset_ts_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm, len(set(labels)))   #type: ignore
     test_ts_label = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm, len(set(labels)))  #type: ignore
     
-    #out = get_and_test_examples(dataset_ts_norm, dataset_ts_labels, test_ts_norm, test_ts_label, len(set(labels))) 
-    #results.append(out)
+    simp_methods = {}
+    if "OS" in args.methods:
+        simp_methods["OS"] = get_OS_simplification
+    if "RDP" in args.methods:
+        simp_methods["RDP"] = get_RDP_simplification
 
-    
-    results_per_alpah = {}
+    results_per_xmethod = {}
     for alpha in args.alphas:
-        results = {}
-        for i in range(steps):
-            if "OS" in args.simplification:
-                dataset_ts_norm_simp = get_OS_simplification(dataset_ts_norm, alpha=alpha)
-                dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
-                test_ts_norm_simp = get_OS_simplification(test_ts_norm, alpha=alpha)
-                num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
-                test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
-                dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
-                test_ts_simp_labels = test_ts_label
+        for simp_name, simp_func in simp_methods.items():
+            dataset_ts_norm_simp = simp_func(dataset_ts_norm, alpha)
+            dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
+            test_ts_norm_simp = simp_func(test_ts_norm, alpha)
+            num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
+            test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
+            dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
+            test_ts_simp_labels = test_ts_label
+            step_results = []
+            for i in range(steps):
                 out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)), args.llm)
-                results["OS"][i] = out
+                step_results.append(out)
 
-            if "RDP" in args.simplification:
-                dataset_ts_norm_simp = get_RDP_simplification(dataset_ts_norm, alpha=alpha)     #type: ignore
-                dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
-                test_ts_norm_simp = get_RDP_simplification(test_ts_norm, alpha=alpha)       #type: ignore
-                num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
-                test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
-                dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
-                test_ts_simp_labels = test_ts_label
-                out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)), args.llm)
-                results["OS"][i] = out
+            results_per_xmethod[simp_name] = {alpha: {"accuracy":statistics.mean(step_results), "segments":num_segments}}
+        
+    df = pd.DataFrame.from_dict(results_per_xmethod)
 
-        print(f"Alpha value of:{alpha}")
-        for xmethod in results.keys():
-            result_xmethod = results[xmethod]
-            print(statistics.mean(list(result_xmethod.values())))
-            results_per_alpah[alpha] = {"method": xmethod,"accuracy":statistics.mean(list(result_xmethod.values())), "segments":num_segments}
-
-    df = pd.DataFrame.from_dict(results_per_alpah)
-
-    if not os.path.exists(f"llm_tests/{args.dataset}.csv"):
-        df.to_csv(f"llm_tests/{args.dataset}.csv")
-    else:
-        df.to_csv(f"llm_tests/{args.dataset}_1.csv")
+    methods_str = "_".join(args.methods)
+    df.to_csv(f"llm_tests/{args.dataset}_{methods_str}.csv")
     print(df)
 
 
