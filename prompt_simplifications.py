@@ -114,7 +114,7 @@ def ts_to_image(ts: np.ndarray, show_fig: bool = False, name: str = ""):
     return f"data:image/png;base64,{img_b64}"
 
 
-def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], test_ts: np.ndarray, test_ts_label: list[int], labels: int, llm_model: str) -> float:
+def simp_ts_to_img(dataset_ts: np.ndarray, dataset_ts_labels: list[int], test_ts: np.ndarray, test_ts_label: list[int]) -> tuple[list[str], list[str]]:
     dataset_ts = dataset_ts
     dataset_ts_labels = dataset_ts_labels
     test_ts = test_ts
@@ -123,6 +123,9 @@ def get_and_test_examples(dataset_ts: np.ndarray, dataset_ts_labels: list[int], 
     k_img = [ts_to_image(ts, show_fig=DEBUG, name=f"train_{i}") for i, ts in enumerate(dataset_ts)]
     test_sample = [ts_to_image(ts, show_fig=DEBUG, name=f"test_{i}") for i, ts in enumerate(test_ts)]
 
+    return k_img, test_sample
+
+def prompt_model(llm_model: str, k_img: list[str], test_sample: list[str], labels: int) -> float:
     prompt = build_prompt(k_img, test_samples= test_sample, num_labels=labels, print_prompt=DEBUG)
 
     response = get_response(prompt, llm_model)
@@ -199,14 +202,21 @@ if __name__ == '__main__':
             test_ts_simp_labels = test_ts_label
             step_results = []
             for i in range(steps):
-                out = get_and_test_examples(prototipes_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(prot_labels)), args.llm)
+                prot_img_simp, test_img_simp = simp_ts_to_img(prototipes_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels)
+                out = prompt_model(args.llm, prot_img_simp, test_img_simp, len(set(prot_labels)))
                 step_results.append(out)
 
             results_per_xmethod[simp_name] = {alpha: {"accuracy":statistics.mean(step_results), "segments":num_segments}}
     
     if "SAX" in args.methods:
-        sax_prot = get_SAX(prototipes_ts_norm)   # returns a list of images
-
+        n_bins = 3
+        prot_img_sax = get_SAX(prototipes_ts_norm, n_bins)   # returns a list of images
+        test_img_sax = get_SAX(test_ts_norm, n_bins)
+        step_results = []
+        for i in range(steps):
+            out = prompt_model(args.llm, prot_img_sax, test_img_sax, len(set(prot_labels)))
+            step_results.append(out)
+        results_per_xmethod["SAX"] = {n_bins: {"accuracy":statistics.mean(step_results), "segments":None}}
 
     df = pd.DataFrame.from_dict(results_per_xmethod)
 

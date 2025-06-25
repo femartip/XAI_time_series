@@ -7,7 +7,7 @@ import numpy as np
 import base64
 import io
 
-def get_SAX(time_series: np.ndarray) -> list[str]:
+def get_SAX(time_series: np.ndarray, n_bins:int = 3) -> list[str]:
     """
     Apply SAX algorithm for all time series in the dataset.
     """
@@ -16,7 +16,6 @@ def get_SAX(time_series: np.ndarray) -> list[str]:
     for i, ts_y in enumerate(time_series):
         n_timestamps = time_series.shape[1]
         ts_y = ts_y.reshape(1, -1)
-        n_bins = 3
         sax = SymbolicAggregateApproximation(n_bins=n_bins, strategy='normal')
         sax_y = sax.fit_transform(ts_y)[0]
         bins = norm.ppf(np.linspace(0, 1, n_bins + 1)[1:-1])
@@ -37,7 +36,7 @@ def get_SAX(time_series: np.ndarray) -> list[str]:
 
         buf = io.BytesIO()
         
-        plt.savefig(f"./sax_{i}.png")
+        #plt.savefig(f"./sax_{i}.png")
             
         plt.savefig(buf)
         buf.seek(0)
