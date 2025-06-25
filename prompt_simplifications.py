@@ -114,18 +114,17 @@ def ts_to_image(ts: np.ndarray, show_fig: bool = False, name: str = ""):
     return f"data:image/png;base64,{img_b64}"
 
 
-def simp_ts_to_img(dataset_ts: np.ndarray, dataset_ts_labels: list[int], test_ts: np.ndarray, test_ts_label: list[int]) -> tuple[list[str], list[str]]:
+def simp_ts_to_img(dataset_ts: np.ndarray, dataset_ts_labels: list[int], test_ts: np.ndarray) -> tuple[list[str], list[str]]:
     dataset_ts = dataset_ts
     dataset_ts_labels = dataset_ts_labels
     test_ts = test_ts
-    test_ts_label = test_ts_label
     
     k_img = [ts_to_image(ts, show_fig=DEBUG, name=f"train_{i}") for i, ts in enumerate(dataset_ts)]
     test_sample = [ts_to_image(ts, show_fig=DEBUG, name=f"test_{i}") for i, ts in enumerate(test_ts)]
 
     return k_img, test_sample
 
-def prompt_model(llm_model: str, k_img: list[str], test_sample: list[str], labels: int) -> float:
+def prompt_model(llm_model: str, k_img: list[str], test_sample: list[str], test_ts_label: list[int], labels: int) -> float:
     prompt = build_prompt(k_img, test_samples= test_sample, num_labels=labels, print_prompt=DEBUG)
 
     response = get_response(prompt, llm_model)
@@ -177,7 +176,8 @@ if __name__ == '__main__':
     prot_labels = np.array(load_dataset_labels(args.dataset, data_type='TEST_normalized'))
 
     test_ts_norm = load_dataset(args.dataset, data_type="TEST_normalized")
-    test_ts_norm = test_ts_norm[np.random.randint(0, test_ts_norm.shape[0], size=(10))]
+    rand_ts_idx = np.random.randint(0, test_ts_norm.shape[0], size=(10))
+    test_ts_norm = test_ts_norm[rand_ts_idx]
     
     classifier_file = f"{args.classifier}_norm.pth" if args.classifier == "cnn" else f"{args.classifier}_norm.pkl"
     dataset_ts_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", prototipes_ts_norm, len(set(prot_labels)))   #type: ignore
@@ -198,11 +198,11 @@ if __name__ == '__main__':
             num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
             test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
             dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", prototipes_ts_norm_simp, len(set(prot_labels)))     #type: ignore
-            test_ts_simp_labels = test_ts_label
+            test_ts_simp_labels = test_ts_label     # Labels compares with original lables given by model
             step_results = []
             for i in range(steps):
-                prot_img_simp, test_img_simp = simp_ts_to_img(prototipes_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels)
-                out = prompt_model(args.llm, prot_img_simp, test_img_simp, len(set(prot_labels)))
+                prot_img_simp, test_img_simp = simp_ts_to_img(prototipes_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp)
+                out = prompt_model(args.llm, prot_img_simp, test_img_simp, test_ts_simp_labels, len(set(prot_labels)))
                 step_results.append(out)
 
             results_per_xmethod[simp_name] = {alpha: {"accuracy":statistics.mean(step_results), "segments":num_segments}}
@@ -212,14 +212,15 @@ if __name__ == '__main__':
         prot_labels_znorm = np.array(load_dataset_labels(args.dataset, data_type='TEST_znormalized'))
 
         test_ts_znorm = load_dataset(args.dataset, data_type="TEST_znormalized")
-        test_ts_znorm = test_ts_znorm[np.random.randint(0, test_ts_znorm.shape[0], size=(10))]
-    
+        test_ts_znorm = test_ts_znorm[rand_ts_idx]
+        test_ts_label_znorm = test_ts_label   #As we are selecting the same instances, its model labels will not change. 
+
         n_bins = 3
         prot_img_sax = get_SAX(prototipes_ts_znorm, n_bins)   # returns a list of images
         test_img_sax = get_SAX(test_ts_znorm, n_bins)
         step_results = []
         for i in range(steps):
-            out = prompt_model(args.llm, prot_img_sax, test_img_sax, len(set(prot_labels_znorm)))
+            out = prompt_model(args.llm, prot_img_sax, test_img_sax, test_ts_label_znorm ,len(set(prot_labels_znorm)))
             step_results.append(out)
         results_per_xmethod["SAX"] = {n_bins: {"accuracy":statistics.mean(step_results), "segments":None}}
 
