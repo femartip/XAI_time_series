@@ -12,7 +12,7 @@ def get_SAX(time_series: np.ndarray, n_bins:int = 3) -> list[str]:
     Apply SAX algorithm for all time series in the dataset.
     """
     ts_simplifications = []
-    
+    first = True
     for i, ts_y in enumerate(time_series):
         n_timestamps = time_series.shape[1]
         ts_y = ts_y.reshape(1, -1)
@@ -35,8 +35,9 @@ def get_SAX(time_series: np.ndarray, n_bins:int = 3) -> list[str]:
         plt.xlabel('Time', fontsize=14)
 
         buf = io.BytesIO()
-        
-        #plt.savefig(f"./sax_{i}.png")
+        if first:
+            plt.savefig(f"./sax_{i}.png")
+            first = False
             
         plt.savefig(buf)
         buf.seek(0)

@@ -36,7 +36,7 @@ def zero_indexing_labels(current_labels: np.ndarray, dataset: str) -> np.ndarray
     le = preprocessing.LabelEncoder()
     le.fit(np.concatenate([training_labels, test_labels, validation_labels], axis=0))
     transformed_labels = le.transform(current_labels)
-    return transformed_labels
+    return transformed_labels       #type: ignore
 
 
 def load_data_set_full(dataset_name: str, data_type: str = "TRAIN") -> np.ndarray:
@@ -115,5 +115,25 @@ def normalize_data(dataset_name: str, data_type: str = "TRAIN"):
     assert not np.isnan(dataset).any(), f"NaN values in the dataset {dataset}."
     np.save(file_path_name, dataset)
 
+def znormalize_data(dataset_name: str, data_type: str = "TRAIN"):
+    dataset = load_dataset(dataset_name, data_type)
+    print(dataset.shape)
+    mean = np.mean(dataset)
+    std = np.std(dataset)
+
+    dataset = (dataset - mean)/std
+    file_path_name = "data/" + dataset_name + "/" +dataset_name +"_" + data_type + "_znormalized.npy"
+    labels = load_raw_dataset_labels(dataset_name, data_type)
+    dataset = np.hstack((labels.reshape(-1, 1), dataset))
+    assert not np.isnan(dataset).any(), f"NaN values in the dataset {dataset}."
+    np.save(file_path_name, dataset)
+
 if __name__ == "__main__":
     test()
+    
+    #datasets = [x for x in os.listdir("./data/") if os.path.isdir(f"./data/{x}")]
+    #datasets = ["Chinatown"]
+    #for dataset in datasets:
+    #    print(dataset)
+    #    znormalize_data(dataset, data_type="TRAIN")
+    #    znormalize_data(dataset, data_type="TEST")

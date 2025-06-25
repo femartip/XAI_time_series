@@ -170,13 +170,12 @@ if __name__ == '__main__':
     global INTERACTIVE
     INTERACTIVE = True if args.interactive else False
     steps = 5
-    
-    
+        
     train_ts_norm = load_dataset(args.dataset, data_type="TRAIN_normalized")
 
     prototipes_ts_norm = select_prototypes(args.dataset, num_instances=args.k, data_type="TRAIN_normalized") 
     prot_labels = np.array(load_dataset_labels(args.dataset, data_type='TEST_normalized'))
-    
+
     test_ts_norm = load_dataset(args.dataset, data_type="TEST_normalized")
     test_ts_norm = test_ts_norm[np.random.randint(0, test_ts_norm.shape[0], size=(10))]
     
@@ -209,12 +208,18 @@ if __name__ == '__main__':
             results_per_xmethod[simp_name] = {alpha: {"accuracy":statistics.mean(step_results), "segments":num_segments}}
     
     if "SAX" in args.methods:
+        prototipes_ts_znorm = select_prototypes(args.dataset, num_instances=args.k, data_type="TRAIN_znormalized") 
+        prot_labels_znorm = np.array(load_dataset_labels(args.dataset, data_type='TEST_znormalized'))
+
+        test_ts_znorm = load_dataset(args.dataset, data_type="TEST_znormalized")
+        test_ts_znorm = test_ts_znorm[np.random.randint(0, test_ts_znorm.shape[0], size=(10))]
+    
         n_bins = 3
-        prot_img_sax = get_SAX(prototipes_ts_norm, n_bins)   # returns a list of images
-        test_img_sax = get_SAX(test_ts_norm, n_bins)
+        prot_img_sax = get_SAX(prototipes_ts_znorm, n_bins)   # returns a list of images
+        test_img_sax = get_SAX(test_ts_znorm, n_bins)
         step_results = []
         for i in range(steps):
-            out = prompt_model(args.llm, prot_img_sax, test_img_sax, len(set(prot_labels)))
+            out = prompt_model(args.llm, prot_img_sax, test_img_sax, len(set(prot_labels_znorm)))
             step_results.append(out)
         results_per_xmethod["SAX"] = {n_bins: {"accuracy":statistics.mean(step_results), "segments":None}}
 
