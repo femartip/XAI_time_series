@@ -15,7 +15,7 @@ from simplifications import get_OS_simplification, get_RDP_simplification, get_b
 import logging
 from Utils.selectPrototypes import select_prototypes
 import statistics
-
+from Utils.SAX import get_SAX
 import openai
 from openai import AzureOpenAI
 from openai import OpenAI as OpenAIClient
@@ -153,7 +153,7 @@ def argparser():
     parser.add_argument('--classifier', type=str, default="cnn", help="Classifier to compare with." )
     parser.add_argument('--llm', type=str, default="gpt4o",help="LLM within the OpenAI API. Models supported: gpt4o, o4-mini, gpt-4.1 and o3")
     parser.add_argument('--k', type=int, default=3, help="Number of total examples to use.")
-    parser.add_argument('--methods', type=str, nargs='+', default=["OS", "RDP"], help="Get results selected explainability methods. Can be: OS, RDP")
+    parser.add_argument('--methods', type=str, nargs='+', default=["OS", "RDP"], help="Get results selected explainability methods. Can be: OS, RDP, SAX")
     parser.add_argument('--alphas', type=float, default=[0.2], nargs='+', help="If a simplification method selected. Set values of alpha to iterate over.")
     parser.add_argument('--interactive', action='store_true', help='Make code interactive')
     return parser.parse_args()
@@ -161,22 +161,25 @@ def argparser():
 if __name__ == '__main__':
     args = argparser()
     assert args.llm in ["gpt4o", "o4-mini", "gpt-4.1","o3"], "Invalid model type"
-    assert set.intersection(set(["OS", "RDP"]), set(args.methods)), "Invalid XAI method"
+    assert set.intersection(set(["OS", "RDP", "SAX"]), set(args.methods)), "Invalid XAI method"
     print(f"Testing {args.dataset } for classifier {args.classifier} on LLM {args.llm}")
 
     global INTERACTIVE
     INTERACTIVE = True if args.interactive else False
     steps = 5
     
-    dataset_ts_norm = select_prototypes(args.dataset, num_instances=args.k, data_type="TRAIN_normalized") 
-    labels = np.array(load_dataset_labels(args.dataset, data_type='TEST_normalized'))
+    
+    train_ts_norm = load_dataset(args.dataset, data_type="TRAIN_normalized")
+
+    prototipes_ts_norm = select_prototypes(args.dataset, num_instances=args.k, data_type="TRAIN_normalized") 
+    prot_labels = np.array(load_dataset_labels(args.dataset, data_type='TEST_normalized'))
     
     test_ts_norm = load_dataset(args.dataset, data_type="TEST_normalized")
     test_ts_norm = test_ts_norm[np.random.randint(0, test_ts_norm.shape[0], size=(10))]
     
     classifier_file = f"{args.classifier}_norm.pth" if args.classifier == "cnn" else f"{args.classifier}_norm.pkl"
-    dataset_ts_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm, len(set(labels)))   #type: ignore
-    test_ts_label = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm, len(set(labels)))  #type: ignore
+    dataset_ts_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", prototipes_ts_norm, len(set(prot_labels)))   #type: ignore
+    test_ts_label = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", test_ts_norm, len(set(prot_labels)))  #type: ignore
     
     simp_methods = {}
     if "OS" in args.methods:
@@ -187,20 +190,24 @@ if __name__ == '__main__':
     results_per_xmethod = {}
     for alpha in args.alphas:
         for simp_name, simp_func in simp_methods.items():
-            dataset_ts_norm_simp = simp_func(dataset_ts_norm, alpha)
-            dataset_ts_norm_simp = np.array([ts.line_version for ts in dataset_ts_norm_simp])
+            prototipes_ts_norm_simp = simp_func(prototipes_ts_norm, alpha)
+            prototipes_ts_norm_simp = np.array([ts.line_version for ts in prototipes_ts_norm_simp])
             test_ts_norm_simp = simp_func(test_ts_norm, alpha)
             num_segments = np.mean([(len(ts.x_pivots) - 1) for ts in test_ts_norm_simp])
             test_ts_norm_simp = np.array([ts.line_version for ts in test_ts_norm_simp])
-            dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", dataset_ts_norm_simp, len(set(labels)))     #type: ignore
+            dataset_ts_simp_labels = model_batch_classify(f"./models/{args.dataset}/{classifier_file}", prototipes_ts_norm_simp, len(set(prot_labels)))     #type: ignore
             test_ts_simp_labels = test_ts_label
             step_results = []
             for i in range(steps):
-                out = get_and_test_examples(dataset_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(labels)), args.llm)
+                out = get_and_test_examples(prototipes_ts_norm_simp, dataset_ts_simp_labels, test_ts_norm_simp, test_ts_simp_labels, len(set(prot_labels)), args.llm)
                 step_results.append(out)
 
             results_per_xmethod[simp_name] = {alpha: {"accuracy":statistics.mean(step_results), "segments":num_segments}}
-        
+    
+    if "SAX" in args.methods:
+        sax_prot = get_SAX(prototipes_ts_norm)   # returns a list of images
+
+
     df = pd.DataFrame.from_dict(results_per_xmethod)
 
     methods_str = "_".join(args.methods)

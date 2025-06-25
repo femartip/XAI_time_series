@@ -1569,6 +1569,30 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "pyts"
+version = "0.13.0"
+description = "A python package for time series classification"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "pyts-0.13.0-py3-none-any.whl", hash = "sha256:b49608267b686ea693dba31316ef2b22ad73ea29b27144696c347809ecd5ad62"},
+    {file = "pyts-0.13.0.tar.gz", hash = "sha256:aca0ecc315f4cc782be363f3b62384a24a02d23a5a7d549b839b2c40a7fbed02"},
+]
+
+[package.dependencies]
+joblib = ">=1.1.1"
+numba = ">=0.55.2"
+numpy = ">=1.22.4"
+scikit-learn = ">=1.2.0"
+scipy = ">=1.8.1"
+
+[package.extras]
+docs = ["docutils (==0.14)", "matplotlib", "numpydoc", "packaging", "sphinx (==1.8.5)", "sphinx-gallery"]
+linting = ["flake8"]
+tests = ["pytest", "pytest-cov"]
+
+[[package]]
 name = "pytz"
 version = "2025.2"
 description = "World timezone definitions, modern and historical"
@@ -2099,4 +2123,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "40d5d4ec2f49f810fed40ccbad62a663126d996959c9a3f00f55547eaa369e5f"
+content-hash = "a1a297a2bff6117b8940c7951efdaa2409360169018f1518596d552df863e3cf"
