@@ -215,7 +215,7 @@ if __name__ == '__main__':
         test_ts_znorm = test_ts_znorm[rand_ts_idx]
         test_ts_label_znorm = test_ts_label   #As we are selecting the same instances, its model labels will not change. 
 
-        n_bins = 3
+        n_bins = 4
         prot_img_sax = get_SAX(prototipes_ts_znorm, n_bins)   # returns a list of images
         test_img_sax = get_SAX(test_ts_znorm, n_bins)
         step_results = []
