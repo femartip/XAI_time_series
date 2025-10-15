@@ -6,7 +6,7 @@ authors = [
     {name = "femartip",email = "felix.marti99@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10, <3.14"
 dependencies = [
     "rdp (>=0.8,<0.9)",
     "pandas (>=2.2.3,<3.0.0)",

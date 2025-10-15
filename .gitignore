@@ -11,10 +11,11 @@ __pycache__/*
 *.pth
 *.pyc
 *.out
+*.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
+*.py[cod]ç
 *$py.class
 
 # C extensions

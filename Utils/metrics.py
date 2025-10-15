@@ -153,7 +153,7 @@ def update_auc(results_df: pd.DataFrame) -> None:
             print(f"Model {model}")
             df = pd.read_csv(f"results/{dataset}/{model}_alpha_complexity_loyalty.csv")
             auc_values, filtered_curves = auc(df, show_fig=False)
-            comp_threshold = get_loylaty_by_threshold(df, 0.8)
+            comp_threshold = get_loyalty_by_threshold(df, 0.8)
                 
 
             simp_alg = ["OS", "RDP", "VW", "BU_1", "BU_2"]
@@ -175,7 +175,7 @@ def update_auc(results_df: pd.DataFrame) -> None:
     results_df.to_csv("./results/results_copy.csv", index=False)
     print("done")
 
-def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:str="Kappa Loyalty") -> tuple[dict[str, float], dict[str, float]]:
+def get_loyalty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:str="Kappa Loyalty") -> tuple[dict[str, float], dict[str, float]]:
     algorithms = df["Type"].unique()
     threshold_comp = {}
     threshold_num_segm = {}
@@ -230,6 +230,50 @@ def get_loylaty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
                     
     return threshold_comp, threshold_num_segm
 
+def get_alpha_by_loyalty(dataset: str, model: str, loyalty_threshold: float, algorithm: str, metric:str="Percentage Agreement") -> float:
+    dataset_csv_path = f"results/{dataset}/{model}_alpha_complexity_loyalty.csv"
+    df = pd.read_csv(dataset_csv_path)
+    alpha = 0.0
+
+    complexity = df["Complexity"].copy().where(df["Type"] == algorithm).dropna().to_list()
+    num_seg = df["Num Segments"].copy().where(df["Type"] == algorithm).dropna().to_list()
+    loyalty = df[metric].copy().where(df["Type"] == algorithm).dropna().to_list()
+    alpha_values = df["Alpha"].copy().where(df["Type"] == algorithm).dropna().to_list()
+
+    sort_id = sorted(range(len(complexity)), key=lambda x: complexity[x])
+    complexity = [complexity[x] for x in sort_id]
+    num_seg = [num_seg[x] for x in sort_id]
+    loyalty = [loyalty[x]/100 if metric == "Percentage Agreement" else loyalty[x] for x in sort_id]
+    alpha_values = [alpha_values[x] for x in sort_id]
+    #print(complexity, alpha_values, loyalty)
+    
+    if loyalty[-1] != 1 or complexity[-1] != 1:
+        complexity.append(1)
+        loyalty.append(1)
+
+    loyalty = [0] + loyalty
+    complexity = [1/num_seg[-1]] + complexity
+    num_seg = [1] + num_seg
+
+    if loyalty_threshold in loyalty:
+        threshold_idx = loyalty.index(loyalty_threshold)        #type: ignore
+        alpha = alpha_values[threshold_idx]
+        
+    else:
+        alpha = 1.0
+        for i in range(len(complexity)-1):
+            if loyalty[i] < loyalty_threshold and loyalty[i+1] > loyalty_threshold:
+                alpha = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[alpha_values[i], alpha_values[i+1]])
+                break
+            elif loyalty[i] == loyalty[len(complexity)-1]:
+                alpha = np.interp(x=loyalty_threshold,xp=[loyalty[i], 1], fp=[alpha_values[i], alpha_values[-1]])
+                break    
+            elif loyalty[i] == 1.0:
+                alpha = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[alpha_values[i], alpha_values[i+1]])
+                break
+                    
+    return alpha
+
 
 if __name__ == '__main__':
     from plotting import plot_csv_complexity_kappa_loyalty
@@ -243,7 +287,7 @@ if __name__ == '__main__':
         print(dataset)
         results_file = f"results/{dataset}/{model}_alpha_complexity_loyalty.csv"
         df = pd.read_csv(results_file)
-        values_comp, values_segm = get_loylaty_by_threshold(df, 0.95, metric="Percentage Agreement")
+        values_comp, values_segm = get_loyalty_by_threshold(df, 0.95, metric="Percentage Agreement")
         #print(values_comp, values_segm)
         row_comp.append(values_comp)
         row_segm.append(values_segm)

@@ -4,38 +4,32 @@ import numpy as np
 from tslearn.metrics import dtw
 
 
-def select_prototypes(dataset_name: str, num_instances: int, data_type: str="TEST_normalized",) -> np.ndarray:
-    # 1. Load a small sample dataset
+def select_prototypes(dataset_name: str, num_instances: int, data_type: str="TEST_normalized") -> np.ndarray:
+    # 1. Load dataset and labels
     X_test = load_dataset(dataset_name=dataset_name, data_type=data_type)
-
     labels_test = load_dataset_labels(dataset_name=dataset_name, data_type=data_type)
     labels = np.array(labels_test)
 
-    mask0 = labels == 0
-    mask1 = labels == 1
+    unique_labels = np.unique(labels)
+    prototypes_list = []
 
-    X_test_0 = X_test[mask0]
-    X_test_1 = X_test[mask1]
+    # 2. For each label, fit KMedoids and collect prototypes
+    for label in unique_labels:
+        mask = labels == label
+        X_label = X_test[mask]
+        if len(X_label) < num_instances:
+            continue  # Skip if not enough samples for clustering
+        km = KMedoids(n_clusters=num_instances, metric=dtw, init="random", random_state=42)  # type: ignore
+        km.fit(X_label)
+        medoid_indices = km.medoid_indices_
+        prototypes = X_label[medoid_indices]
+        prototypes_list.append(prototypes)
 
-    # 2. Instantiate k-medoids for 3 prototypes, using DTW distance
-    km_0 = KMedoids(n_clusters=num_instances, metric=dtw, init="random", random_state=42)  #type: ignore
-    km_1 = KMedoids(n_clusters=num_instances, metric=dtw, init="random", random_state=42)   #type: ignore
-
-
-    # 3. Fit on your time-series array (shape: [n_samples, series_length, n_channels])
-    km_0.fit(X_test_0)
-    km_1.fit(X_test_1)
-
-
-    # 4. Retrieve medoid indices and corresponding prototypes
-    medoid_indices_0 = km_0.medoid_indices_
-    medoid_indices_1 = km_1.medoid_indices_
-
-    prototypes_0 = X_test_0[medoid_indices_0]
-    prototypes_1 = X_test_1[medoid_indices_1]
-    #print("Selected prototype indices 0:", medoid_indices_0)
-    #print("Selected prototype indices 1:", medoid_indices_1)
-    return np.concatenate((prototypes_0, prototypes_1))
+    # 3. Concatenate all prototypes
+    if prototypes_list:
+        return np.concatenate(prototypes_list)
+    else:
+        return np.array([])  # Return empty array if no prototypes found
 
 if __name__ == "__main__":
     select_prototypes("ItalyPowerDemand", num_instances=3)
