@@ -1,12 +1,3 @@
-
-from simplification.cutil import (
-    simplify_coords,
-    simplify_coords_idx,
-    simplify_coords_vw,
-    simplify_coords_vw_idx,
-    simplify_coords_vwp,
-)
-
 # From this place https://github.com/urschrei/simplification/tree/master
 """
 @software{Hugel_Simplification_2021,

@@ -13,6 +13,7 @@ import pandas as pd
 
 from Utils.plotting import plot_metrics
 from Utils.load_data import load_dataset, load_dataset_labels
+from Utils.load_models import load_pytorch_model
 import os
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -222,6 +223,21 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
     else:
         raise ValueError("Model type not supported")
 
+def test_model(dataset_name: str, model_type:str, normalized: bool) -> dict:
+    extra = ("_normalized" if normalized else "")
+
+    X_test = load_dataset(dataset_name=dataset_name, data_type='TEST' + extra)
+    y_test = load_dataset_labels(dataset_name=dataset_name, data_type='TEST' + extra)
+
+    metrics = {}
+    if model_type == 'cnn':
+        model = load_pytorch_model(f"models/{dataset_name}/cnn{'_norm' if normalized else ''}.pth", num_classes=len(set(y_test)))
+        test_metric = test_conv_model(X_test, y_test, model)
+        metrics.update(test_metric)
+        metrics = {key: value.item() if isinstance(value, torch.Tensor) else value for key, value in metrics.items()}
+        return metrics
+    else:
+        raise ValueError("Model type not supported")
 
 
 if __name__ == '__main__':
@@ -229,6 +245,7 @@ if __name__ == '__main__':
     parser.add_argument('--datasets', type=str, nargs='+', help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
     parser.add_argument('--normalized', action='store_true', help='True or False')
     parser.add_argument('--model_type', type=str, help='Type of model to train. Supported: cnn, decision-tree, logistic-regression')
+    parser.add_argument('--train', action='store_true', help='Train the model')
     parser.add_argument('--save_model', action='store_true', help='Save the model in results file')
     args = parser.parse_args()
 
@@ -239,30 +256,35 @@ if __name__ == '__main__':
         datasets = [x for x in os.listdir("./data/") if os.path.isdir(f"./data/{x}")]
     strange_results = []
     for dataset in datasets:
-        model, metrics = train_model(dataset, args.model_type, args.normalized)
-        print(f"Train accuracy: {metrics['train_acc']}, Validation accuracy: {metrics['val_acc']}, Test accuracy: {metrics['test_acc']}")
-        logging.info("Model trained")
-        if metrics["train_acc"] == 0:
-            strange_results.append(dataset)
+        if args.train:
+            model, metrics = train_model(dataset, args.model_type, args.normalized)
+            print(f"Train accuracy: {metrics['train_acc']}, Validation accuracy: {metrics['val_acc']}, Test accuracy: {metrics['test_acc']}")
+            logging.info("Model trained")
+            if metrics["train_acc"] == 0:
+                strange_results.append(dataset)
 
-        if args.save_model:
-            model_path = f"models/{dataset}/cnn_norm.pth" if args.normalized else f"models/{dataset}/cnn.pth"
-            model_csv = f"results/{dataset}/models.csv"
-            if os.path.exists(model_csv):
-                model_df = pd.read_csv(model_csv, header=0)
-            else:
-                model_df = pd.DataFrame(columns=["model_type", "train_acc", "val_acc", "test_acc"])
+            if args.save_model:
+                model_path = f"models/{dataset}/cnn_norm.pth" if args.normalized else f"models/{dataset}/cnn.pth"
+                model_csv = f"results/{dataset}/models.csv"
+                if os.path.exists(model_csv):
+                    model_df = pd.read_csv(model_csv, header=0)
+                else:
+                    model_df = pd.DataFrame(columns=["model_type", "train_acc", "val_acc", "test_acc"])
 
-            if args.model_type not in model_df["model_type"].unique(): 
-                model_df.loc[len(model_df)] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
-                model_df.to_csv(model_csv, index=False)
-                save_model(model, model_path, args.model_type)
-            else:
-                model_df[model_df["model_type"] == args.model_type] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
-                model_df.to_csv(model_csv, index=False)
-                save_model(model, model_path, args.model_type)
-            print("Model saved")
+                if args.model_type not in model_df["model_type"].unique(): 
+                    model_df.loc[len(model_df)] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
+                    model_df.to_csv(model_csv, index=False)
+                    save_model(model, model_path, args.model_type)
+                else:
+                    model_df[model_df["model_type"] == args.model_type] = [args.model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
+                    model_df.to_csv(model_csv, index=False)
+                    save_model(model, model_path, args.model_type)
+                print("Model saved")
+        else:
+            metrics = test_model(dataset, args.model_type, args.normalized)
+            print(f"Test accuracy: {metrics['test_acc']}")
 
     print("Datasets with 0 training accuracy:")
     print(" ".join(strange_results))
-    
+        
+        
