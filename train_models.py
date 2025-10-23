@@ -1,4 +1,5 @@
 import torch
+from tqdm import tqdm
 from torcheval.metrics import BinaryAccuracy, MulticlassAccuracy
 import argparse
 import Utils.conv_model as conv_model
@@ -17,6 +18,22 @@ import os
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 SEED = 42
+
+from sktime.classification.kernel_based._rocket_classifier import RocketClassifier
+
+def test_miniRocket(X,y,model):
+    accuracy = accuracy_score(y, model.predict(X))
+    return {"test_acc": accuracy}
+def train_miniRocket(X_train, y_train, X_val, y_val):
+    model = RocketClassifier(
+        rocket_transform="rocket",
+        use_multivariate='no'
+    )
+
+    model.fit(X_train, y_train)
+    train_accuracy = accuracy_score(y_train, model.predict(X_train))
+    val_accuracy = accuracy_score(y_val, model.predict(X_val))
+    return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
 
 def test_decision_tree(X, y, model):
     accuracy = accuracy_score(y, (model.predict(X) > 0.5).astype(int))  
@@ -202,7 +219,13 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
         metrics.update(test_metric)
         metrics = {key: value.item() if isinstance(value, torch.Tensor) else value for key, value in metrics.items()}
         return model, metrics
-    
+    elif model_type == 'miniRocket':
+        model, metrics = train_miniRocket(X_train, y_train, X_val, y_val)
+        test_metric = test_miniRocket(X_test, y_test, model)
+        metrics.update(test_metric)
+        metrics = {key: value.item() if isinstance(value, torch.Tensor) else value for key, value in metrics.items()}
+        return model, metrics
+
     elif model_type == 'decision-tree':
         model, metrics = train_decision_tree(X_train, y_train, X_val, y_val)
         test_metrics = test_decision_tree(X_test, y_test, model)
@@ -224,7 +247,7 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
 
 
 
-if __name__ == '__main__':
+def old():
     parser = argparse.ArgumentParser()
     parser.add_argument('--datasets', type=str, nargs='+', help='Dataset to use, supported: Chinatown, ECG200, ItalyPowerDemand')
     parser.add_argument('--normalized', action='store_true', help='True or False')
@@ -265,4 +288,69 @@ if __name__ == '__main__':
 
     print("Datasets with 0 training accuracy:")
     print(" ".join(strange_results))
-    
+
+
+def new():
+    from generate_user_survey.configurations import selected_datasets_to_be_in_survey
+    #datasets = selected_datasets_to_be_in_survey()
+    datasets = sorted([x for x in os.listdir("./results/") if os.path.isdir(f"./data/{x}") if x.split("/")[-1] not in ["global_results.ipynb","results.csv","__pycache__"]])
+    print(datasets)
+    model_type = "miniRocket"
+    normalized = True
+    strange_results = []
+    do_save_model = True
+    for dataset in tqdm(datasets):
+        print(dataset)
+        model, metrics = train_model(dataset, model_type, normalized)
+        print(f"Train accuracy: {metrics['train_acc']}, Validation accuracy: {metrics['val_acc']}, Test accuracy: {metrics['test_acc']}")
+        logging.info("Model trained")
+        if metrics["train_acc"] == 0:
+            strange_results.append(dataset)
+
+        if do_save_model:
+            model_folder = f"models/{dataset}"
+            os.makedirs(model_folder, exist_ok=True)
+            model_path = f"{model_folder}/{model_type}{'_norm' if normalized else ''}.pkl"
+            csv_folder = f"results/{dataset}"
+            os.makedirs(csv_folder, exist_ok=True)
+            model_csv = f"{csv_folder}/models.csv"
+            if os.path.exists(model_csv):
+                model_df = pd.read_csv(model_csv, header=0)
+            else:
+                model_df = pd.DataFrame(columns=["model_type", "train_acc", "val_acc", "test_acc"])
+
+            if model_type not in model_df["model_type"].unique():
+                model_df.loc[len(model_df)] = [model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
+            else:
+                model_df[model_df["model_type"] == model_type] = [model_type, metrics["train_acc"], metrics["val_acc"], metrics["test_acc"]]
+
+            model_df.to_csv(model_csv, index=False)
+            save_model(model, model_path, model_type)
+            print("Model saved")
+
+    print("Datasets with 0 training accuracy:")
+    print(" ".join(strange_results))
+
+
+def my_code():
+    from generate_user_survey.configurations import selected_datasets_to_be_in_survey
+    datasets = selected_datasets_to_be_in_survey()
+    for dataset in datasets:
+        dataset_name = dataset
+        x_test = load_dataset(dataset_name, data_type="TEST_normalized")
+        y_test = load_dataset_labels(dataset_name, data_type="TEST_normalized")
+        model_path = f"models/{dataset_name}/miniRocket_norm.pkl"
+        from Utils.load_models import model_batch_classify
+        preds = model_batch_classify(model_path, x_test, 2)
+        print(np.array(preds).tolist().count(0), np.array(preds).tolist().count(1))
+        print("Accuracy:", accuracy_score(y_test, preds))
+
+if __name__ == '__main__':
+    new()
+    my_code()
+
+
+
+    #test_conv_model(x_test,y_test,model, True)
+
+    #train_miniRocket(x_test, y_test, x_test,y_test)
