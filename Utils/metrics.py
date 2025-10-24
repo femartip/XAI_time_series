@@ -5,7 +5,7 @@ import pandas as pd
 from kneed import KneeLocator
 import pandas as pd
 
-from Utils.dataTypes import SegmentedTS 
+from dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
     if approximation.num_real_segments is None:
@@ -91,8 +91,8 @@ def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tu
 
         if show_fig:
             print("AUC",auc)
-            plt.plot(complexity, loyalty)
-            #plt.plot(filtered_complexity, filtered_loyalty)
+            #plt.plot(complexity, loyalty)
+            plt.plot(filtered_complexity, filtered_loyalty)
             plt.title(f"{algorithm} - {metric}")
             plt.xlabel("Complexity")
             plt.ylabel("Loyalty")
@@ -277,17 +277,22 @@ def get_alpha_by_loyalty(dataset: str, model: str, loyalty_threshold: float, alg
 
 if __name__ == '__main__':
     from plotting import plot_csv_complexity_kappa_loyalty
-    datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD']
+    datasets = ['Chinatown', 'ECG200', 'TwoPatterns', 'UMD']
+    #datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD']
+    
     print(len(datasets))
     #datasets = ['MoteStrain', 'ECG5000', 'ECGFiveDays', 'Wafer']
-    model = "cnn"
+    model = "miniRocket"
     row_comp = []
     row_segm = []
     for dataset in datasets:
         print(dataset)
         results_file = f"results/{dataset}/{model}_alpha_complexity_loyalty.csv"
         df = pd.read_csv(results_file)
+
+        auc_dict, filtered_curves = auc(df, show_fig=True)
         values_comp, values_segm = get_loyalty_by_threshold(df, 0.95, metric="Percentage Agreement")
+
         #print(values_comp, values_segm)
         row_comp.append(values_comp)
         row_segm.append(values_segm)
