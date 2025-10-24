@@ -6,6 +6,16 @@ from Utils.dataTypes import SegmentedTS
 from Utils.conv_model import ConvClassifier
 
 MODELS = {}
+def load_model(model_path, num_classes):
+    if model_path not in MODELS:
+        if model_path.endswith('.pth'):
+            MODELS[model_path] = load_pytorch_model(model_path,num_classes)
+        else:
+            MODELS[model_path] = load_sklearn_model(model_path)
+    return MODELS[model_path]
+
+def load_sklearn_model(model_path):
+    return joblib.load(model_path)
 
 def load_pytorch_model(model_path, num_classes: int):
     global MODELS
