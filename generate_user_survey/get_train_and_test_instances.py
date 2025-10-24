@@ -1,42 +1,44 @@
 import json
-from typing import Tuple, Dict, List
-
-from generate_user_survey.find_prototypes import select_prototypes
-from generate_user_survey.test_selection import select_test_examples
-from generate_user_survey.configurations import loyalty_value_for_each_dataset
-
-from simplifications import get_RDP_simplification
-
-from Utils.load_data import load_dataset
-
-import numpy as np
 import os
 import random
+import warnings
+from typing import Tuple, Dict, List
+
+import numpy as np
+
+from Utils.load_data import load_dataset
+from generate_user_survey.configurations import loyalty_value_for_each_dataset
+from generate_user_survey.find_prototypes import select_prototypes
+from generate_user_survey.test_selection import select_test_examples
+from simplifications import get_RDP_simplification
 
 NORM = True
 dataset_extra = "" if not NORM else f"_normalized"
+
+
 def make_and_save_train_test_instance(dataset):
     prototypes_label_idx = select_prototypes(dataset_name=dataset)
     for c in prototypes_label_idx.keys():
         np.save(f"generate_user_survey/prototype_and_test/{dataset}_train_label_idx_{c}.npy", prototypes_label_idx[c])
     print(dataset)
     print("TRAIN")
-    print("Selected proto:",prototypes_label_idx)
+    print("Selected proto:", prototypes_label_idx)
     test_label_idx = select_test_examples(dataset_name=dataset)
 
     # Make random order!
     my_random = random.Random(42)
-    all_test_examples_idx = [(idx,c) for c in test_label_idx.keys() for idx in test_label_idx[c]]
+    all_test_examples_idx = [(idx, c) for c in test_label_idx.keys() for idx in test_label_idx[c]]
     my_random.shuffle(all_test_examples_idx)
 
-    test_idx = [idx for (idx,c) in all_test_examples_idx]
-    idx_to_class = {int(idx):int(c) for (idx,c) in all_test_examples_idx}
+    test_idx = [idx for (idx, c) in all_test_examples_idx]
+    idx_to_class = {int(idx): int(c) for (idx, c) in all_test_examples_idx}
     np.save(f"generate_user_survey/prototype_and_test/{dataset}_test_idx.npy", test_idx)
     with open(f"generate_user_survey/prototype_and_test/{dataset}_test_idx_to_class.json", "w") as f:
-        json.dump(idx_to_class,f, indent=4)
+        json.dump(idx_to_class, f, indent=4)
 
     print("TEST")
     print(test_idx)
+
 
 def need_to_train_and_test(dataset):
     have_all = True
