@@ -74,7 +74,7 @@ def bottom_up(ts:List[float], max_error):
 
 
 
-    while len(mergeCosts) >1 and min(mergeCosts) < max_error:
+    while len(mergeCosts) >= 1 and min(mergeCosts) < max_error:
         i = mergeCosts.index(min(mergeCosts))
         segTS[i] = merge(segTS[i], segTS[i+1]) # Overwrite with new bigger segment
 

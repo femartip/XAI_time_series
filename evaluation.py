@@ -12,7 +12,7 @@ from multiprocessing import Pool, Manager
 from simplifications import get_OS_simplification, get_RDP_simplification, get_bottom_up_simplification, \
     get_VW_simplification, get_LSF_simplification, get_bottom_up_lsf_simplification
 from Utils.metrics import calculate_mean_loyalty, calculate_kappa_loyalty, calculate_complexity, score_simplicity, calculate_percentage_agreement
-from Utils.load_models import model_batch_classify, load_pytorch_model, batch_classify_pytorch_model # type: ignore
+from Utils.load_models import model_batch_classify, load_pytorch_model, batch_classify_pytorch_model, batch_classify_sklearn_model # type: ignore
 from Utils.load_data import load_dataset, load_dataset_labels
 from Utils.dataTypes import SegmentedTS 
 
@@ -209,7 +209,7 @@ def score_different_alphas(dataset_name: str, datset_type: str, model_path: str)
 
 
 
-def score_different_alphas_mp(dataset_name: str, datset_type: str, model_path: str) -> tuple[pd.DataFrame, dict]:
+def score_different_alphas_mp(dataset_name: str, datset_type: str, model_path: str, model_type: str) -> tuple[pd.DataFrame, dict]:
     """
     Evaluate the impact of different alpha values on loyalty, kappa, and complexity.
     """
@@ -229,12 +229,13 @@ def score_different_alphas_mp(dataset_name: str, datset_type: str, model_path: s
             all_time_series, _ = train_test_split(all_time_series, train_size=porcentage_data, stratify=labels, random_state=42)
         except ValueError as e:
             logging.warning(f"Stratified sampling failed: {e}")
+            random.seed(42)
             rand_idx = random.sample(range(real_shape[0]), 100)
             all_time_series = [all_time_series[i] for i in rand_idx]
 
         logging.info(f"Number of instances {real_shape} > 100, so modified to: {np.shape(all_time_series)[0]}")
 
-    args = [(alpha, all_time_series, model_path, dataset_name, datset_type, num_classes) for alpha in diff_alpha_values]
+    args = [(alpha if i != len(diff_alpha_values) - 1 else 1000, all_time_series, model_path, model_type, dataset_name, datset_type, num_classes) for i, alpha in enumerate(diff_alpha_values)]
 
     results = []
     with Pool(processes=12) as pool:
@@ -245,25 +246,33 @@ def score_different_alphas_mp(dataset_name: str, datset_type: str, model_path: s
         for row in result:
             df.loc[len(df)] = row
 
-    time = {"OS": 0, "RDP": 0, "VW": 0, "GAP-BU": 0, "BU": 0, "GAP-BULSF": 0, "BULSF": 0}
+    #time = {"OS": 0, "RDP": 0, "VW": 0, "GAP-BU": 0, "BU": 0, "GAP-BULSF": 0, "BULSF": 0}
+    time = {"OS": 0, "RDP": 0, "VW": 0, "BU": 0}
 
     return df, time
 
 def process_alpha_mp(args):
-    alpha, all_time_series, model_path, dataset_name, datset_type, num_classes = args
+    alpha, all_time_series, model_path, model_type, dataset_name, datset_type, num_classes = args
     results = []
 
-    assert model_path.endswith(".pth"), "Model path must be a cnn"
-    model = load_pytorch_model(model_path, num_classes)
-    predicted_classes_original = batch_classify_pytorch_model(model, all_time_series, num_classes) 
+    #assert model_path.endswith([".pth", ".pkl"]), "Model path must be a pth or pkl file."
+    
+    if model_type == "cnn":
+        model = load_pytorch_model(model_path, num_classes)
+        predicted_classes_original = batch_classify_pytorch_model(model, all_time_series, num_classes) 
+    else:
+        predicted_classes_original = batch_classify_sklearn_model(model_path, all_time_series)
     # Step 1 gen all simplified ts
     logging.debug(f"Alpha: {alpha}")
 
     logging.debug("Running OS")
     all_simplifications_OS = get_OS_simplification(time_series=all_time_series, alpha=alpha) #type: ignore
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_OS]
-    predicted_classes_simplifications_OS = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
-    
+    if model_type == "cnn":
+        predicted_classes_simplifications_OS = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
+    else:
+        predicted_classes_simplifications_OS = batch_classify_sklearn_model(model_path, batch_simplified_ts)
+
     kappa_loyalty_OS = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_OS, num_classes=num_classes)
     percentage_agreement_OS = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_OS)
     complexity_OS = calculate_complexity(batch_simplified_ts=all_simplifications_OS)
@@ -274,7 +283,10 @@ def process_alpha_mp(args):
     logging.debug("Running RDP")
     all_simplifications_RDP = get_RDP_simplification(time_series=all_time_series, epsilon=alpha)    #type: ignore
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_RDP]
-    predicted_classes_simplifications_RDP = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
+    if model_type == "cnn":
+        predicted_classes_simplifications_RDP = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
+    else:
+        predicted_classes_simplifications_RDP = batch_classify_sklearn_model(model_path, batch_simplified_ts)
 
     kappa_loyalty_RDP = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_RDP, num_classes=num_classes)
     percentage_agreement_RDP = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_RDP)
@@ -283,6 +295,7 @@ def process_alpha_mp(args):
     row = ["RDP", alpha, percentage_agreement_RDP, kappa_loyalty_RDP, complexity_RDP, num_segments_RDP]
     results.append(row)
 
+    """
     logging.debug("Running  GAP-BU")
     all_simplifications_gap_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_gap_BU]
@@ -294,11 +307,15 @@ def process_alpha_mp(args):
     num_segments_gap_BU = np.mean([ts.num_real_segments for ts in all_simplifications_gap_BU])
     row = ["GAP-BU", alpha, percentage_agreement_gap_BU, kappa_loyalty_gap_BU, complexity_gap_BU, num_segments_gap_BU]
     results.append(row)
+    """
 
     logging.debug("Running BU")
     all_simplifications_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
-    predicted_classes_simplifications_BU = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
+    if model_type == "cnn":
+        predicted_classes_simplifications_BU = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
+    else:
+        predicted_classes_simplifications_BU = batch_classify_sklearn_model(model_path, batch_simplified_ts)
 
     kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU, num_classes=num_classes)
     percentage_agreement_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
@@ -307,6 +324,7 @@ def process_alpha_mp(args):
     row = ["BU", alpha, percentage_agreement_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
     results.append(row)
 
+    """
     logging.debug("Running  GAP-BULSF")
     all_simplifications_gap_BUlsf = get_bottom_up_lsf_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=True) #type: ignore
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_gap_BUlsf]
@@ -318,24 +336,30 @@ def process_alpha_mp(args):
     num_segments_gap_BUlsf = np.mean([ts.num_real_segments for ts in all_simplifications_gap_BUlsf])
     row = ["GAP-BULSF", alpha, percentage_agreement_gap_BUlsf, kappa_loyalty_gap_BUlsf, complexity_gap_BUlsf, num_segments_gap_BUlsf]
     results.append(row)
-
+    """
     logging.debug("Running BU")
-    all_simplifications_BUlsf = get_bottom_up_lsf_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
-    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BUlsf]
-    predicted_classes_simplifications_BUlsf = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
+    all_simplifications_BU = get_bottom_up_simplification(time_series=all_time_series, max_error=alpha, interpolate_segments=False) #type: ignore
+    batch_simplified_ts = [ts.line_version for ts in all_simplifications_BU]
+    if model_type == "cnn":
+        predicted_classes_simplifications_BU = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
+    else:
+        predicted_classes_simplifications_BU = batch_classify_sklearn_model(model_path, batch_simplified_ts)
 
-    kappa_loyalty_BUlsf = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BUlsf, num_classes=num_classes)
-    percentage_agreement_BUlsf = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BUlsf)
-    complexity_BUlsf = calculate_complexity(batch_simplified_ts=all_simplifications_BUlsf)
-    num_segments_BUlsf = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BUlsf])
-    row = ["BULSF", alpha, percentage_agreement_BUlsf, kappa_loyalty_BUlsf, complexity_BUlsf, num_segments_BUlsf]
+    kappa_loyalty_BU = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU, num_classes=num_classes)
+    percentage_agreement_BU = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_BU)
+    complexity_BU = calculate_complexity(batch_simplified_ts=all_simplifications_BU)
+    num_segments_BU = np.mean([(len(ts.x_pivots) - 1) for ts in all_simplifications_BU])
+    row = ["BU", alpha, percentage_agreement_BU, kappa_loyalty_BU, complexity_BU, num_segments_BU]
     results.append(row)
 
 
     logging.debug("Running VW")
     all_simplifications_VW = get_VW_simplification(time_series=all_time_series,alpha=alpha)   #type: ignore
     batch_simplified_ts = [ts.line_version for ts in all_simplifications_VW]
-    predicted_classes_simplifications_VW = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)
+    if model_type == "cnn":
+        predicted_classes_simplifications_VW = batch_classify_pytorch_model(model, batch_simplified_ts, num_classes)  
+    else:
+        predicted_classes_simplifications_VW = batch_classify_sklearn_model(model_path, batch_simplified_ts)
 
     kappa_loyalty_VW = calculate_kappa_loyalty(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW, num_classes=num_classes)
     percentage_agreement_VW = calculate_percentage_agreement(pred_class_original=predicted_classes_original, pred_class_simplified=predicted_classes_simplifications_VW)

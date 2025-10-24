@@ -1,7 +1,7 @@
 import logging
 from evaluation import score_different_alphas, score_different_alphas_mp
 from Utils.plotting import plot_csv_complexity_kappa_loyalty, plot_csv_alpha_mean_loyalty, plot_csv_complexity_mean_loyalty
-from Utils.metrics import auc, find_knee_curve, get_loylaty_by_threshold
+from Utils.metrics import auc, find_knee_curve, get_loyalty_by_threshold
 import argparse
 import os
 from train_models import train_model, save_model
@@ -25,7 +25,8 @@ def save_plots(dataset: str, model_type: str) -> None:
 def update_results(dataset_name:str, datset_type:str, model_path:str, time:dict, auc:dict, comp_perf:dict) -> None:
     results_df = pd.read_csv(f"results/results.csv", header=0)
 
-    simp_alg = ["OS", "RDP", "VW", "GAP-BU", "BU", "GAP-BULSF", "BULSF"]
+    #simp_alg = ["OS", "RDP", "VW", "GAP-BU", "BU", "GAP-BULSF", "BULSF"]
+    simp_alg = ["OS", "RDP", "VW", "BU"]
 
     rows_to_drop = []
     rows_to_update=[]
@@ -91,14 +92,14 @@ def main(dataset: str, dataset_type: str, model_type: str, args: argparse.Namesp
             save_model(model, model_path, model_type)
 
     if multiproc:
-        df, time_dict = score_different_alphas_mp(dataset, datset_type=dataset_type, model_path=model_path)
+        df, time_dict = score_different_alphas_mp(dataset, datset_type=dataset_type, model_path=model_path, model_type=model_type)
     else:
         df, time_dict = score_different_alphas(dataset, datset_type=dataset_type, model_path=model_path)
 
     df.to_csv(f"results/{dataset}/{model_type}_alpha_complexity_loyalty.csv", index=False)
 
     auc_dict, filtered_curves = auc(df)
-    comp_performance, segm_performance = get_loylaty_by_threshold(df, loyalty_threshold=0.8)
+    comp_performance, segm_performance = get_loyalty_by_threshold(df, loyalty_threshold=0.8)
     
     update_results(dataset, dataset_type, model_path, time_dict, auc_dict, comp_performance)    #type: ignore
 
@@ -118,7 +119,8 @@ if __name__ == "__main__":
     if args.datasets is not None:
         datasets = args.datasets
     else:
-        datasets = [x for x in os.listdir("./data/") if os.path.isdir(f"./data/{x}")]
+        datasets = [x for x in os.listdir("./results/") if os.path.isdir(f"./results/{x}")]
+        datasets = sorted(datasets)
     if args.model_type is not None:
         model_types = [args.model_type]
     else:     

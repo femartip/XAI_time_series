@@ -9,8 +9,9 @@ from reportlab.platypus import (Frame, FrameBreak,PageTemplate,BaseDocTemplate,P
 from reportlab.platypus.flowables import Flowable
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-
+from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Frame, FrameBreak,PageTemplate,BaseDocTemplate,PageBreak,Paragraph, Table, TableStyle
 
 from generate_user_survey.configurations import get_dataset_and_loyalty_from_config, get_config_of_group
 from generate_user_survey.get_train_and_test_instances import get_train_and_test_instances
@@ -20,16 +21,41 @@ global BODY_TEXT_STYLE
 BODY_TEXT_STYLE = styles["BodyText"]
 BODY_TEXT_STYLE.fontSize = 10
 
+class ClassSwatch(Flowable):
+    def __init__(self, class_name: str, fill_color: colors.Color, box=12, gap=4):
+        super().__init__()
+        self.class_name = class_name
+        self.fill_color = fill_color
+        self.box = box
+        self.gap = gap
+        self.height = box
+        self.width = box + gap + 45
+
+    def draw(self):
+        self.canv.setFillColor(self.fill_color)
+        self.canv.rect(0, 0, self.box, self.box, fill=1, stroke=1)
+        self.canv.setFont("Helvetica", 10)
+        self.canv.setFillColor(colors.black)
+        self.canv.drawString(self.box + self.gap, 2, self.class_name.capitalize())
+
+
 def build_pdf_one_dataset(prot_images: Dict[int,list[io.BytesIO]], test_images:  Dict[str,list[io.BytesIO]],config_for_student,group,studentnr) -> list[Flowable]:
+    colour_names = ['pink', 'blue']
+    
     prototype_pdf = []
     prototype_pdf.append(Paragraph(f"Configuration: {config_for_student}", BODY_TEXT_STYLE))
     for i,label in enumerate(prot_images.keys()):
         one_class_images = prot_images[label]
-        colour = 'red' if label == 0 else 'blue'
-        prototype_pdf.append(Paragraph(f"<font color='{colour}'>{colour}</font>", BODY_TEXT_STYLE))
+        colour = 'pink' if label == 0 else 'blue'
+        #prototype_pdf.append(Paragraph(f"<font color='{colour}'>{colour}</font>", BODY_TEXT_STYLE))
         for img in one_class_images:
             buf_img = Image(img, width=3.5 * inch, height=1.3 * inch)
             prototype_pdf.append(buf_img)
+
+            data = [[ClassSwatch(c, getattr(colors, "white")) if c != colour else ClassSwatch(c, getattr(colors, colour)) for c in colour_names]]
+            table = Table(data, colWidths=[60]*len(colour_names))
+            table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
+            prototype_pdf.append(table)
 
         prototype_pdf.append(FrameBreak())
         if i == 0:
@@ -39,8 +65,8 @@ def build_pdf_one_dataset(prot_images: Dict[int,list[io.BytesIO]], test_images: 
     test_pdf = []
     test_pdf.append(Paragraph(f"Configuration: {config_for_student}", BODY_TEXT_STYLE))
 
-    test_pdf.append(
-        Paragraph("Which class do you think this is (pink or blue).", BODY_TEXT_STYLE))
+    #test_pdf.append(Paragraph("Which class do you think this is (pink or blue).", BODY_TEXT_STYLE))
+    test_pdf.append(Paragraph("<b>Test Samples</b> - Assign the colour you think corresponds to each of the following samples.", BODY_TEXT_STYLE))
 
     for i,img in enumerate(test_images):
         if i == 5:
@@ -51,24 +77,23 @@ def build_pdf_one_dataset(prot_images: Dict[int,list[io.BytesIO]], test_images: 
 
         buf_img = Image(img, width=3.5 * inch, height=1.3 * inch)
         test_pdf.append(buf_img)
-        test_pdf.append(Paragraph("Color: ", BODY_TEXT_STYLE))
+        #test_pdf.append(Paragraph("Color: ", BODY_TEXT_STYLE))
+        data = [[f"{i+1})"] + [ClassSwatch(c, getattr(colors, "white")) for c in colour_names]]
+        table = Table(data, colWidths=[60]*(len(colour_names)+1))
+        table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
+        test_pdf.append(table)
 
     test_pdf.append(PageBreak())
     full_pdf = prototype_pdf + test_pdf
 
-    if False:
-        print("----------------------------------------------")
-        print(full_pdf)
-        print("----------------------------------------------")
-        input("Press Enter to continue...")
     return full_pdf
 
 
 def image_to_buf(ts: np.ndarray,y_lim:Tuple[float,float], class_num: str = -1,) -> io.BytesIO:
     plt.figure(figsize=(6, 3))
-    colour_dict = {0: 'red', 1: 'blue'}
-    linestyle = '-'
+    colour_dict = {0: 'pink', 1: 'blue'}
     colour = colour_dict.get(class_num, 'gray')
+    linestyle = '-' if colour != 'gray' else '--'
 
     plt.plot(ts, color=colour, linestyle=linestyle)
     plt.ylabel("Domain Specific Y Label")

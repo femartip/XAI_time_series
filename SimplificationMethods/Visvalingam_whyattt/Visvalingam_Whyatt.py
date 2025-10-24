@@ -24,7 +24,7 @@ import numpy as np
 from SimplificationMethods.ORSalgorithm.Perturbations.dataTypes import SegmentedTS
 
 def simplify(ts, alpha):
-    alpha = alpha
+    alpha = alpha*3
     x_values = list(range(len(ts)))
     coords_vw = np.array(list(zip(x_values, ts)))
     simp = simplify_coords_vw(coords_vw, alpha)

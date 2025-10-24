@@ -12,11 +12,11 @@ import warnings
 warnings.simplefilter("always")
 def select_prototypes(dataset_name: str) -> Dict[str, List[int]] :
     # 1. Load dataset and labels
-    model_path = f"models/{dataset_name}/miniRocket_norm.pkl"
+    model_path = f"models/{dataset_name}/miniRocket.pkl"
     num_instances = 3
 
     # We use test data set as train is to small, and we can't always find 3 instance from eac class
-    X_train = load_dataset(dataset_name=dataset_name, data_type="TRAIN_normalized")
+    X_train = load_dataset(dataset_name=dataset_name, data_type="TRAIN")
     labels_test = model_batch_classify(model_path=model_path,batch_of_timeseries=X_train,num_classes=2)
     labels = np.array(labels_test)
 

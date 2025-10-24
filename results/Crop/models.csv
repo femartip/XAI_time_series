@@ -1,0 +1,2 @@
+model_type,train_acc,val_acc,test_acc
+miniRocket,0.9984805730410246,0.7256944444444444,0.7334960414310375

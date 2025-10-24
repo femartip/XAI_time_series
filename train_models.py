@@ -24,6 +24,7 @@ from sktime.classification.kernel_based._rocket_classifier import RocketClassifi
 def test_miniRocket(X,y,model):
     accuracy = accuracy_score(y, model.predict(X))
     return {"test_acc": accuracy}
+
 def train_miniRocket(X_train, y_train, X_val, y_val):
     model = RocketClassifier(
         rocket_transform="rocket",
