@@ -98,37 +98,19 @@ def get_pivot_points_and_simp_of_paa(data, total_pivots):
     return paa_simplifications, paa_pivots
 
 
-def get_pivot_points_and_simp_of_algo(algo, data,dataset_name, total_pivots):
+def get_pivot_points_and_simp_of_algo(algo, model_name,data,dataset_name, total_pivots):
     # TODO: Fix so that we limit based on num segments instead of loyalty.
-    org_data = data
-    if algo == "VW":
-        try:
-            simps = np.load(f"results/{dataset_name}/data/{algo}_cnn_TEST_normalized.npy")
-
-        except:
-            simps = np.load(f"results/{dataset_name}/data/VC_cnn_TEST_normalized.npy")
-
-
-    else:
-        simps = np.load(f"results/{dataset_name}/data/{algo}_cnn_TEST_normalized.npy")
+    simps = np.load(f"results/{dataset_name}/data/{algo}_{model_name}_TEST_normalized.npy")
 
 
     # Get alpha needed to get num segments on average
-    df = pd.read_csv(f"results/{dataset_name}/cnn_alpha_complexity_loyalty.csv")
-    if algo not in np.unique(df["Type"]):
-        if algo == "BU" and "BU_1" in np.unique(df["Type"]):
-            algo = "BU_1"
-        if algo == "VW" and "VC" in np.unique(df["Type"]):
-            algo = "VC"
-
-        algo = "BU_1"
+    df = pd.read_csv(f"results/{dataset_name}/{model_name}_alpha_complexity_loyalty.csv")
     df = df[df["Type"] == algo]
     df = df[df["Num Segments"] >= total_pivots-1]
     min_num_segs= min(df["Num Segments"])
     print(min_num_segs)
     df = df[df["Num Segments"] == min_num_segs]
-    min_alpha_needed = round(sorted(df["Alpha"].tolist())[0],1) # Miss match between files, need to change alpha to fit.
-    min_alpha_needed = min(min_alpha_needed,0.9) # we can't have 1.0
+    min_alpha_needed = sorted(df["Alpha"].tolist())[0] # Miss match between files, need to change alpha to fit.
     # Extract the simp corresponding to this alpha
     correct_alpha = simps[np.isclose(simps["alpha"][:, 0], min_alpha_needed)]
 
@@ -232,7 +214,7 @@ def check_how_often_most_important_time_step_is_pivot(model_name, dataset_name, 
     our_algos = ["OS", "BU", "RDP","VW"]
 
     for algo in our_algos:
-        pivots, simp = get_pivot_points_and_simp_of_algo(algo=algo, data=org_dataset,dataset_name=dataset_name, total_pivots=total_pivots)
+        pivots, simp = get_pivot_points_and_simp_of_algo(algo=algo,model_name=model_name, data=org_dataset,dataset_name=dataset_name, total_pivots=total_pivots)
         df_data[f"{algo}PivotPoints"] = pivots
         df_data[f"{algo}Simp"] = simp
 
