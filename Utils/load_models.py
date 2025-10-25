@@ -39,8 +39,8 @@ def classify_pytorch_model(model, time_series):
 def classify_sklearn_model(model_path, time_series):
     model = joblib.load(open(model_path, 'rb'))
     prediction = model.predict(time_series)
-    if len(np.unique(prediction)) > 2:
-        return 1 if prediction[0] > 0.5 else 0
+    #if len(np.unique(prediction)) > 2:
+    #    return 1 if prediction[0] > 0.5 else 0
     return prediction[0]
 
 def model_classify(model_path: str, time_series: list[float], num_classes: int) -> int:
@@ -75,8 +75,8 @@ def batch_classify_sklearn_model(model_path, batch_of_timeseries):
 
     batch_of_timeseries = np.array(batch_of_timeseries)
     predictions = model.predict(batch_of_timeseries)
-    if len(np.unique(predictions)) > 2:
-        predictions = [1 if pred > 0.5 else 0 for pred in predictions]
+    #if len(np.unique(predictions)) > 2:
+    #    predictions = [1 if pred > 0.5 else 0 for pred in predictions]
     return predictions
 
 def model_batch_classify(model_path: str, batch_of_timeseries: list[list[float]], num_classes: int) -> list[int]:

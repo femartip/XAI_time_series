@@ -90,14 +90,16 @@ def auc(df: pd.DataFrame, metric:str="Kappa Loyalty", show_fig:bool=False) -> tu
         filtered_curves[algorithm] = (filtered_complexity, filtered_loyalty)
 
         if show_fig:
-            print("AUC",auc)
+            print(f"AUC {algorithm}: {auc}")
             #plt.plot(complexity, loyalty)
             plt.plot(filtered_complexity, filtered_loyalty)
-            plt.title(f"{algorithm} - {metric}")
-            plt.xlabel("Complexity")
-            plt.ylabel("Loyalty")
-            plt.legend(["Original", "Filtered"])
-            plt.show()
+            
+    if show_fig:
+        plt.title(f"{algorithm} - {metric}")
+        plt.xlabel("Complexity")
+        plt.ylabel("Loyalty")
+        plt.legend(algorithms)
+        plt.show()
 
     return all_auc, filtered_curves
     
@@ -194,40 +196,20 @@ def get_loyalty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
         if loyalty[-1] != 1 or complexity[-1] != 1:
             complexity.append(1)
             loyalty.append(1)
-        loyalty = [0] + loyalty
-        complexity = [1/num_seg[-1]] + complexity
-        num_seg = [1] + num_seg
+      
 
-        #print(min(complexity), max(complexity))
-
-        if loyalty_threshold in loyalty:
-            threshold_idx = loyalty.index(loyalty_threshold)        #type: ignore
-            threshold_comp[algorithm] = complexity[threshold_idx]
-            threshold_num_segm[algorithm] = num_seg[threshold_idx]
+        if loyalty[0] > loyalty_threshold:
+            ## If the first loyalty is already above the threshold, we set complexity to the first value
+            threshold_comp[algorithm] = complexity[0]
+            threshold_num_segm[algorithm] = num_seg[0]
         else:
-            interpolated_comp  = 1.0
             for i in range(len(complexity)-1):
-                if loyalty[i] < loyalty_threshold and loyalty[i+1] > loyalty_threshold:
+                if loyalty[i+1] >= loyalty_threshold:
                     interpolated_comp = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
                     interpolated_num_segm = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[num_seg[i], num_seg[i+1]])
                     threshold_comp[algorithm] = interpolated_comp
                     threshold_num_segm[algorithm] = interpolated_num_segm
-                    if interpolated_comp > 1.0: 
-                        print(f"Interpolated value {interpolated_comp} > 1.0")
-                        interpolated_comp = 1.0
-                    break
-                elif loyalty[i] == loyalty[len(complexity)-1]:
-                    interpolated_comp = np.interp(x=loyalty_threshold,xp=[loyalty[i], 1], fp=[complexity[i], 1])
-                    interpolated_num_segm = np.interp(x=loyalty_threshold,xp=[loyalty[i], 1], fp=[num_seg[i], num_seg[-1]])
-                    threshold_comp[algorithm] = interpolated_comp
-                    threshold_num_segm[algorithm] = interpolated_num_segm
-                elif loyalty[i] == 1.0:
-                    interpolated_comp = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[complexity[i], complexity[i+1]])
-                    interpolated_num_segm = np.interp(x=loyalty_threshold,xp=[loyalty[i], loyalty[i+1]], fp=[num_seg[i], num_seg[i+1]])
-                    threshold_comp[algorithm] = interpolated_comp
-                    threshold_num_segm[algorithm] = interpolated_num_segm
-                    break
-                    
+                    break        
     return threshold_comp, threshold_num_segm
 
 def get_alpha_by_loyalty(dataset: str, model: str, loyalty_threshold: float, algorithm: str, metric:str="Percentage Agreement") -> float:
@@ -251,10 +233,6 @@ def get_alpha_by_loyalty(dataset: str, model: str, loyalty_threshold: float, alg
         complexity.append(1)
         loyalty.append(1)
 
-    loyalty = [0] + loyalty
-    complexity = [1/num_seg[-1]] + complexity
-    num_seg = [1] + num_seg
-
     if loyalty_threshold in loyalty:
         threshold_idx = loyalty.index(loyalty_threshold)        #type: ignore
         alpha = alpha_values[threshold_idx]
@@ -277,60 +255,49 @@ def get_alpha_by_loyalty(dataset: str, model: str, loyalty_threshold: float, alg
 
 if __name__ == '__main__':
     from plotting import plot_csv_complexity_kappa_loyalty
-    datasets = ['Chinatown', 'ECG200', 'TwoPatterns', 'UMD']
-    #datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD']
+    #datasets = ['Chinatown', 'ECG200', 'TwoPatterns', 'UMD']
+    datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD']
     
     print(len(datasets))
     #datasets = ['MoteStrain', 'ECG5000', 'ECGFiveDays', 'Wafer']
     model = "miniRocket"
-    row_comp = []
-    row_segm = []
+    comp_loy_8 = []
+    comp_loy_85 = []
+    comp_loy_9 = []
+    comp_loy_95 = []
+    
     for dataset in datasets:
         print(dataset)
         results_file = f"results/{dataset}/{model}_alpha_complexity_loyalty.csv"
         df = pd.read_csv(results_file)
 
-        auc_dict, filtered_curves = auc(df, show_fig=True)
-        values_comp, values_segm = get_loyalty_by_threshold(df, 0.95, metric="Percentage Agreement")
+        comp_loy_8.append(get_loyalty_by_threshold(df, 0.8, metric="Percentage Agreement"))
+        comp_loy_85.append(get_loyalty_by_threshold(df, 0.85, metric="Percentage Agreement"))
+        comp_loy_9.append(get_loyalty_by_threshold(df, 0.9, metric="Percentage Agreement"))
+        comp_loy_95.append(get_loyalty_by_threshold(df, 0.95, metric="Percentage Agreement"))
+        #_, _ = auc(df, show_fig=True)
+  
 
-        #print(values_comp, values_segm)
-        row_comp.append(values_comp)
-        row_segm.append(values_segm)
-        #for alg in values:
-        #    if values[alg] > 1:
-        #        print(dataset)
-        #        print(alg)
-        #        print(values[alg])
-        #fig = plot_csv_complexity_kappa_loyalty(results_file)
-        #plt.show()
-        #plt.show(block=False)
-        #plt.pause(3)
-        #plt.close()
-    comp_df = pd.DataFrame.from_dict(row_comp)  #type: ignore
-    comp_df.index = datasets    #type: ignore
-    segm_df = pd.DataFrame.from_dict(row_segm)  #type: ignore
-    segm_df.index = datasets    #type: ignore
-    comp_df_long = comp_df.reset_index().rename(columns={'index': 'Dataset'})
+    method_order = ["OS", "RDP", "VW", "BU"]
 
-    #comp_df_long = pd.melt(comp_df_reset, id_vars=['Dataset'], var_name='Method',value_name='Value')
+    # Join all tables into a list where each column is a method and each row is a loyalty threshold
+    rows = []
+    for method in method_order:
+        loy_8 = [comp_loy_8[j][0].get(method, np.nan) for j in range(len(datasets))]
+        loy_85 = [comp_loy_85[j][0].get(method, np.nan) for j in range(len(datasets))]
+        loy_9 = [comp_loy_9[j][0].get(method, np.nan) for j in range(len(datasets))]
+        loy_95 = [comp_loy_95[j][0].get(method, np.nan) for j in range(len(datasets))]
 
-    #method_order = ['OS', 'RDP', 'VW', 'BU_1', 'BU_2']
-    #method_order = ['OS', 'RDP']
-    #comp_df_long['Method'] = pd.Categorical(comp_df_long['Method'], categories=method_order, ordered=True)
-    #comp_df_long = comp_df_long.sort_values(['Dataset', 'Method'])
+        row = {
+            "Method": method,
+            "mean_comp@0.8": float(np.nanmean(loy_8)),
+            "mean_comp@0.85": float(np.nanmean(loy_85)),
+            "mean_comp@0.9": float(np.nanmean(loy_9)),
+            "mean_comp@0.95": float(np.nanmean(loy_95)),
+            }
+        rows.append(row)
 
-    #print(comp_df_long)
+    methods_df = pd.DataFrame(rows).set_index("Method").T
+    print(methods_df)
 
-    segm_df_long = segm_df.reset_index().rename(columns={'index': 'Dataset'})
-    #segm_df_long = pd.melt(segm_df_reset,id_vars=['Dataset'],var_name='Method',value_name='Value')
-    #segm_df_long['Method'] = pd.Categorical(segm_df_long['Method'], categories=method_order, ordered=True)
-    #segm_df_long = segm_df_long.sort_values(['Dataset', 'Method'])
-
-    comp_df_long.to_csv("complexity.csv", index=False)
-    segm_df_long.to_csv("num_segments.csv", index=False)
-    print(segm_df_long)
-    
-    if False:
-        results_df = pd.read_csv("./results/results_copy.csv")
-        update_auc(results_df=results_df)
 
