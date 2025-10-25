@@ -5,7 +5,7 @@ import pandas as pd
 from kneed import KneeLocator
 import pandas as pd
 
-from dataTypes import SegmentedTS 
+from Utils.dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
     if approximation.num_real_segments is None:
