@@ -10,7 +10,7 @@ from Utils.load_data import load_dataset, load_dataset_labels
 from generate_user_survey.configurations import loyalty_value_for_each_dataset
 from generate_user_survey.find_prototypes import select_prototypes
 from generate_user_survey.test_selection import select_test_examples
-from simplifications import get_RDP_simplification
+from simplifications import get_OS_simplification, get_RDP_simplification
 
 NORM = True
 dataset_extra = "" if not NORM else f"_normalized"
@@ -65,11 +65,16 @@ def get_train_and_test_index(dataset, remake=False) -> Tuple[Dict[str, np.ndarra
 
 def simplify_instance_to_loyalty_level(instances: List[float], dataset: str, loyalty_level: str,
                                        verbose: bool = False) -> np.ndarray:
-    alpha, num_segments = loyalty_value_for_each_dataset(dataset)[loyalty_level]
+    if loyalty_level == "NoSimp":
+        simplified_segTS = get_RDP_simplification(np.array(instances), epsilon=0)
+        simplified_instances = np.array([segTS.line_version for segTS in simplified_segTS])
+        return simplified_instances
+    else:
+        alpha, num_segments = loyalty_value_for_each_dataset(dataset)[loyalty_level]
 
-    simplified_segTS = get_RDP_simplification(np.array(instances), epsilon=alpha)
-    simplified_instances = np.array([segTS.line_version for segTS in simplified_segTS])
-    return simplified_instances
+        simplified_segTS = get_OS_simplification(np.array(instances), alpha=alpha)
+        simplified_instances = np.array([segTS.line_version for segTS in simplified_segTS])
+        return simplified_instances
 
 
 def get_train_and_test_instances(dataset, loyalty_level) -> Tuple[Dict[str, np.ndarray], np.ndarray]:

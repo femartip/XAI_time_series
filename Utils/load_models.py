@@ -1,8 +1,9 @@
+import os
+
+import joblib
 import numpy as np
 import torch
-import joblib
-import os
-from Utils.dataTypes import SegmentedTS
+
 from Utils.conv_model import ConvClassifier
 
 MODELS = {}
@@ -70,26 +71,30 @@ def batch_classify_pytorch_model(model, batch_of_timeseries, num_classes: int):
 
     return class_pred
 
+
 def batch_classify_sklearn_model(model_path, batch_of_timeseries):
     model = joblib.load(open(model_path, 'rb'))
 
     batch_of_timeseries = np.array(batch_of_timeseries)
     predictions = model.predict(batch_of_timeseries)
-    #if len(np.unique(predictions)) > 2:
+    # if len(np.unique(predictions)) > 2:
     #    predictions = [1 if pred > 0.5 else 0 for pred in predictions]
     return predictions
 
-def model_batch_classify(model_path: str, batch_of_timeseries: list[list[float]], num_classes: int) -> list[int]:
+
+def model_batch_classify(model_path: str, batch_of_timeseries: list[list[float]], num_classes: int = None) -> list[int]:
     assert os.path.exists(model_path), f"Model path {model_path} does not exist"
 
     if model_path.endswith(".pth"):
+        assert num_classes is not None, f"num_classes is None for {model_path}"
         model = load_pytorch_model(model_path, num_classes)
         return batch_classify_pytorch_model(model, batch_of_timeseries, num_classes)
     elif model_path.endswith(".pkl"):
         return batch_classify_sklearn_model(model_path, batch_of_timeseries)
     else:
         raise ValueError("Model path not supported.")
-    
+
+
 """
 def model_confidence(dataset, timeseries):
     model = load_pytorch_model(dataset)

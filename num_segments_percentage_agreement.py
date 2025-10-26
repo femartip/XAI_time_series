@@ -22,7 +22,7 @@ def get_ts_data_from_algo(algos, dataset_name, model_name, metric):
 
 
 def make_and_save_pdf():
-    dataset_names = [dataset for dataset in os.listdir("results") if os.path.isdir(f"results/{dataset}")]
+    dataset_names = sorted([dataset for dataset in os.listdir("results") if os.path.isdir(f"results/{dataset}")])
     model_name = "miniRocket"
     algos = ["BU", "OS", "RDP", "VW"]
     metrics = ["Percentage Agreement", "Kappa Loyalty"]
