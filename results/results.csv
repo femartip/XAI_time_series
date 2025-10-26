@@ -553,7 +553,15 @@ SonyAIBORobotSurface2TEST_normalized,miniRocket_norm.pkl,OS,0.8926191606057381,0
 SonyAIBORobotSurface2TEST_normalized,miniRocket_norm.pkl,RDP,0.9151232929693088,0.12683696914083742,,0.0
 SonyAIBORobotSurface2TEST_normalized,miniRocket_norm.pkl,VW,0.8734869110705501,0.1380633849918434,,0.0
 SonyAIBORobotSurface2TEST_normalized,miniRocket_norm.pkl,BU,0.8317573738957896,0.21411875,,0.0
-WaferTEST_normalized,miniRocket_norm.pkl,OS,0.9545948530723125,0.054370689196303515,,0.0
+WaferTEST_normalized,miniRocket_norm.pkl,OS,0.9545948530723124,0.054370689196303515,,0.0
 WaferTEST_normalized,miniRocket_norm.pkl,RDP,0.9512168814588042,0.05983787256249497,,0.0
 WaferTEST_normalized,miniRocket_norm.pkl,VW,0.9630214637355474,0.045620983704144635,,0.0
 WaferTEST_normalized,miniRocket_norm.pkl,BU,0.9486083118561096,0.059634765395540454,,0.0
+ChlorineConcentrationTEST_normalized,miniRocket_norm.pkl,OS,0.5029892414494166,0.6593142350332594,,0.0
+ChlorineConcentrationTEST_normalized,miniRocket_norm.pkl,RDP,0.4995711071726489,0.7479384558629776,,0.0
+ChlorineConcentrationTEST_normalized,miniRocket_norm.pkl,VW,0.4095938974610871,0.8416917818181818,,0.0
+ChlorineConcentrationTEST_normalized,miniRocket_norm.pkl,BU,0.3866835005550582,0.8493641876832845,,0.0
+SyntheticControlTEST_normalized,miniRocket_norm.pkl,OS,0.9355829317874061,0.0829205791543282,,0.0
+SyntheticControlTEST_normalized,miniRocket_norm.pkl,RDP,0.9204042385587926,0.1238505606410048,,0.0
+SyntheticControlTEST_normalized,miniRocket_norm.pkl,VW,0.9170350849413429,0.12220677966101695,,0.0
+SyntheticControlTEST_normalized,miniRocket_norm.pkl,BU,0.8968221046101612,0.15062269963398314,,0.0
