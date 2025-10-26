@@ -33,7 +33,10 @@ def train_miniRocket(X_train, y_train, X_val, y_val):
 
     model.fit(X_train, y_train)
     train_accuracy = accuracy_score(y_train, model.predict(X_train))
-    val_accuracy = accuracy_score(y_val, model.predict(X_val))
+    if X_val is not None and y_val is not None:
+        val_accuracy = accuracy_score(y_val, model.predict(X_val))
+    else:
+        val_accuracy = 0.0
     return model, {"train_acc": train_accuracy, "val_acc": val_accuracy}
 
 def test_decision_tree(X, y, model):
@@ -209,8 +212,12 @@ def train_model(dataset_name: str, model_type:str, normalized: bool):
 
     X_train = load_dataset(dataset_name=dataset_name, data_type="TRAIN" + extra)
     y_train = load_dataset_labels(dataset_name=dataset_name, data_type="TRAIN" + extra)
-    X_val = load_dataset(dataset_name=dataset_name, data_type='VALIDATION' + extra)
-    y_val = load_dataset_labels(dataset_name=dataset_name, data_type='VALIDATION'+ extra)
+    if os.path.exists(f"data/{dataset_name}/{dataset_name}_VALIDATION{extra}.npy"):
+        X_val = load_dataset(dataset_name=dataset_name, data_type='VALIDATION' + extra)
+        y_val = load_dataset_labels(dataset_name=dataset_name, data_type='VALIDATION'+ extra)
+    else:
+        X_val = X_train
+        y_val = y_train
     X_test = load_dataset(dataset_name=dataset_name, data_type='TEST' + extra)
     y_test = load_dataset_labels(dataset_name=dataset_name, data_type='TEST' + extra)
 

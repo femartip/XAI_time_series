@@ -46,9 +46,9 @@ def zero_indexing_labels(current_labels: np.ndarray, dataset: str) -> np.ndarray
     """
     training_labels = load_dataset_org_labels(dataset, data_type="TRAIN")
     test_labels = load_dataset_org_labels(dataset, data_type="TEST")
-    validation_labels = load_dataset_org_labels(dataset, data_type="VALIDATION")
+    #validation_labels = load_dataset_org_labels(dataset, data_type="VALIDATION")
     le = preprocessing.LabelEncoder()
-    le.fit(np.concatenate([training_labels, test_labels, validation_labels], axis=0))
+    le.fit(np.concatenate([training_labels, test_labels], axis=0))
     transformed_labels = le.transform(current_labels)
     return transformed_labels       #type: ignore
 
