@@ -8,7 +8,7 @@ from generate_user_survey.configurations import selected_datasets_to_be_in_surve
 
 
 def visualise_the_selected_loyalty_values(dataset_name, model_name, selected_kneepoints):
-    simp_algo = "RDP"
+    simp_algo = "OS"
 
     df = pd.read_csv(f"results/{dataset_name}/{model_name}_alpha_complexity_loyalty.csv")
     df = df[df["Type"] == simp_algo]
@@ -18,9 +18,12 @@ def visualise_the_selected_loyalty_values(dataset_name, model_name, selected_kne
 
     timeseries = load_dataset(dataset_name)
     length = timeseries.shape[1]
+    x_y_s = sorted(zip(num_segments, loyalty_values), key=lambda x: x[0])
+    x_es = [x for x, y in x_y_s]
+    y_es = [y for x, y in x_y_s]
 
     fig, ax = plt.subplots()
-    ax.plot([length - 1] + num_segments, [100] + loyalty_values)
+    ax.plot(x_es, y_es)
     ax.set_xlabel("Number of segments")
     ax.set_ylabel("Percentage Agreement")
 
@@ -45,6 +48,7 @@ def visualise_the_selected_loyalty_values(dataset_name, model_name, selected_kne
 if __name__ == "__main__":
     datasets = selected_datasets_to_be_in_survey()
     model_name = "miniRocket"
+    algo = "OS"
     for dataset_name in datasets:
         selected_loyalty_values = loyalty_value_for_each_dataset(dataset_name)
         selected_kneepoints = selected_loyalty_values
