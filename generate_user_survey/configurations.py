@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def selected_datasets_to_be_in_survey():
-    return ["Chinatown", "ECG200", "SonyAIBORobotSurface1", "PhalangesOutlinesCorrect"]
+    return ["Chinatown", "ECG200", "SonyAIBORobotSurface1", "UMD"]
 
 
 def get_no_simp_data(dataset_name, model_name):
@@ -39,30 +39,36 @@ def loyalty_value_for_each_dataset(dataset_name):
 
     """
     dataset_knees = {
-        "ECG200": {
-            'L95': (0.14, 6.33),
-            'L98': (0.07, 12.67),
-            'L100': (0.02, 40.37),
+        'ECG200': {
+            'L82': (0.01, 3.07),
+            'L97': (0.07, 7.71),
+            'L100': (0.23, 20.36),
             'NoSimp': (0.0, 95.0),
         },
-        "Chinatown": {
-            'L84': (0.4, 2.25),
-            'L96': (0.15, 4.7),
-            'L100': (0.03, 12.33),
+        'Chinatown': {
+            'L72': (0.01, 1.0),
+            'L95': (0.05, 2.41),
+            'L100': (0.45, 8.33),
             'NoSimp': (0.0, 22.97),
         },
-        "SonyAIBORobotSurface1": {
-            'L91': (0.13, 11.93),
-            'L99': (0.05, 22.63),
-            'L100': (0.03, 31.33),
+        'SonyAIBORobotSurface1': {
+            'L90': (0.08, 11.62),
+            'L96': (0.14, 15.87),
+            'L100': (0.28, 26.35),
             'NoSimp': (0.0, 60.67),
         },
-        "PhalangesOutlinesCorrect": {
-            'L86': (0.07, 9.92),
-            'L97': (0.02, 20.72),
-            'L100': (0.01, 30.68),
-            'NoSimp': (0.0, 69.15),
-        }
+        'BME': {
+            'L73': (0.01, 5.44),
+            'L96': (0.02, 6.61),
+            'L100': (0.03, 7.59),
+            'NoSimp': (0.0, 124.35),
+        },
+        'UMD': {
+            'L95': (0.03, 7.92),
+            'L99': (0.16, 13.6),
+            'L100': (0.4, 24.51),
+            'NoSimp': (0.0, 146.75),
+        },
     }
 
     return dataset_knees[dataset_name]
@@ -89,11 +95,11 @@ def get_dataset_and_loyalty_from_config(config):
     config_to_dataset_and_loyalty = {
         "A": [
             "Chinatown",
-            "L84"
+            "L72"
         ],
         "B": [
             "Chinatown",
-            "L96"
+            "L95"
         ],
         "C": [
             "Chinatown",
@@ -105,11 +111,11 @@ def get_dataset_and_loyalty_from_config(config):
         ],
         "E": [
             "ECG200",
-            "L95"
+            "L82"
         ],
         "F": [
             "ECG200",
-            "L98"
+            "L97"
         ],
         "G": [
             "ECG200",
@@ -121,11 +127,11 @@ def get_dataset_and_loyalty_from_config(config):
         ],
         "I": [
             "SonyAIBORobotSurface1",
-            "L91"
+            "L90"
         ],
         "J": [
             "SonyAIBORobotSurface1",
-            "L99"
+            "L96"
         ],
         "K": [
             "SonyAIBORobotSurface1",
@@ -136,19 +142,19 @@ def get_dataset_and_loyalty_from_config(config):
             "NoSimp"
         ],
         "M": [
-            "PhalangesOutlinesCorrect",
-            "L86"
+            "UMD",
+            "L95"
         ],
         "N": [
-            "PhalangesOutlinesCorrect",
-            "L97"
+            "UMD",
+            "L99"
         ],
         "O": [
-            "PhalangesOutlinesCorrect",
+            "UMD",
             "L100"
         ],
         "P": [
-            "PhalangesOutlinesCorrect",
+            "UMD",
             "NoSimp"
         ]
     }
@@ -166,6 +172,6 @@ def get_config_of_group(group):
 
 
 if __name__ == "__main__":
-    # _config_to_dataset_and_loyalty_print()
+    _config_to_dataset_and_loyalty_print()
     # _print_no_simp_info()
     pass

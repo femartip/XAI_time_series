@@ -59,25 +59,20 @@ def config_loyalty(dataset_name) -> Dict[str, Tuple[float, float]]:
             'L99': (0.26, 24.72),
             'L100': (0.28, 26.35),
         },
-        'PhalangesOutlinesCorrect': {
-            'L73': (0.0, 1.0),
-            'L74': (0.04, 8.72),
-            'L76': (0.05, 9.2),
-            'L78': (0.06, 9.64),
-            'L82': (0.07, 9.92),
-            'L84': (0.09, 10.48),
-            'L85': (0.12, 11.33),
-            'L86': (0.1, 10.68),
-            'L89': (0.13, 11.63),
-            'L92': (0.14, 12.02),
-            'L93': (0.15, 12.34),
-            'L94': (0.18, 13.5),
-            'L95': (0.25, 16.24),
-            'L96': (0.19, 13.98),
-            'L97': (0.2, 14.27),
-            'L98': (0.37, 20.72),
-            'L99': (0.44, 23.65),
-            'L100': (0.45, 24.1),
+        'BME': {
+            'L73': (0.01, 5.44),
+            'L96': (0.02, 6.61),
+            'L99': (0.17, 13.68),
+            'L100': (0.03, 7.59),
+        },
+        'UMD': {
+            'L91': (0.02, 7.06),
+            'L95': (0.03, 7.92),
+            'L96': (0.06, 9.44),
+            'L97': (0.13, 11.71),
+            'L98': (0.15, 12.95),
+            'L99': (0.16, 13.6),
+            'L100': (0.4, 24.51),
         }, }
 
     return config_details[dataset_name]
@@ -86,7 +81,7 @@ def config_loyalty(dataset_name) -> Dict[str, Tuple[float, float]]:
 if __name__ == "__main__":
     model_name = "miniRocket"
     thresholds = [i for i in range(70, 101)]
-    dataset_names = ["ECG200", "Chinatown", "SonyAIBORobotSurface1", "PhalangesOutlinesCorrect"]
+    dataset_names = ["ECG200", "Chinatown", "SonyAIBORobotSurface1", "BME", "UMD"]
     metric = "Percentage Agreement"
     algo = "OS"
     for dataset_name in dataset_names:

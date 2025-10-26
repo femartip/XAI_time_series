@@ -1,22 +1,23 @@
+import warnings
+from typing import Dict, List
+
 import numpy as np
-
-from Utils.load_data import load_dataset
-from Utils.load_models import model_batch_classify, model_classify
-
 from sklearn_extra.cluster import KMedoids
 from tslearn.metrics import dtw
 
-from typing import Dict, List
+from Utils.load_data import load_dataset
+from Utils.load_models import model_batch_classify
 
-import warnings
 warnings.simplefilter("always")
-def select_prototypes(dataset_name: str) -> Dict[str, List[int]] :
+
+
+def select_prototypes(dataset_name: str) -> Dict[str, List[int]]:
     # 1. Load dataset and labels
     model_path = f"models/{dataset_name}/miniRocket.pkl"
     num_instances = 3
 
     X_train = load_dataset(dataset_name=dataset_name, data_type="TRAIN")
-    labels_test = model_batch_classify(model_path=model_path,batch_of_timeseries=X_train,num_classes=2)
+    labels_test = model_batch_classify(model_path=model_path, batch_of_timeseries=X_train)
     labels = np.array(labels_test)
 
     unique_labels = np.unique(labels)
@@ -37,7 +38,7 @@ def select_prototypes(dataset_name: str) -> Dict[str, List[int]] :
     # 3. Concatenate all prototypes
     return label_to_prototypes
 
+
 if __name__ == "__main__":
     print(select_prototypes("PhalangesOutlinesCorrect"))
     print("Done")
-

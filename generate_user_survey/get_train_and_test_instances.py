@@ -6,7 +6,7 @@ from typing import Tuple, Dict, List
 
 import numpy as np
 
-from Utils.load_data import load_dataset
+from Utils.load_data import load_dataset, load_dataset_labels
 from generate_user_survey.configurations import loyalty_value_for_each_dataset
 from generate_user_survey.find_prototypes import select_prototypes
 from generate_user_survey.test_selection import select_test_examples
@@ -55,7 +55,9 @@ def get_train_and_test_index(dataset, remake=False) -> Tuple[Dict[str, np.ndarra
         make_and_save_train_test_instance(dataset)
 
     train_idx = {}
-    for c in [0, 1]:
+    labels = load_dataset_labels(dataset)
+
+    for c in np.unique(labels):
         train_idx[c] = np.load(f"generate_user_survey/prototype_and_test/{dataset}_train_label_idx_{c}.npy")
     test_idx = np.load(f"generate_user_survey/prototype_and_test/{dataset}_test_idx.npy")
     return train_idx, test_idx
@@ -79,8 +81,9 @@ def get_train_and_test_instances(dataset, loyalty_level) -> Tuple[Dict[str, np.n
         full_train_instances[c] = train_ts[train_instances[c]]
 
     full_test_instances = test_ts[test_instances]
-    full_train_instances_simplified = {
-        0: simplify_instance_to_loyalty_level(full_train_instances[0], dataset, loyalty_level),
-        1: simplify_instance_to_loyalty_level(full_train_instances[1], dataset, loyalty_level)}
+    full_train_instances_simplified = {}
+    for c in full_train_instances.keys():
+        full_train_instances_simplified[c] = simplify_instance_to_loyalty_level(full_train_instances[c], dataset,
+                                                                                loyalty_level)
     full_test_instances_simplified = simplify_instance_to_loyalty_level(full_test_instances, dataset, loyalty_level)
     return full_train_instances_simplified, full_test_instances_simplified
