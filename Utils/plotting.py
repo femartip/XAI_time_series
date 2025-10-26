@@ -117,7 +117,8 @@ def plot_csv_complexity_kappa_loyalty(file:str, points:dict={}) -> Figure:
         ax.set_yticks(loyalty_ticks)
         ax.set_yticklabels(y_labels) 
     
-    ax.set_xticks(complexity_ticks)
+    #ax.set_xticks(complexity_ticks)
+    ax.set_xticklabels(x_labels)
 
     ax.legend(loc='lower right')
     plt.tight_layout()
