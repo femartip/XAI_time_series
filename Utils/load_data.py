@@ -7,10 +7,24 @@ This code has been extracted from:
 https://github.com/BrigtHaavardstun/kSimplification
 """
 
+def tsv_to_numpy(dataset_name: str) -> np.ndarray:
+    """
+    Parse the data from TSV file into a Dataframe, and transform it into a numpy array.
+    :param dataset_name:
+    :return:
+    """
+    folder = "./data/" + dataset_name.split("_")[0] + "/"
+    file_location = folder + dataset_name
+    #array_2d = np.load(file_location)
+    df = pd.read_csv(file_location, header=None, sep="\t")
+    array_2d = df.to_numpy()
+
+    return array_2d
+
 
 def read_numpy(dataset_name: str) -> np.ndarray:
     """
-    Parse the data from TSV file into a Dataframe, and transform it into a numpy array.
+    Read the data from Numpy file into a numpy array.
     :param dataset_name:
     :return:
     """
@@ -129,11 +143,33 @@ def znormalize_data(dataset_name: str, data_type: str = "TRAIN"):
     np.save(file_path_name, dataset)
 
 if __name__ == "__main__":
-    test()
-    
+    #test()
+    import os
     #datasets = [x for x in os.listdir("./data/") if os.path.isdir(f"./data/{x}")]
+    datasets = ['SyntheticControl']
+    print(f"Number of datasets: {len(datasets)}")
     #datasets = ["Chinatown"]
-    #for dataset in datasets:
-    #    print(dataset)
-    #    znormalize_data(dataset, data_type="TRAIN")
-    #    znormalize_data(dataset, data_type="TEST")
+    for dataset in datasets:
+        print(dataset)
+        if not os.path.exists(f"./data/{dataset}/{dataset}_TRAIN.npy"):
+            print("No Train Numpy file found")
+            train_np = tsv_to_numpy(f"{dataset}_TRAIN.tsv")
+            np.save(f"./data/{dataset}/{dataset}_TRAIN.npy", train_np)
+
+        """
+        if not os.path.exists(f"./data/{dataset}/{dataset}_VALIDATION.npy"):
+            if not os.path.exists(f"./data/{dataset}/{dataset}_VALIDATION.tsv"):
+                print("No Validation file found, skipping...")
+            else:
+                print("No Validation Numpy file found")
+                valid_np = read_numpy(f"{dataset}_VALIDATION.tsv")
+                np.save(f"./data/{dataset}/{dataset}_VALIDATION.npy", valid_np)
+        """
+        if not os.path.exists(f"./data/{dataset}/{dataset}_TEST.npy"):
+            print("No Test Numpy file found")
+            test_np = tsv_to_numpy(f"{dataset}_TEST.tsv")
+            np.save(f"./data/{dataset}/{dataset}_TEST.npy", test_np)
+
+        normalize_data(dataset, data_type="TRAIN")
+        #normalize_data(dataset, data_type="VALIDATION")
+        normalize_data(dataset, data_type="TEST")
