@@ -192,6 +192,8 @@ def get_loyalty_by_threshold(df: pd.DataFrame, loyalty_threshold: float, metric:
         num_seg = [num_seg[x] for x in sort_id]
         loyalty = [loyalty[x]/100 if metric == "Percentage Agreement" else loyalty[x] for x in sort_id]
 
+        if num_seg[0] != 1:
+            print("Warning: First num_seg is not 1")
         
         if loyalty[-1] != 1 or complexity[-1] != 1:
             complexity.append(1)
@@ -275,7 +277,7 @@ if __name__ == '__main__':
         comp_loy_85.append(get_loyalty_by_threshold(df, 0.85, metric="Percentage Agreement"))
         comp_loy_9.append(get_loyalty_by_threshold(df, 0.9, metric="Percentage Agreement"))
         comp_loy_95.append(get_loyalty_by_threshold(df, 0.95, metric="Percentage Agreement"))
-        #_, _ = auc(df, show_fig=True)
+        _, _ = auc(df, show_fig=True)
   
 
     method_order = ["OS", "RDP", "VW", "BU"]
