@@ -5,7 +5,7 @@ import pandas as pd
 from kneed import KneeLocator
 import pandas as pd
 
-from Utils.dataTypes import SegmentedTS 
+from dataTypes import SegmentedTS 
 
 def score_simplicity(approximation: SegmentedTS) -> float:
     if approximation.num_real_segments is None:
@@ -258,8 +258,8 @@ def get_alpha_by_loyalty(dataset: str, model: str, loyalty_threshold: float, alg
 if __name__ == '__main__':
     from plotting import plot_csv_complexity_kappa_loyalty
     #datasets = ['Chinatown', 'ECG200', 'TwoPatterns', 'UMD']
-    datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD']
-    
+    datasets = ['Adiac', 'BME', 'CBF', 'Chinatown', 'DistalPhalanxOutlineAgeGroup', 'DistalPhalanxOutlineCorrect', 'DistalPhalanxTW', 'ECG200', 'ElectricDevices', 'FacesUCR', 'GunPointAgeSpan', 'GunPointOldVersusYoung', 'ItalyPowerDemand', 'MedicalImages', 'MiddlePhalanxOutlineAgeGroup', 'MiddlePhalanxOutlineCorrect', 'MiddlePhalanxTW', 'PhalangesOutlinesCorrect', 'Plane', 'ProximalPhalanxOutlineAgeGroup', 'ProximalPhalanxOutlineCorrect', 'ProximalPhalanxTW', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SwedishLeaf', 'TwoLeadECG', 'TwoPatterns', 'UMD', 'Crop', 'ECG5000', 'ECGFiveDays', 'FaceAll', 'GunPoint', 'GunPointMaleVersusFemale', 'MoteStrain', 'PowerCons', 'SonyAIBORobotSurface2', 'Wafer', 'ChlorineConcentration', 'SyntheticControl']
+
     print(len(datasets))
     #datasets = ['MoteStrain', 'ECG5000', 'ECGFiveDays', 'Wafer']
     model = "miniRocket"
