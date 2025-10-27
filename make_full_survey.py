@@ -172,7 +172,7 @@ def make_pdf_for_current_student(group, student_number):
 
 
 def build_all_surveys_full_survey():
-    num_of_student_in_each_group = 4
+    num_of_student_in_each_group = 6
     for gi in range(1, 5):
         group = "G{}".format(gi)
         for si in range(1, 1 + num_of_student_in_each_group):

@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def selected_datasets_to_be_in_survey():
-    return ["Chinatown", "ECG200", "SonyAIBORobotSurface1", "UMD"]
+    return ["Chinatown", "ECG200", "UMD", "ProximalPhalanxOutlineAgeGroup"]
 
 
 def get_no_simp_data(dataset_name, model_name):
@@ -69,6 +69,12 @@ def loyalty_value_for_each_dataset(dataset_name):
             'L100': (0.4, 24.51),
             'NoSimp': (0.0, 146.75),
         },
+        'ProximalPhalanxOutlineAgeGroup':{
+        'L91': (0.08,9.63),
+        'L95': (0.27,17.79),
+        'L100': (0.73,39.63),
+        'NoSimp': (0.0, 65.23),
+    },
     }
 
     return dataset_knees[dataset_name]
@@ -93,70 +99,70 @@ def _config_to_dataset_and_loyalty_print():
 
 def get_dataset_and_loyalty_from_config(config):
     config_to_dataset_and_loyalty = {
-        "A": [
-            "Chinatown",
-            "L72"
-        ],
-        "B": [
-            "Chinatown",
-            "L95"
-        ],
-        "C": [
-            "Chinatown",
-            "L100"
-        ],
-        "D": [
-            "Chinatown",
-            "NoSimp"
-        ],
-        "E": [
-            "ECG200",
-            "L82"
-        ],
-        "F": [
-            "ECG200",
-            "L97"
-        ],
-        "G": [
-            "ECG200",
-            "L100"
-        ],
-        "H": [
-            "ECG200",
-            "NoSimp"
-        ],
-        "I": [
-            "SonyAIBORobotSurface1",
-            "L90"
-        ],
-        "J": [
-            "SonyAIBORobotSurface1",
-            "L96"
-        ],
-        "K": [
-            "SonyAIBORobotSurface1",
-            "L100"
-        ],
-        "L": [
-            "SonyAIBORobotSurface1",
-            "NoSimp"
-        ],
-        "M": [
-            "UMD",
-            "L95"
-        ],
-        "N": [
-            "UMD",
-            "L99"
-        ],
-        "O": [
-            "UMD",
-            "L100"
-        ],
-        "P": [
-            "UMD",
-            "NoSimp"
-        ]
+    "A": [
+        "Chinatown",
+        "L72"
+    ],
+    "B": [
+        "Chinatown",
+        "L95"
+    ],
+    "C": [
+        "Chinatown",
+        "L100"
+    ],
+    "D": [
+        "Chinatown",
+        "NoSimp"
+    ],
+    "E": [
+        "ECG200",
+        "L82"
+    ],
+    "F": [
+        "ECG200",
+        "L97"
+    ],
+    "G": [
+        "ECG200",
+        "L100"
+    ],
+    "H": [
+        "ECG200",
+        "NoSimp"
+    ],
+    "I": [
+        "UMD",
+        "L95"
+    ],
+    "J": [
+        "UMD",
+        "L99"
+    ],
+    "K": [
+        "UMD",
+        "L100"
+    ],
+    "L": [
+        "UMD",
+        "NoSimp"
+    ],
+    "M": [
+        "ProximalPhalanxOutlineAgeGroup",
+        "L91"
+    ],
+    "N": [
+        "ProximalPhalanxOutlineAgeGroup",
+        "L95"
+    ],
+    "O": [
+        "ProximalPhalanxOutlineAgeGroup",
+        "L100"
+    ],
+    "P": [
+        "ProximalPhalanxOutlineAgeGroup",
+        "NoSimp"
+    ]
     }
     return config_to_dataset_and_loyalty[config]
 

@@ -73,7 +73,24 @@ def config_loyalty(dataset_name) -> Dict[str, Tuple[float, float]]:
             'L98': (0.15, 12.95),
             'L99': (0.16, 13.6),
             'L100': (0.4, 24.51),
-        }, }
+        }, 
+        'ProximalPhalanxOutlineAgeGroup':{
+        'L80': (0.03,8.49),
+        'L87': (0.04,8.95),
+        'L88': (0.05,9.18),
+        'L89': (0.07,9.5),
+        'L90': (0.1,9.93),
+        'L91': (0.08,9.63),
+        'L92': (0.22,15.67),
+        'L93': (0.23,16.15),
+        'L94': (0.26,17.5),
+        'L95': (0.27,17.79),
+        'L96': (0.33,20.22),
+        'L97': (0.51,27.93),
+        'L98': (0.55,29.78),
+        'L99': (0.62,33.27),
+        'L100': (0.73,39.63),
+        },}
 
     return config_details[dataset_name]
 
@@ -81,7 +98,7 @@ def config_loyalty(dataset_name) -> Dict[str, Tuple[float, float]]:
 if __name__ == "__main__":
     model_name = "miniRocket"
     thresholds = [i for i in range(70, 101)]
-    dataset_names = ["ECG200", "Chinatown", "SonyAIBORobotSurface1", "BME", "UMD"]
+    dataset_names = ["ECG200", "Chinatown", "SonyAIBORobotSurface1", "BME", "UMD", "ProximalPhalanxOutlineAgeGroup"]
     metric = "Percentage Agreement"
     algo = "OS"
     for dataset_name in dataset_names:
