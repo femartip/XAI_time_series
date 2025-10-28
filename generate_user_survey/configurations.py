@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def selected_datasets_to_be_in_survey():
-    return ["Chinatown", "ECG200", "UMD", "ProximalPhalanxOutlineAgeGroup"]
+    return ["Chinatown", "ECG200", "SonyAIBORobotSurface1", "UMD"]
 
 
 def get_no_simp_data(dataset_name, model_name):
@@ -132,35 +132,35 @@ def get_dataset_and_loyalty_from_config(config):
         "NoSimp"
     ],
     "I": [
-        "UMD",
-        "L95"
+        "SonyAIBORobotSurface1",
+        "L90"
     ],
     "J": [
-        "UMD",
-        "L99"
+        "SonyAIBORobotSurface1",
+        "L96"
     ],
     "K": [
-        "UMD",
+        "SonyAIBORobotSurface1",
         "L100"
     ],
     "L": [
-        "UMD",
+        "SonyAIBORobotSurface1",
         "NoSimp"
     ],
     "M": [
-        "ProximalPhalanxOutlineAgeGroup",
-        "L91"
-    ],
-    "N": [
-        "ProximalPhalanxOutlineAgeGroup",
+        "UMD",
         "L95"
     ],
+    "N": [
+        "UMD",
+        "L99"
+    ],
     "O": [
-        "ProximalPhalanxOutlineAgeGroup",
+        "UMD",
         "L100"
     ],
     "P": [
-        "ProximalPhalanxOutlineAgeGroup",
+        "UMD",
         "NoSimp"
     ]
     }
