@@ -1,7 +1,8 @@
+import hashlib
 import json
 import os
-import random
 import warnings
+from random import Random
 from typing import Tuple, Dict, List
 
 import numpy as np
@@ -16,6 +17,15 @@ NORM = True
 dataset_extra = "" if not NORM else f"_normalized"
 
 
+def stable_random_for(dataset_name: str) -> Random:
+    """
+    To increase randomness we base the selection on the dataset name.
+    We use hashlib to have a STABLE hash, that will always stay the same.
+    """
+    seed = int(hashlib.sha256(dataset_name.encode()).hexdigest(), 16) % (2 ** 32)
+    return Random(seed)
+
+
 def make_and_save_train_test_instance(dataset):
     prototypes_label_idx = select_prototypes(dataset_name=dataset)
     for c in prototypes_label_idx.keys():
@@ -26,7 +36,7 @@ def make_and_save_train_test_instance(dataset):
     test_label_idx = select_test_examples(dataset_name=dataset)
 
     # Make random order!
-    my_random = random.Random(42)
+    my_random = stable_random_for(dataset)
     all_test_examples_idx = [(idx, c) for c in test_label_idx.keys() for idx in test_label_idx[c]]
     my_random.shuffle(all_test_examples_idx)
 
