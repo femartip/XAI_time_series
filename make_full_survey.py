@@ -40,7 +40,7 @@ class ClassSwatch(Flowable):
 
 def build_pdf_one_dataset(prot_images: Dict[int, list[io.BytesIO]], test_images: Dict[str, list[io.BytesIO]],
                           config_for_student, group, studentnr) -> list[Flowable]:
-    colour_names = ['pink', 'blue', 'green'][:len(prot_images.keys())]
+    colour_names = ['red', 'blue', 'green'][:len(prot_images.keys())]
     if len(prot_images) == 3:
         print("UCM")
     prototype_pdf = []
@@ -100,7 +100,7 @@ def build_pdf_one_dataset(prot_images: Dict[int, list[io.BytesIO]], test_images:
 
 def image_to_buf(ts: np.ndarray, y_lim: Tuple[float, float], class_num: str = -1, ) -> io.BytesIO:
     plt.figure(figsize=(6, 3))
-    colour_dict = {0: 'pink', 1: 'blue', 2: 'green'}
+    colour_dict = {0: 'red', 1: 'blue', 2: 'green'}
     colour = colour_dict.get(class_num, 'gray')
     linestyle = '-' if colour != 'gray' else '--'
 
