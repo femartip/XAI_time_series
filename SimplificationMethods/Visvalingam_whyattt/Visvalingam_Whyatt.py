@@ -1,4 +1,3 @@
-
 from simplification.cutil import (
     simplify_coords,
     simplify_coords_idx,
